@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fs-tools - JavaScript Tools Collection</title>
+  <link rel="stylesheet" href="tools/js/jquery-ui.min.css">
+  <script src="tools/js/jquery-3.7.1.min.js"></script>
+  <script src="tools/js/jquery-ui.min.js"></script>
+  <script src="tools/js/fs-tools.js"></script>
+
+  <style>
+    /* Global Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header Styles */
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    /* Tool Cards Styles */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .tool-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    .tool-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      color: #667eea;
+    }
+
+    .tool-title {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .tool-description {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .tool-link {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+    }
+
+    .tool-link:hover {
+      background: #5a6fd8;
+    }
+
+    /* Author Info Styles */
+    .author-info {
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+
+    /* Footer Styles */
+    .footer {
+      text-align: center;
+      color: rgba(255,255,255,0.7);
+      padding: 30px 0;
+      margin-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .footer p {
+      margin: 5px 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .tool-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="docs/pics/logo.svg" alt="fs-tools Logo">
+      </div>
+      <h1>fs-tools</h1>
+      <p class="subtitle">JavaScript Tools Collection</p>
+      <p class="author-info" id="author-info"></p>
+    </header>
+
+    <!-- Tools List -->
+    <main>
+      <div class="tools-grid">
+        <!-- JMH Visualizer Tool -->
+        <a href="tools/jmh/jmh-visualizer.html" class="tool-card">
+          <div class="tool-icon">📊</div>
+          <h3 class="tool-title">JMH Benchmark Visualizer</h3>
+          <p class="tool-description">Java Microbenchmark Harness performance test results visualization tool with multiple chart types and real-time data display.</p>
+          <span class="tool-link">Get Started →</span>
+        </a>
+
+        <!-- Placeholder Tool 1 -->
+        <div class="tool-card">
+          <div class="tool-icon">🔧</div>
+          <h3 class="tool-title">Code Formatter</h3>
+          <p class="tool-description">Code formatting tool supporting multiple programming languages with unified code style specifications.</p>
+          <span class="tool-link" style="background: #ccc; cursor: not-allowed;">In Development</span>
+        </div>
+
+        <!-- Placeholder Tool 2 -->
+        <div class="tool-card">
+          <div class="tool-icon">📝</div>
+          <h3 class="tool-title">Documentation Generator</h3>
+          <p class="tool-description">Automated project documentation generator supporting multiple formats and custom templates.</p>
+          <span class="tool-link" style="background: #ccc; cursor: not-allowed;">In Development</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Powered by fs-tools and <span id="footer-author"></span></p>
+    </footer>
+  </div>
+
+  <script>
+    // Display author information using fs-tools.js
+    $(document).ready(() => {
+      const authorInfo = fsTools.getToolAuthor('index.html');
+      $('#author-info').text('Author: ' + authorInfo);
+      $('#footer-author').text(authorInfo);
+    });
+  </script>
+</body>
+</html>

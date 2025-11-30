@@ -1,5 +1,5 @@
 /*!
- * FS-Tools - Common JavaScript Utilities
+ * fs-tools.js - Common JavaScript Utilities for fs-tools
  */
 
 !function(global, factory) {
@@ -28,6 +28,8 @@
      */
     getToolAuthor: function(toolName) {
       switch(toolName) {
+        case 'index.html':
+          return 'TRAE[DeepSeek-V3.1/Doubal-Seed-Code]';
         case 'jmh-visualizer':
           return 'TRAE[DeepSeek-V3.1/Doubal-Seed-Code]';
         default:
