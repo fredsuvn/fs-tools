@@ -1,0 +1,48 @@
+<svg width="104" height="104" viewBox="0 0 104 104" xmlns="http://www.w3.org/2000/svg">
+  <title>SonLuo</title>
+  <g id="group-back">
+    <rect id="back-global" x="0" y="0" width="100%" height="100%" fill="#3f3f3f" stroke="none"/>
+  </g>
+  <g id="group-hive"
+     stroke-linecap="square" stroke-miterlimit="100"
+     stroke="#3f3f3f" stroke-width="2" fill="#fefefe"
+  >
+    <path id="hive-t"
+          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
+          transform="translate(0,-34)"
+    />
+    <path id="hive-rt"
+          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
+          transform="translate(30,-17)"
+    />
+    <path id="hive-rb"
+          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
+          transform="translate(30,17)"
+    />
+    <path id="hive-b"
+          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
+          transform="translate(0,34)"
+    />
+    <path id="hive-lt"
+          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
+          transform="translate(-30,-17)"
+    />
+    <path id="hive-lb"
+          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
+          transform="translate(-30,17)"
+    />
+  </g>
+  <g id="group-cmd"
+     stroke-linecap="square" stroke-miterlimit="100"
+     stroke="#fefefe" stroke-width="2"
+  >
+    <path id="cmd-prompt"
+          d="M52,52 m-12,-10 l10,10 l-10,10"
+          fill="none"
+    />
+    <path id="cmd-input"
+          d="M52,52 m2,10 l10,0 l-10,0"
+          fill="none"
+    />
+  </g>
+</svg>
