@@ -707,6 +707,27 @@ class JMHVisualizer {
     toggleBtn.html(isVisible ? '▼' : '▶');
   }
 
+  toggleAllGroups() {
+    const allGroupContents = $('.benchmark-group .group-content');
+    const allToggleButtons = $('.benchmark-group .group-toggle');
+
+    if (allGroupContents.length === 0) return;
+
+    // Check if all groups are collapsed or all are expanded
+    const allCollapsed = allGroupContents.toArray().every(content => $(content).hasClass('collapsed'));
+    const allExpanded = allGroupContents.toArray().every(content => !$(content).hasClass('collapsed'));
+
+    // Determine the target state
+    const shouldCollapse = !allCollapsed;
+
+    // Toggle all groups
+    allGroupContents.toggleClass('collapsed', shouldCollapse);
+    allToggleButtons.html(shouldCollapse ? '▶' : '▼');
+
+    // Update the button text
+    $('#toggle-groups-btn').text(shouldCollapse ? 'Expand All Groups' : 'Collapse All Groups');
+  }
+
   // 折叠/展开所有分组的切换方法
   toggleGroups() {
     // 检查当前是否有展开的分组
