@@ -1,5 +1,5 @@
 /*!
- * fs-tools.js - Common JavaScript Utilities for fs-tools
+ * fs-tools.js - Common JavaScript for fs-tools
  */
 
 !function(global, factory) {
@@ -32,6 +32,8 @@
           return 'TRAE[DeepSeek-V3.1/Doubal-Seed-Code]';
         case 'jmh-visualizer':
           return 'TRAE[DeepSeek-V3.1/Doubal-Seed-Code]';
+        case 'pixel-logo':
+          return 'TRAE[DeepSeek-V3.1]';
         default:
           return 'Unknown';
       }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Logo Maker - fs-tools</title>
+  <link rel="stylesheet" href="pixel-logo.css">
+  <link rel="stylesheet" href="../js/jquery-ui.min.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Pixel Logo Maker</h1>
+      <div class="toolbar">
+        <div class="tool-group">
+          <label for="canvasSize">Canvas Size:</label>
+          <select id="canvasSize">
+            <option value="16">16×16</option>
+            <option value="32" selected>32×32</option>
+            <option value="64">64×64</option>
+          </select>
+        </div>
+
+        <div class="tool-group">
+          <label for="colorPicker">Color:</label>
+          <input type="color" id="colorPicker" value="#000000">
+        </div>
+
+        <div class="tool-group">
+          <button id="pencilBtn" class="tool-btn active" title="Pencil">✏️</button>
+          <button id="eraserBtn" class="tool-btn" title="Eraser">🧽</button>
+          <button id="clearBtn" class="tool-btn" title="Clear Canvas">🗑️</button>
+        </div>
+
+        <div class="tool-group">
+          <button id="importBtn" class="tool-btn" title="Import Image">📁</button>
+          <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="workspace">
+        <div class="canvas-container">
+          <canvas id="pixelCanvas"></canvas>
+        </div>
+
+        <div class="preview">
+          <h3>Preview</h3>
+          <div id="previewArea"></div>
+        </div>
+      </div>
+
+      <div class="export-section">
+        <h3>Export</h3>
+        <div class="export-options">
+          <button id="exportSvgBtn">Export as SVG</button>
+          <button id="exportMarkdownBtn">Export as Markdown</button>
+        </div>
+        <div class="code-output">
+          <textarea id="codeOutput" readonly placeholder="Generated code will appear here..."></textarea>
+          <button id="copyBtn">Copy Code</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    <p>powered by <strong>fs-tools</strong> and created by fs-tools</p>
+  </footer>
+
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <script src="../js/jquery-ui.min.js"></script>
+  <script src="pixel-logo.js"></script>
+</body>
+</html>
