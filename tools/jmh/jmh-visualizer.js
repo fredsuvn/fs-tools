@@ -4,9 +4,7 @@ class JMHVisualizer {
     this.benchmarkData = [];
     this.groups = new Map();
     this.charts = new Map();
-    // 添加状态跟踪：记录最后修改的设置来源
-    this.lastChangedSource = new Map(); // 'global' 或 'local'
-    this.lastChangedType = new Map(); // 'chart-type', 'renderer', 'sort-metric', 'sort-order'
+    this.chartSettings = new Map(); // 为每个图表记录设置状态
     this.init();
 
     // 显示作者信息
@@ -25,12 +23,26 @@ class JMHVisualizer {
     $('#toggle-groups-btn').on('click', () => this.toggleGroups());
 
     // Global controls event listeners with proper binding
-    $('#global-chart-type, #global-renderer, #global-sort-metric, #global-sort-order')
-      .on('change', function() {
-        const controlType = $(this).attr('id').replace('global-', '');
-        this.setLastChanged('global', controlType);
+     $('#global-chart-type, #global-renderer, #global-sort-metric, #global-sort-order, #global-show-errors')
+       .on('change', (e) => {
+        const $target = $(e.target);
+        const id = $target.attr('id');
+        if (!id) return;
+
+        const controlType = id.replace('global-', '');
+
+        // 为所有图表设置全局为最后修改来源
+        this.charts.forEach((config, chartId) => {
+          this.setLastChanged(chartId, 'global', controlType);
+        });
+
+        // 同步更新所有图表的本地控制值，确保UI一致
+        const globalValue = $target.val();
+        $(`.${controlType}`).val(globalValue);
+
+        // 更新所有图表
         this.updateAllCharts();
-      }.bind(this));
+      });
 
     // File upload
     $('#toggle-file-upload').on('click', () => {
@@ -294,7 +306,7 @@ class JMHVisualizer {
       $('<option>').val('bar').text('Vertical'),
       $('<option>').val('horizontalBar').text('Horizontal').prop('selected', true)
     ).on('change', () => {
-      this.setLastChanged('local', 'chart-type');
+      this.setLastChanged(chartId, 'local', 'chart-type');
       this.updateChart(chartId);
     });
     controls.append(chartTypeSelect);
@@ -304,7 +316,7 @@ class JMHVisualizer {
       $('<option>').val('canvas').text('Canvas'),
       $('<option>').val('svg').text('SVG')
     ).on('change', () => {
-      this.setLastChanged('local', 'renderer');
+      this.setLastChanged(chartId, 'local', 'renderer');
       this.updateChart(chartId);
     });
     controls.append(rendererSelect);
@@ -314,7 +326,7 @@ class JMHVisualizer {
       $('<option>').val('score').text('Score'),
       $('<option>').val('throughput').text('Throughput')
     ).on('change', () => {
-      this.setLastChanged('local', 'sort-metric');
+      this.setLastChanged(chartId, 'local', 'sort-metric');
       this.updateChart(chartId);
     });
     controls.append(sortMetricSelect);
@@ -325,10 +337,20 @@ class JMHVisualizer {
       $('<option>').val('asc').text('Ascending'),
       $('<option>').val('desc').text('Descending')
     ).on('change', () => {
-      this.setLastChanged('local', 'sort-order');
+      this.setLastChanged(chartId, 'local', 'sort-order');
       this.updateChart(chartId);
     });
     controls.append(sortOrderSelect);
+
+    // Show errors with event listener
+    const showErrorsSelect = $('<select>').addClass('show-errors').append(
+      $('<option>').val('true').text('Show Errors'),
+      $('<option>').val('false').text('Hide Errors')
+    ).on('change', () => {
+      this.setLastChanged(chartId, 'local', 'show-errors');
+      this.updateChart(chartId);
+    });
+    controls.append(showErrorsSelect);
 
     // Copy SVG button
     controls.append($('<button>').addClass('copy-svg-btn').text('Copy SVG')
@@ -355,7 +377,7 @@ class JMHVisualizer {
     });
 
     // Set up control event listeners
-    chartDiv.find('.chart-type, .chart-renderer, .sort-metric, .sort-order')
+    chartDiv.find('.chart-type, .chart-renderer, .sort-metric, .sort-order, .show-errors')
       .on('change', () => this.updateChart(chartId));
 
     return chartDiv;
@@ -367,23 +389,51 @@ class JMHVisualizer {
     });
   }
 
-  // 新增方法：设置最后修改的来源和类型
-  setLastChanged(source, type) {
-    this.lastChangedSource.set(type, source);
-    this.lastChangedType.set(source, type);
-    console.log(`Last changed by ${source} for ${type}`);
+  // 设置最后修改的来源和类型
+  setLastChanged(chartId, source, type) {
+    if (!this.chartSettings.has(chartId)) {
+      this.chartSettings.set(chartId, {
+        lastChangedSource: new Map(),
+        lastChangedTimestamp: new Map()
+      });
+    }
+
+    const chartSetting = this.chartSettings.get(chartId);
+    chartSetting.lastChangedSource.set(type, source);
+    chartSetting.lastChangedTimestamp.set(type, Date.now());
+
+    console.log(`Chart ${chartId}: Last changed by ${source} for ${type} at ${chartSetting.lastChangedTimestamp.get(type)}`);
   }
 
-  // 新增方法：获取设置，考虑最后修改的来源
+  // 获取设置，考虑最后修改的来源和时间戳
   getSettingWithPriority(chartId, type) {
-    const lastSource = this.lastChangedSource.get(type);
     const globalValue = this.getGlobalSetting(type);
-    const localElement = $(`#${chartId} .${type}`);
+
+    // 将类型映射到对应的class名称
+    const classMapping = {
+      'chart-type': 'chart-type',
+      'renderer': 'chart-renderer',
+      'sort-metric': 'sort-metric',
+      'sort-order': 'sort-order',
+      'show-errors': 'show-errors'
+    };
+
+    const className = classMapping[type] || type;
+    const localElement = $(`#${chartId} .${className}`);
     const localValue = localElement && localElement.length > 0 ? localElement.val() : null;
+
+    // 获取该图表的设置状态
+    let lastSource = null;
+    if (this.chartSettings.has(chartId)) {
+      const chartSetting = this.chartSettings.get(chartId);
+      lastSource = chartSetting.lastChangedSource.get(type);
+    }
 
     // 为chart-type设置默认值为horizontalBar
     if (type === 'chart-type') {
       const defaultValue = 'horizontalBar';
+
+      // 如果有明确的最后修改来源，优先使用
       if (lastSource === 'global' && globalValue) {
         return globalValue;
       } else if (lastSource === 'local' && localValue) {
@@ -393,12 +443,13 @@ class JMHVisualizer {
       return localValue || globalValue || defaultValue;
     }
 
-    // 其他类型的设置逻辑
-    if (lastSource === 'global' || (!localValue)) {
+    // 其他类型的设置逻辑 - 优先使用最后设置的值
+    if (lastSource === 'global') {
       return globalValue;
     } else if (lastSource === 'local' && localValue) {
       return localValue;
     }
+    // 如果没有明确的最后修改来源，优先使用局部设置，否则使用全局设置
     return localValue || globalValue;
   }
 
@@ -409,6 +460,7 @@ class JMHVisualizer {
       case 'renderer': return $('#global-renderer').val();
       case 'sort-metric': return $('#global-sort-metric').val();
       case 'sort-order': return $('#global-sort-order').val();
+      case 'show-errors': return $('#global-show-errors').val();
       default: return null;
     }
   }
@@ -470,6 +522,7 @@ class JMHVisualizer {
   createChartOption(benchmarks, chartId) {
     const sortedData = this.sortBenchmarks(benchmarks, chartId);
     const isHorizontal = this.isHorizontalChart(chartId);
+    const showErrors = this.getSettingWithPriority(chartId, 'show-errors') === 'true';
 
     const xAxisData = sortedData.map(b => {
       const paramsValues = this.getParamsValuesOnly(b.params);
@@ -482,6 +535,122 @@ class JMHVisualizer {
         color: this.getColorForScore(b.primaryMetric.score, sortedData)
       }
     }));
+
+    // 准备误差线数据
+    const hasErrors = sortedData.some(b => b.primaryMetric.scoreError && b.primaryMetric.scoreError !== 'NaN');
+
+    const series = [{
+      name: 'Score',
+      type: 'bar',
+      data: seriesData,
+      label: {
+        show: true,
+        position: isHorizontal ? 'right' : 'top',
+        formatter: (params) => params.value.toLocaleString()
+      }
+    }];
+
+    // 如果有误差数据且显示误差线，添加误差线
+    if (hasErrors && showErrors) {
+      // 使用markLine为每个数据点创建独立的误差线
+      const errorLinesData = sortedData.map((b, index) => {
+        if (b.primaryMetric.scoreError && b.primaryMetric.scoreError !== 'NaN') {
+          const error = b.primaryMetric.scoreError;
+          const score = b.primaryMetric.score;
+
+          if (isHorizontal) {
+            // 水平图表：垂直误差线
+            return [
+              {
+                yAxis: index,
+                xAxis: score - error,
+                symbol: 'none'
+              },
+              {
+                yAxis: index,
+                xAxis: score + error,
+                symbol: 'none'
+              }
+            ];
+          } else {
+            // 垂直图表：水平误差线
+            return [
+              {
+                xAxis: index,
+                yAxis: score - error,
+                symbol: 'none'
+              },
+              {
+                xAxis: index,
+                yAxis: score + error,
+                symbol: 'none'
+              }
+            ];
+          }
+        }
+        return null;
+      }).filter(item => item !== null).flat();
+
+      // 添加误差线系列
+      const errorLinesSeries = {
+        name: 'Error Lines',
+        type: 'line',
+        symbol: 'none',
+        lineStyle: {
+          color: '#ff6b6b',
+          width: 2,
+          type: 'dashed'
+        },
+        data: errorLinesData,
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          lineStyle: {
+            color: '#ff6b6b',
+            width: 2,
+            type: 'dashed'
+          },
+          data: errorLinesData.map((point, index) => {
+            // 每两个点组成一条误差线
+            if (index % 2 === 0 && index + 1 < errorLinesData.length) {
+              return [errorLinesData[index], errorLinesData[index + 1]];
+            }
+            return null;
+          }).filter(item => item !== null)
+        }
+      };
+
+      // 添加误差线标记（上下限点）
+      const errorPointsSeries = {
+        name: 'Error Range',
+        type: 'scatter',
+        symbol: 'circle',
+        symbolSize: 6,
+        itemStyle: {
+          color: '#ff6b6b'
+        },
+        data: sortedData.map((b, index) => {
+          if (b.primaryMetric.scoreError && b.primaryMetric.scoreError !== 'NaN') {
+            const error = b.primaryMetric.scoreError;
+            const score = b.primaryMetric.score;
+            // 返回上限和下限两个点
+            return [
+              {
+                value: isHorizontal ? [score + error, index] : [index, score + error],
+                symbolOffset: isHorizontal ? [0, 0] : [0, 0]
+              },
+              {
+                value: isHorizontal ? [score - error, index] : [index, score - error],
+                symbolOffset: isHorizontal ? [0, 0] : [0, 0]
+              }
+            ];
+          }
+          return null;
+        }).filter(item => item !== null).flat()
+      };
+
+      series.push(errorPointsSeries, errorLinesSeries);
+    }
 
     return {
       tooltip: {
@@ -525,16 +694,7 @@ class JMHVisualizer {
           fontSize: 10
         }
       },
-      series: [{
-        name: 'Score',
-        type: 'bar',
-        data: seriesData,
-        label: {
-          show: true,
-          position: isHorizontal ? 'right' : 'top',
-          formatter: (params) => params.value.toLocaleString()
-        }
-      }]
+      series: series
     };
   }
 
@@ -659,38 +819,20 @@ class JMHVisualizer {
     }
 
     try {
-      // 检查当前是否使用SVG渲染器
-      if (config.currentRenderer !== 'svg') {
-        this.showToast('Please switch to SVG renderer first', 'error');
-        return;
-      }
-
       // 获取图表的SVG元素
       const chartElement = $(`#${chartId}_chart`)[0];
       const svgElement = chartElement.querySelector('svg');
 
       if (!svgElement) {
-        this.showToast('No SVG element found. Please ensure SVG renderer is selected.', 'error');
+        this.showToast('No SVG element found. Please switch to SVG renderer first.', 'error');
         return;
       }
 
-      // 克隆SVG元素
-      const clonedSvg = svgElement.cloneNode(true);
-
-      // 清理SVG代码
-      clonedSvg.setAttribute('width', '800');
-      clonedSvg.setAttribute('height', '400');
-      clonedSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-
-      // 移除可能的问题属性
-      clonedSvg.removeAttribute('data-zr-dom-id');
-      clonedSvg.removeAttribute('class');
-
-      // 获取SVG代码
+      // 直接获取页面上显示的SVG代码，不进行修改
       const serializer = new XMLSerializer();
-      let svgCode = serializer.serializeToString(clonedSvg);
+      let svgCode = serializer.serializeToString(svgElement);
 
-      // 添加XML声明
+      // 添加XML声明以确保SVG可以正确使用
       svgCode = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgCode;
 
       await navigator.clipboard.writeText(svgCode);
@@ -734,9 +876,6 @@ class JMHVisualizer {
     const hasExpanded = $('.benchmark-group .group-content:visible').length > 0;
     const toggleBtn = $('#toggle-groups-btn');
 
-    // 更新按钮文本
-    toggleBtn.text(hasExpanded ? 'Expand All Groups' : 'Collapse All Groups');
-
     // 遍历所有分组
     $('.benchmark-group').each((index, groupDiv) => {
       const $groupDiv = $(groupDiv);
@@ -757,6 +896,9 @@ class JMHVisualizer {
         }
       }
     });
+
+    // 更新按钮文本 - 放在操作执行后，确保状态正确
+    toggleBtn.text(hasExpanded ? 'Expand All Groups' : 'Collapse All Groups');
   }
 
   scrollToGroup(className) {
