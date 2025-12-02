@@ -140,7 +140,8 @@
       if (shouldLog(LOG_LEVELS.DEBUG)) {
         var formatted = formatMessage(LOG_LEVELS.DEBUG, message, Array.prototype.slice.call(arguments, 1));
         if (currentConfig.consoleOutput) {
-          console.debug(formatted);
+          // console.debug(formatted);
+          console.log(formatted);
         }
       }
       return this;
