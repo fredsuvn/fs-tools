@@ -61,7 +61,51 @@
     .subtitle {
       font-size: 1.2rem;
       opacity: 0.9;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    /* Search Bar Styles */
+    .search-container {
+      margin: 20px auto;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 40px 12px 20px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .search-input:focus {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #667eea;
+      pointer-events: none;
+    }
+
+    /* Search Results */
+    .no-results {
+      text-align: center;
+      color: white;
+      padding: 40px 20px;
+      font-size: 1.1rem;
+    }
+
+    .no-results-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
     }
 
     /* Tool Cards Styles */
@@ -171,6 +215,10 @@
       </div>
       <h1>fs-tools</h1>
       <p class="subtitle">JavaScript Tools Collection</p>
+      <div class="search-container">
+        <input type="text" id="search-input" class="search-input" placeholder="Search tools by ID, name or tags...">
+        <span class="search-icon">🔍</span>
+      </div>
       <p class="author-info" id="author-info"></p>
     </header>
 
@@ -245,36 +293,27 @@
       });
 
       // 仅在首页加载所有工具信息
+      let allTools = [];
+
       fsTools.loadAllToolsInfo(function(tools) {
         if (typeof fsLogger !== 'undefined') {
           fsLogger.debug('Tools info loaded:', tools);
         } else {
           console.log('Tools info loaded:', tools);
         }
+
         if (tools && tools.length > 0) {
-          // 根据 tools.json 更新工具列表
-          const toolsGrid = $('.tools-grid');
-          toolsGrid.empty(); // 清空现有的工具卡片
+          // 保存所有工具信息
+          allTools = tools.filter(tool => tool.id !== 'index.html');
 
-          // 排除 index.html，只添加实际的工具
-          tools.filter(tool => tool.id !== 'index.html').forEach(tool => {
-            const toolCard = $('<a>')
-              .attr('href', `tools/${tool.directory}/${tool.directory}.html`)
-              .addClass('tool-card');
+          // 初始渲染所有工具
+          renderTools(allTools);
 
-            const iconMap = {
-              'jmh-visualizer': '📊',
-              'pixel-logo': '🎨'
-            };
-
-            toolCard.html(`
-              <div class="tool-icon">${iconMap[tool.id] || '🔧'}</div>
-              <h3 class="tool-title">${tool.name}</h3>
-              <p class="tool-description">${tool.description}</p>
-              <span class="tool-link">Get Started →</span>
-            `);
-
-            toolsGrid.append(toolCard);
+          // 实现搜索功能
+          $('#search-input').on('input', function() {
+            const searchTerm = $(this).val().toLowerCase().trim();
+            const filteredTools = filterTools(allTools, searchTerm);
+            renderTools(filteredTools);
           });
         } else {
           // 如果没有加载到工具信息，不做任何操作，保持静态内容
@@ -285,6 +324,66 @@
           }
         }
       });
+
+      // 过滤工具的函数
+      function filterTools(tools, searchTerm) {
+        if (!searchTerm) {
+          return tools; // 如果搜索词为空，返回所有工具
+        }
+
+        return tools.filter(tool => {
+          // 搜索id
+          const idMatch = tool.id.toLowerCase().includes(searchTerm);
+          // 搜索名称
+          const nameMatch = tool.name.toLowerCase().includes(searchTerm);
+          // 搜索标签
+          const tagsMatch = tool.tags && Array.isArray(tool.tags) &&
+            tool.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+
+          // 只要有一个匹配就返回
+          return idMatch || nameMatch || tagsMatch;
+        });
+      }
+
+      // 渲染工具列表的函数
+      function renderTools(tools) {
+        const toolsGrid = $('.tools-grid');
+        toolsGrid.empty(); // 清空现有的工具卡片
+
+        if (tools.length === 0) {
+          // 显示没有结果的提示
+          const noResults = $('<div>')
+            .addClass('no-results')
+            .html(`
+              <div class="no-results-icon">🔍</div>
+              <p>No tools found matching your search criteria.</p>
+              <p>Try adjusting your search term.</p>
+            `);
+          toolsGrid.append(noResults);
+          return;
+        }
+
+        // 渲染过滤后的工具列表
+        tools.forEach(tool => {
+          const toolCard = $('<a>')
+            .attr('href', `tools/${tool.directory}/${tool.directory}.html`)
+            .addClass('tool-card');
+
+          const iconMap = {
+            'jmh-visualizer': '📊',
+            'pixel-logo': '🎨'
+          };
+
+          toolCard.html(`
+            <div class="tool-icon">${iconMap[tool.id] || '🔧'}</div>
+            <h3 class="tool-title">${tool.name}</h3>
+            <p class="tool-description">${tool.description}</p>
+            <span class="tool-link">Get Started →</span>
+          `);
+
+          toolsGrid.append(toolCard);
+        });
+      }
     });
     </script>
 </body>
