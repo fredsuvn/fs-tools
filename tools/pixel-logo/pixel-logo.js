@@ -27,14 +27,36 @@ $(document).ready(function() {
 
     // 更新预览
     updatePreview();
+
+    // 监听窗口大小变化，动态调整画布
+    window.addEventListener('resize', function() {
+      const oldPixelData = pixelData;
+      resizeCanvas();
+      pixelData = oldPixelData; // 保留原有像素数据
+      drawGrid();
+    });
   }
 
   // 调整画布大小
   function resizeCanvas() {
-    canvas.width = canvasSize * pixelSize;
-    canvas.height = canvasSize * pixelSize;
-    canvas.style.width = (canvasSize * pixelSize) + 'px';
-    canvas.style.height = (canvasSize * pixelSize) + 'px';
+    // 计算合适的像素大小，确保画布不会太大
+    const containerWidth = $('.canvas-container').width() - 40; // 减去padding
+    const containerHeight = $('.canvas-container').height() - 40; // 减去padding
+    const maxPixelSize = Math.min(
+      containerWidth / canvasSize,
+      containerHeight / canvasSize,
+      20 // 最大像素大小限制
+    );
+
+    const adjustedPixelSize = Math.floor(maxPixelSize);
+
+    canvas.width = canvasSize * adjustedPixelSize;
+    canvas.height = canvasSize * adjustedPixelSize;
+    canvas.style.width = (canvasSize * adjustedPixelSize) + 'px';
+    canvas.style.height = (canvasSize * adjustedPixelSize) + 'px';
+
+    // 更新pixelSize以便绘制时使用正确的尺寸
+    pixelSize = adjustedPixelSize;
   }
 
   // 初始化像素数据
@@ -244,7 +266,8 @@ $(document).ready(function() {
         updatePreview();
 
         // 显示成功消息
-        showMessage('Image imported successfully!');
+        fsLogger.info('Image imported successfully:', file.name);
+        fsLogger.showToast('Image imported successfully!', 'success');
       };
       img.src = e.target.result;
     };
@@ -289,7 +312,8 @@ $(document).ready(function() {
 
     svgCode += '</svg>';
     $('#codeOutput').val(svgCode);
-    showMessage('SVG code generated!');
+    fsLogger.info('SVG code generated successfully');
+    fsLogger.showToast('SVG code generated!', 'success');
   }
 
   // 导出为Markdown
@@ -310,7 +334,8 @@ $(document).ready(function() {
 
     markdownCode += '```';
     $('#codeOutput').val(markdownCode);
-    showMessage('Markdown code generated!');
+    fsLogger.info('Markdown code generated successfully');
+    fsLogger.showToast('Markdown code generated!', 'success');
   }
 
   // 复制到剪贴板
@@ -321,35 +346,12 @@ $(document).ready(function() {
 
     try {
       document.execCommand('copy');
-      showMessage('Code copied to clipboard!');
+      fsLogger.info('Code copied to clipboard successfully');
+      fsLogger.showToast('Code copied to clipboard!', 'success');
     } catch (err) {
-      showMessage('Failed to copy code: ' + err);
+      fsLogger.error('Failed to copy code:', err);
+      fsLogger.showToast('Failed to copy code: ' + err, 'error');
     }
-  }
-
-  // 显示消息
-  function showMessage(message) {
-    // 创建临时消息元素
-    const messageEl = $('<div>').text(message).css({
-      position: 'fixed',
-      top: '20px',
-      right: '20px',
-      background: '#48bb78',
-      color: 'white',
-      padding: '10px 20px',
-      borderRadius: '5px',
-      zIndex: 1000,
-      boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
-    });
-
-    $('body').append(messageEl);
-
-    // 3秒后自动消失
-    setTimeout(() => {
-      messageEl.fadeOut(300, function() {
-        $(this).remove();
-      });
-    }, 3000);
   }
 
   // 初始化应用

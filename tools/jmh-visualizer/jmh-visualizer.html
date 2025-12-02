@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JMH Benchmark Visualizer</title>
   <link rel="stylesheet" href="jmh-visualizer.css">
-  <link rel="stylesheet" href="../common/jquery-ui.min.css">
-  <script src="../common/jquery-3.7.1.min.js"></script>
-  <script src="../common/jquery-ui.min.js"></script>
-  <script src="../common/echarts.min.js"></script>
-  <script src="../tools.js"></script>
+  <link rel="stylesheet" href="../../libs/jquery-ui.min.css">
+  <link rel="stylesheet" href="../../libs/logger.css">
+  <script src="../../libs/jquery-3.7.1.min.js"></script>
+  <script src="../../libs/jquery-ui.min.js"></script>
+  <script src="../../libs/echarts.min.js"></script>
+  <script src="../../libs/tools.js"></script>
+  <script src="../../libs/logger.js"></script>
 </head>
 <body>
   <div id="app">
@@ -101,22 +103,23 @@
   <script>
     // 显示页脚作者信息
     $(document).ready(() => {
-      console.log('jQuery loaded:', typeof $ !== 'undefined');
-      console.log('fsTools loaded:', typeof fsTools !== 'undefined');
+      fsLogger.debug('jQuery loaded:', typeof $ !== 'undefined');
+      fsLogger.debug('fsTools loaded:', typeof fsTools !== 'undefined');
+      fsLogger.debug('fsLogger loaded:', typeof fsLogger !== 'undefined');
 
       // 默认作者信息（降级方案）
       const defaultAuthor = 'sunqian, DeepSeek-V3.1, Doubal-Seed-Code';
 
       // 只获取当前工具(jmh-visualizer)的作者信息，每个工具只获取一次并缓存
       fsTools.getToolAuthorAsync('jmh-visualizer', function(authorInfo) {
-        console.log('Author info received:', authorInfo);
+        fsLogger.debug('Author info received:', authorInfo);
         // 处理可能的空作者信息，为空时使用默认作者
         const finalAuthor = authorInfo || defaultAuthor;
-        console.log('Setting author info:', finalAuthor);
+        fsLogger.debug('Setting author info:', finalAuthor);
         $('#author-info').text('Author: ' + finalAuthor);
         $('#footer-author').text(finalAuthor);
       });
     });
-  </script>
+    </script>
 </body>
 </html>

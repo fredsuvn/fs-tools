@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>fs-tools - JavaScript Tools Collection</title>
-  <link rel="stylesheet" href="tools/common/jquery-ui.min.css">
-  <script src="tools/common/jquery-3.7.1.min.js"></script>
-  <script src="tools/common/jquery-ui.min.js"></script>
-  <script src="tools/tools.js"></script>
+  <link rel="stylesheet" href="libs/jquery-ui.min.css">
+  <link rel="stylesheet" href="libs/logger.css">
+  <script src="libs/jquery-3.7.1.min.js"></script>
+  <script src="libs/jquery-ui.min.js"></script>
+  <script src="libs/logger.js"></script>
+  <script src="libs/tools.js"></script>
 
   <style>
     /* Global Styles */
@@ -210,25 +212,45 @@
   <script>
     // Display author information and tools using fs-tools.js
     $(document).ready(() => {
-      console.log('jQuery loaded:', typeof $ !== 'undefined');
-      console.log('fsTools loaded:', typeof fsTools !== 'undefined');
+      // Check if fsLogger is loaded
+      if (typeof fsLogger !== 'undefined') {
+        fsLogger.debug('jQuery loaded:', typeof $ !== 'undefined');
+        fsLogger.debug('fsTools loaded:', typeof fsTools !== 'undefined');
+        fsLogger.debug('fsLogger loaded:', typeof fsLogger !== 'undefined');
+      } else {
+        console.log('jQuery loaded:', typeof $ !== 'undefined');
+        console.log('fsTools loaded:', typeof fsTools !== 'undefined');
+        console.log('fsLogger not loaded, using console.log');
+      }
 
       // 默认作者信息（降级方案）
       const defaultAuthor = 'sunqian, DeepSeek-V3.1';
 
       // 异步获取index.html的作者信息
       fsTools.getToolAuthorAsync('index.html', function(authorInfo) {
-        console.log('Author info received for index.html:', authorInfo);
+        if (typeof fsLogger !== 'undefined') {
+          fsLogger.debug('Author info received for index.html:', authorInfo);
+        } else {
+          console.log('Author info received for index.html:', authorInfo);
+        }
         // 处理可能的空作者信息，为空时使用默认作者
         const finalAuthor = authorInfo || defaultAuthor;
-        console.log('Setting author info:', finalAuthor);
+        if (typeof fsLogger !== 'undefined') {
+          fsLogger.debug('Setting author info:', finalAuthor);
+        } else {
+          console.log('Setting author info:', finalAuthor);
+        }
         $('#author-info').text('Author: ' + finalAuthor);
         $('#footer-author').text(finalAuthor);
       });
 
       // 仅在首页加载所有工具信息
       fsTools.loadAllToolsInfo(function(tools) {
-        console.log('Tools info loaded:', tools);
+        if (typeof fsLogger !== 'undefined') {
+          fsLogger.debug('Tools info loaded:', tools);
+        } else {
+          console.log('Tools info loaded:', tools);
+        }
         if (tools && tools.length > 0) {
           // 根据 tools.json 更新工具列表
           const toolsGrid = $('.tools-grid');
@@ -256,7 +278,11 @@
           });
         } else {
           // 如果没有加载到工具信息，不做任何操作，保持静态内容
-          console.log('No tools loaded, keeping static content');
+          if (typeof fsLogger !== 'undefined') {
+            fsLogger.debug('No tools loaded, keeping static content');
+          } else {
+            console.log('No tools loaded, keeping static content');
+          }
         }
       });
     });

@@ -109,6 +109,9 @@ main {
   border-radius: 10px;
   padding: 20px;
   min-height: 400px;
+  max-width: 100%;
+  overflow: auto;
+  max-height: 500px;
 }
 
 #pixelCanvas {

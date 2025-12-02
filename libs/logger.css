@@ -1,0 +1,127 @@
+/*!
+ * logger.css - Styles for fs-tools logger
+ * Author: sunqian
+ */
+
+/* Toast message styles */
+.fs-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 300px;
+  word-wrap: break-word;
+  animation: toastSlideIn 0.3s ease-out;
+}
+
+.fs-toast-info {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-left: 4px solid #1f618d;
+}
+
+.fs-toast-success {
+  background: linear-gradient(135deg, #27ae60, #229954);
+  border-left: 4px solid #1e8449;
+}
+
+.fs-toast-warning {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  border-left: 4px solid #d68910;
+}
+
+.fs-toast-error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border-left: 4px solid #a93226;
+}
+
+.fs-toast-debug {
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+  border-left: 4px solid #616a6b;
+}
+
+/* Toast animations */
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.fs-toast.fade-out {
+  animation: toastSlideOut 0.3s ease-in forwards;
+}
+
+/* Logger configuration panel (optional, for debugging) */
+.fs-logger-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 12px;
+  max-width: 250px;
+}
+
+.fs-logger-panel h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.fs-logger-panel select {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.fs-logger-panel .status {
+  color: #7f8c8d;
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .fs-toast {
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    top: 10px;
+  }
+
+  .fs-logger-panel {
+    right: 10px;
+    bottom: 10px;
+    max-width: calc(100% - 20px);
+  }
+}

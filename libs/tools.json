@@ -1,9 +1,12 @@
 {
+  "logger": {
+    "level": "warn"
+  },
   "tools": [
     {
       "id": "index.html",
       "name": "fs-tools",
-      "directory": "../index.html",
+      "directory": ".",
       "description": "The index.html file of fs-tools.",
       "tags": [
         "fs",

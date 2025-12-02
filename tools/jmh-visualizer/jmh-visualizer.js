@@ -82,14 +82,16 @@ class JMHVisualizer {
       this.renderGroups();
       $('#loading').addClass('hidden');
     } catch (error) {
-      this.showToast('Error loading default results.json: ' + error.message, 'error');
+      fsLogger.error('Error loading default results.json:', error.message);
+      fsLogger.showToast('Error loading default results.json: ' + error.message, 'error');
       $('#loading').addClass('hidden');
     }
   }
 
   async handleFileUpload(file) {
     if (!file || !file.name.endsWith('.json')) {
-      this.showToast('Please select a valid JSON file', 'error');
+      fsLogger.warn('Invalid file selected:', file ? file.name : 'no file');
+      fsLogger.showToast('Please select a valid JSON file', 'error');
       return;
     }
 
@@ -101,9 +103,11 @@ class JMHVisualizer {
       this.renderTOC();
       this.renderGroups();
       $('#loading').addClass('hidden');
-      this.showToast('File loaded successfully', 'info');
+      fsLogger.info('File loaded successfully:', file.name);
+      fsLogger.showToast('File loaded successfully', 'info');
     } catch (error) {
-      this.showToast('Error loading file: ' + error.message, 'error');
+      fsLogger.error('Error loading file:', error.message);
+      fsLogger.showToast('Error loading file: ' + error.message, 'error');
       $('#loading').addClass('hidden');
     }
   }
@@ -402,7 +406,7 @@ class JMHVisualizer {
     chartSetting.lastChangedSource.set(type, source);
     chartSetting.lastChangedTimestamp.set(type, Date.now());
 
-    console.log(`Chart ${chartId}: Last changed by ${source} for ${type} at ${chartSetting.lastChangedTimestamp.get(type)}`);
+    fsLogger.debug(`Chart ${chartId}: Last changed by ${source} for ${type} at ${chartSetting.lastChangedTimestamp.get(type)}`);
   }
 
   // 获取设置，考虑最后修改的来源和时间戳
@@ -483,7 +487,7 @@ class JMHVisualizer {
     const sortMetric = this.getSettingWithPriority(chartId, 'sort-metric');
     const sortOrder = this.getSettingWithPriority(chartId, 'sort-order');
 
-    console.log(`Updating chart ${chartId} with settings:`, {
+    fsLogger.debug(`Updating chart ${chartId} with settings:`, {
       renderer,
       chartType,
       sortMetric,
@@ -725,7 +729,7 @@ class JMHVisualizer {
 
   getChartType(chartId) {
     const result = this.getSettingWithPriority(chartId, 'chart-type') || 'horizontalBar';
-    console.log(`Chart type for ${chartId}:`, result);
+    fsLogger.debug(`Chart type for ${chartId}:`, result);
     return result;
   }
 
@@ -736,13 +740,13 @@ class JMHVisualizer {
 
   getSortMetric(chartId) {
     const result = this.getSettingWithPriority(chartId, 'sort-metric') || 'score';
-    console.log(`Sort metric for ${chartId}:`, result);
+    fsLogger.debug(`Sort metric for ${chartId}:`, result);
     return result;
   }
 
   getSortOrder(chartId) {
     const result = this.getSettingWithPriority(chartId, 'sort-order') || 'original';
-    console.log(`Sort order for ${chartId}:`, result);
+    fsLogger.debug(`Sort order for ${chartId}:`, result);
     return result;
   }
 
@@ -814,7 +818,8 @@ class JMHVisualizer {
   async copyChartSVG(chartId) {
     const config = this.charts.get(chartId);
     if (!config || !config.chartInstance) {
-      this.showToast('Chart not ready for SVG export', 'error');
+      fsLogger.warn('Chart not ready for SVG export:', chartId);
+      fsLogger.showToast('Chart not ready for SVG export', 'error');
       return;
     }
 
@@ -824,9 +829,10 @@ class JMHVisualizer {
       const svgElement = chartElement.querySelector('svg');
 
       if (!svgElement) {
-        this.showToast('No SVG element found. Please switch to SVG renderer first.', 'error');
-        return;
-      }
+          fsLogger.warn('No SVG element found for SVG export. Please switch to SVG renderer first.');
+          fsLogger.showToast('No SVG element found. Please switch to SVG renderer first.', 'error');
+          return;
+        }
 
       // 直接获取页面上显示的SVG代码，不进行修改
       const serializer = new XMLSerializer();
@@ -836,9 +842,11 @@ class JMHVisualizer {
       svgCode = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgCode;
 
       await navigator.clipboard.writeText(svgCode);
-      this.showToast('SVG code copied to clipboard', 'info');
+      fsLogger.info('SVG code copied to clipboard for chart:', chartId);
+      fsLogger.showToast('SVG code copied to clipboard', 'info');
     } catch (error) {
-      this.showToast('Failed to copy SVG: ' + error.message, 'error');
+      fsLogger.error('Failed to copy SVG:', error.message);
+      fsLogger.showToast('Failed to copy SVG: ' + error.message, 'error');
     }
   }
 
@@ -922,8 +930,15 @@ class JMHVisualizer {
 
   // 显示作者信息
   displayAuthorInfo() {
-    const authorInfo = fsTools.getToolAuthor('jmh-visualizer');
-    $('#author-info').text(`Author: ${authorInfo}`);
+    // 默认作者信息（降级方案）
+    const defaultAuthor = 'sunqian, DeepSeek-V3.1, Doubal-Seed-Code';
+
+    // 使用异步版本获取作者信息
+    fsTools.getToolAuthorAsync('jmh-visualizer', (authorInfo) => {
+      // 处理可能的空作者信息，为空时使用默认作者
+      const finalAuthor = authorInfo || defaultAuthor;
+      $('#author-info').text('Author: ' + finalAuthor);
+    });
   }
 }
 
