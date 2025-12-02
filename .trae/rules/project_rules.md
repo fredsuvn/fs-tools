@@ -5,9 +5,9 @@
 # 项目规则
 
 - 生成代码时，要考虑到.editorconfig，.gitattributes,.gitignore文件的配置，.idea目录下的不用改；
-- tools/tools.json中储存了所有的工具信息（包括tools里的工具和index.html），包括工具的id、名称、目录、描述、标签和作者；
-- tools/tools.js是所有工具都会导入的js文件，其中包含了一些和本项目通用的函数和变量；
-- tools/common目录下有一些预置的js文件，这些文件可以作为工具js导入；尽可能减少引入额外的js文件，只引入必要的js文件；
+- libs目录下有一些预置的js库，这些库可以作为工具js导入；尽可能减少引入额外的js文件，只引入必要的js文件；
+- libs/tools.json中储存了所有的工具信息（包括tools里的工具和index.html），包括工具的id、名称、目录、描述、标签和作者；
+- libs/tools.js是所有工具都会导入的js文件，其中包含了一些和本项目通用的函数和变量；
 - 所有的html文件都需要添加作者信息，且需要添加页脚，页脚显示powered by fs-tools and 作者信息（fs-tools小写，且fs-tools和作者信息用同样的样式）；
 - 生成的工具语言为英文，但是代码内部注释可以用中文；
 - 每个工具的前端代码都在tools目录下的对应目录中；

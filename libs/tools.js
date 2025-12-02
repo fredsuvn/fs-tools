@@ -36,17 +36,18 @@
 
       // 确定当前页面路径，以便正确加载tools.json
       const currentPath = window.location.pathname;
+      const currentUrl = window.location.href;
       let jsonPath;
 
+      // 根据当前页面位置确定正确的tools.json路径
       if (currentPath.includes('tools/')) {
-        // 如果在tools目录下的页面，需要上一级路径
-        jsonPath = '../tools.json';
+        jsonPath = '../libs/tools.json';  // 从tools子目录访问
       } else {
-        // 如果在根目录（如index.html）
-        jsonPath = 'tools/tools.json';
+        jsonPath = 'libs/tools.json';     // 从根目录访问
       }
 
       console.log('Current path:', currentPath);
+      console.log('Current URL:', currentUrl);
       console.log('Loading tools.json from:', jsonPath);
 
       $.getJSON(jsonPath, function(data) {
@@ -64,8 +65,8 @@
         }
       }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error('Failed to load tools.json:', textStatus, errorThrown);
-        // 失败时尝试另一个可能的路径
-        const altJsonPath = currentPath.includes('tools/') ? 'tools/tools.json' : '../tools.json';
+        // 失败时尝试更具体的备选路径
+        const altJsonPath = currentPath.includes('tools/') ? 'tools.json' : '../tools/tools.json';
         console.log('Trying alternative path:', altJsonPath);
 
         $.getJSON(altJsonPath, function(data) {
@@ -79,6 +80,7 @@
             callback(null);
           }
         }).fail(function() {
+          console.error('All attempts to load tools.json failed');
           fsTools._toolCache[toolId] = null;
           callback(null);
         });
@@ -107,14 +109,18 @@
       console.log('Loading all tools info');
       // 确定当前页面路径，以便正确加载tools.json
       const currentPath = window.location.pathname;
+      const currentUrl = window.location.href;
       let jsonPath;
 
+      // 使用与getToolInfo一致的路径检测逻辑
       if (currentPath.includes('tools/')) {
-        jsonPath = '../tools.json';
+        jsonPath = '../tools/tools.json';
       } else {
         jsonPath = 'tools/tools.json';
       }
 
+      console.log('Current path:', currentPath);
+      console.log('Current URL:', currentUrl);
       console.log('Loading tools.json from:', jsonPath);
 
       $.getJSON(jsonPath, function(data) {
@@ -127,8 +133,8 @@
         }
       }).fail(function(jqXHR, textStatus, errorThrown) {
         console.error('Failed to load tools.json:', textStatus, errorThrown);
-        // 失败时尝试另一个可能的路径
-        const altJsonPath = currentPath.includes('tools/') ? 'tools/tools.json' : '../tools.json';
+        // 失败时尝试更具体的备选路径
+        const altJsonPath = currentPath.includes('tools/') ? 'tools.json' : '../tools/tools.json';
         console.log('Trying alternative path:', altJsonPath);
 
         $.getJSON(altJsonPath, function(data) {
@@ -139,6 +145,7 @@
             callback([]);
           }
         }).fail(function() {
+          console.error('All attempts to load tools.json failed');
           callback([]);
         });
       });
