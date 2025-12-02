@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>fs-tools - JavaScript Tools Collection</title>
-  <link rel="stylesheet" href="tools/js/jquery-ui.min.css">
-  <script src="tools/js/jquery-3.7.1.min.js"></script>
-  <script src="tools/js/jquery-ui.min.js"></script>
-  <script src="tools/js/fs-tools.js"></script>
+  <link rel="stylesheet" href="tools/common/jquery-ui.min.css">
+  <script src="tools/common/jquery-3.7.1.min.js"></script>
+  <script src="tools/common/jquery-ui.min.js"></script>
+  <script src="tools/tools.js"></script>
 
   <style>
     /* Global Styles */
@@ -176,7 +176,7 @@
     <main>
       <div class="tools-grid">
         <!-- JMH Visualizer Tool -->
-        <a href="tools/jmh/jmh-visualizer.html" class="tool-card">
+        <a href="tools/jmh-visualizer/jmh-visualizer.html" class="tool-card">
           <div class="tool-icon">📊</div>
           <h3 class="tool-title">JMH Benchmark Visualizer</h3>
           <p class="tool-description">Java Microbenchmark Harness performance test results visualization tool with multiple chart types and real-time data display.</p>
@@ -208,12 +208,58 @@
   </div>
 
   <script>
-    // Display author information using fs-tools.js
+    // Display author information and tools using fs-tools.js
     $(document).ready(() => {
-      const authorInfo = fsTools.getToolAuthor('index.html');
-      $('#author-info').text('Author: ' + authorInfo);
-      $('#footer-author').text(authorInfo);
+      console.log('jQuery loaded:', typeof $ !== 'undefined');
+      console.log('fsTools loaded:', typeof fsTools !== 'undefined');
+
+      // 默认作者信息（降级方案）
+      const defaultAuthor = 'sunqian, DeepSeek-V3.1';
+
+      // 异步获取index.html的作者信息
+      fsTools.getToolAuthorAsync('index.html', function(authorInfo) {
+        console.log('Author info received for index.html:', authorInfo);
+        // 处理可能的空作者信息，为空时使用默认作者
+        const finalAuthor = authorInfo || defaultAuthor;
+        console.log('Setting author info:', finalAuthor);
+        $('#author-info').text('Author: ' + finalAuthor);
+        $('#footer-author').text(finalAuthor);
+      });
+
+      // 仅在首页加载所有工具信息
+      fsTools.loadAllToolsInfo(function(tools) {
+        console.log('Tools info loaded:', tools);
+        if (tools && tools.length > 0) {
+          // 根据 tools.json 更新工具列表
+          const toolsGrid = $('.tools-grid');
+          toolsGrid.empty(); // 清空现有的工具卡片
+
+          // 排除 index.html，只添加实际的工具
+          tools.filter(tool => tool.id !== 'index.html').forEach(tool => {
+            const toolCard = $('<a>')
+              .attr('href', `tools/${tool.directory}/${tool.directory}.html`)
+              .addClass('tool-card');
+
+            const iconMap = {
+              'jmh-visualizer': '📊',
+              'pixel-logo': '🎨'
+            };
+
+            toolCard.html(`
+              <div class="tool-icon">${iconMap[tool.id] || '🔧'}</div>
+              <h3 class="tool-title">${tool.name}</h3>
+              <p class="tool-description">${tool.description}</p>
+              <span class="tool-link">Get Started →</span>
+            `);
+
+            toolsGrid.append(toolCard);
+          });
+        } else {
+          // 如果没有加载到工具信息，不做任何操作，保持静态内容
+          console.log('No tools loaded, keeping static content');
+        }
+      });
     });
-  </script>
+    </script>
 </body>
 </html>

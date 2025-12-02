@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pixel Logo Maker - fs-tools</title>
   <link rel="stylesheet" href="pixel-logo.css">
-  <link rel="stylesheet" href="../js/jquery-ui.min.css">
+  <link rel="stylesheet" href="../common/jquery-ui.min.css">
+  <script src="../common/jquery-3.7.1.min.js"></script>
+  <script src="../tools.js"></script>
 </head>
 <body>
   <div class="container">
@@ -66,11 +68,30 @@
   </div>
 
   <footer>
-    <p>powered by <strong>fs-tools</strong> and created by fs-tools</p>
+    <p>Powered by <strong>fs-tools</strong> and <span id="footer-author"></span></p>
   </footer>
 
-  <script src="../js/jquery-3.7.1.min.js"></script>
-  <script src="../js/jquery-ui.min.js"></script>
+  <script src="../common/jquery-ui.min.js"></script>
   <script src="pixel-logo.js"></script>
+
+  <script>
+    // 显示页脚作者信息
+    $(document).ready(() => {
+      console.log('jQuery loaded:', typeof $ !== 'undefined');
+      console.log('fsTools loaded:', typeof fsTools !== 'undefined');
+
+      // 默认作者信息（降级方案）
+      const defaultAuthor = 'sunqian, DeepSeek-V3.1';
+
+      // 只获取当前工具(pixel-logo)的作者信息，每个工具只获取一次并缓存
+      fsTools.getToolAuthorAsync('pixel-logo', function(authorInfo) {
+        console.log('Author info received for pixel-logo:', authorInfo);
+        // 处理可能的空作者信息，为空时使用默认作者
+        const finalAuthor = authorInfo || defaultAuthor;
+        console.log('Setting author info:', finalAuthor);
+        $('#footer-author').text(finalAuthor);
+      });
+    });
+  </script>
 </body>
 </html>
