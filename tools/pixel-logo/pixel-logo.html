@@ -1,99 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pixel Logo Maker - fs-tools</title>
-  <link rel="stylesheet" href="pixel-logo.css">
-  <link rel="stylesheet" href="../../libs/jquery-ui.min.css">
-  <link rel="stylesheet" href="../../libs/logger.css">
-  <script src="../../libs/jquery-3.7.1.min.js"></script>
-  <script src="../../libs/logger.js"></script>
-  <script src="../../libs/tools.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Logo Maker</title>
+    <link rel="stylesheet" href="../../libs/jquery-ui.min.css">
+    <link rel="stylesheet" href="../../libs/logger.css">
+    <link rel="stylesheet" href="pixel-logo.css">
+    <script src="../../libs/jquery-3.7.1.min.js"></script>
+    <script src="../../libs/jquery-ui.min.js"></script>
+    <script src="../../libs/logger.js"></script>
+    <script src="../../libs/tools.js"></script>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Pixel Logo Maker</h1>
-      <div class="toolbar">
-        <div class="tool-group">
-          <label for="canvasSize">Canvas Size:</label>
-          <select id="canvasSize">
-            <option value="16">16×16</option>
-            <option value="32" selected>32×32</option>
-            <option value="64">64×64</option>
-          </select>
-        </div>
-
-        <div class="tool-group">
-          <label for="colorPicker">Color:</label>
-          <input type="color" id="colorPicker" value="#000000">
-        </div>
-
-        <div class="tool-group">
-          <button id="pencilBtn" class="tool-btn active" title="Pencil">Pencil</button>
-          <button id="eraserBtn" class="tool-btn" title="Eraser">Eraser</button>
-          <button id="clearBtn" class="tool-btn" title="Clear Canvas">Clear</button>
-        </div>
-
-        <div class="tool-group">
-          <button id="importBtn" class="tool-btn" title="Import Image">Import</button>
-          <input type="file" id="imageInput" accept="image/*" style="display: none;">
-        </div>
-      </div>
-    </header>
+    <div class="container">
+        <header class="header">
+            <div style="position: relative; text-align: center; min-height: 100px;">
+                <h1>Pixel Logo Maker</h1>
+                <p class="subtitle" style="margin-bottom: 20px;">Create your own pixel art logo with ease!</p>
+                <p id="author-info" class="author-info" style="margin-top: 15px; text-align: left; margin-left: 61.8%; font-size: 0.9rem; opacity: 0.9;"></p>
+            </div>
+        </header>
 
     <main>
-      <div class="workspace">
-        <div class="canvas-container">
-          <canvas id="pixelCanvas"></canvas>
-        </div>
+        <div class="tool-container">
+            <div class="tool-controls">
+                <div class="control-group">
+                    <label for="canvas-size">Canvas Size:</label>
+                    <select id="canvas-size">
+                        <option value="32">32 x 32</option>
+                        <option value="64" selected>64 x 64</option>
+                    </select>
+                    <button id="clear-canvas">Clear Canvas</button>
+                </div>
 
-        <div class="preview">
-          <h3>Preview</h3>
-          <div id="previewArea"></div>
-        </div>
-      </div>
+                <div class="control-group">
+                    <label for="tool-select">Tool:</label>
+                    <select id="tool-select">
+                        <option value="brush" selected>Brush</option>
+                        <option value="eraser">Eraser</option>
+                    </select>
+                </div>
 
-      <div class="export-section">
-        <h3>Export</h3>
-        <div class="export-options">
-          <button id="exportSvgBtn">Export as SVG</button>
-          <button id="exportMarkdownBtn">Export as Markdown</button>
+                <div class="control-group">
+                    <label for="color-picker">Color:</label>
+                    <input type="color" id="color-picker" value="#000000">
+                </div>
+
+                <div class="palette">
+                    <label>Quick Colors:</label>
+                    <div class="color-palette">
+                        <div class="color-swatch" data-color="#000000"></div>
+                        <div class="color-swatch" data-color="#FFFFFF"></div>
+                        <div class="color-swatch" data-color="#FF0000"></div>
+                        <div class="color-swatch" data-color="#00FF00"></div>
+                        <div class="color-swatch" data-color="#0000FF"></div>
+                        <div class="color-swatch" data-color="#FFFF00"></div>
+                        <div class="color-swatch" data-color="#FF00FF"></div>
+                        <div class="color-swatch" data-color="#00FFFF"></div>
+                    </div>
+                </div>
+
+                <div class="image-import">
+                    <label for="image-import">Import Image:</label>
+                    <div class="drop-area" id="drop-area">
+                        <p>Drop image here or click to select</p>
+                        <input type="file" id="image-import" accept="image/*" style="display: none;">
+                    </div>
+                    <label for="pixel-size">Pixel Size for Import:</label>
+                    <input type="range" id="pixel-size" min="1" max="16" value="8">
+                    <span id="pixel-size-value">8</span>
+                </div>
+
+                <div class="export-options">
+                    <button id="export-svg">Export as SVG</button>
+                    <button id="export-markdown">Export as Markdown</button>
+                    <button id="download-image">Download Image</button>
+                </div>
+            </div>
+
+            <div class="canvas-container">
+                <canvas id="pixel-canvas"></canvas>
+            </div>
+
+            <div class="output-container">
+                <div class="output-tabs">
+                    <button class="tab-btn active" data-tab="svg">SVG Output</button>
+                    <button class="tab-btn" data-tab="markdown">Markdown Output</button>
+                </div>
+                <div class="output-content">
+                    <div id="svg-output" class="output-panel active">
+                        <pre><code></code></pre>
+                        <button class="copy-btn">Copy to Clipboard</button>
+                    </div>
+                    <div id="markdown-output" class="output-panel">
+                        <pre><code></code></pre>
+                        <button class="copy-btn">Copy to Clipboard</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="code-output">
-          <textarea id="codeOutput" readonly placeholder="Generated code will appear here..."></textarea>
-          <button id="copyBtn">Copy Code</button>
-        </div>
-      </div>
     </main>
-  </div>
 
-  <footer>
-    <p>Powered by <strong>fs-tools</strong> and <span id="footer-author"></span></p>
-  </footer>
+        <footer class="footer">
+            <p>Powered by fs-tools and <span id="footer-author"></span></p>
+        </footer>
+    </div>
 
-  <script src="pixel-logo.js"></script>
+    <script src="pixel-logo.js"></script>
 
-  <script>
-    // 显示页脚作者信息
-    $(document).ready(() => {
-      fsLogger.debug('jQuery loaded:', typeof $ !== 'undefined');
-      fsLogger.debug('fsTools loaded:', typeof fsTools !== 'undefined');
-      fsLogger.debug('fsLogger loaded:', typeof fsLogger !== 'undefined');
-
-      // 默认作者信息（降级方案）
-      const defaultAuthor = 'sunqian, DeepSeek-V3.1';
-
-      // 只获取当前工具(pixel-logo)的作者信息，每个工具只获取一次并缓存
-      fsTools.getToolAuthorAsync('pixel-logo', function(authorInfo) {
-        fsLogger.debug('Author info received for pixel-logo:', authorInfo);
-        // 处理可能的空作者信息，为空时使用默认作者
-        const finalAuthor = authorInfo || defaultAuthor;
-        fsLogger.debug('Setting author info:', finalAuthor);
-        $('#footer-author').text(finalAuthor);
-      });
-    });
+    <script>
+        // 显示作者信息
+        $(document).ready(() => {
+            // 获取当前工具(pixel-logo)的作者信息
+            fsTools.getToolAuthorAsync('pixel-logo', function(author) {
+                if (author) {
+                    $('#author-info').text('Author: ' + author);
+                    const footerAuthor = document.getElementById('footer-author');
+                    if (footerAuthor) {
+                        footerAuthor.textContent = author;
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
