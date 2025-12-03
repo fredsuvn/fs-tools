@@ -4,51 +4,63 @@
         "benchmark" : "internal.tests.benchmarks.AspectBenchmark.aspect",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "aspectType" : "fs-asm",
             "withPrimitive" : "true"
         },
         "primaryMetric" : {
-            "score" : 19940.169740523444,
-            "scoreError" : "NaN",
+            "score" : 30151.548525478316,
+            "scoreError" : 309.81006323690957,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                29841.738462241407,
+                30461.358588715226
             ],
             "scorePercentiles" : {
-                "0.0" : 19940.169740523444,
-                "50.0" : 19940.169740523444,
-                "90.0" : 19940.169740523444,
-                "95.0" : 19940.169740523444,
-                "99.0" : 19940.169740523444,
-                "99.9" : 19940.169740523444,
-                "99.99" : 19940.169740523444,
-                "99.999" : 19940.169740523444,
-                "99.9999" : 19940.169740523444,
-                "100.0" : 19940.169740523444
+                "0.0" : 29844.6565157513,
+                "50.0" : 30144.460921764312,
+                "90.0" : 30509.282155772235,
+                "95.0" : 30509.282155772235,
+                "99.0" : 30509.282155772235,
+                "99.9" : 30509.282155772235,
+                "99.99" : 30509.282155772235,
+                "99.999" : 30509.282155772235,
+                "99.9999" : 30509.282155772235,
+                "100.0" : 30509.282155772235
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    19940.169740523444
+                    29844.6565157513,
+                    30057.291738488046,
+                    30193.73927179218
+                ],
+                [
+                    30509.282155772235,
+                    30263.193888027272,
+                    30240.81472403054
+                ],
+                [
+                    30144.460921764312,
+                    30061.019408189914,
+                    30049.478105489066
                 ]
             ]
         },
@@ -60,51 +72,63 @@
         "benchmark" : "internal.tests.benchmarks.AspectBenchmark.aspect",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "aspectType" : "fs-asm",
             "withPrimitive" : "false"
         },
         "primaryMetric" : {
-            "score" : 12137.240583632454,
-            "scoreError" : "NaN",
+            "score" : 18097.170775450828,
+            "scoreError" : 437.9022524806591,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                17659.268522970167,
+                18535.07302793149
             ],
             "scorePercentiles" : {
-                "0.0" : 12137.240583632454,
-                "50.0" : 12137.240583632454,
-                "90.0" : 12137.240583632454,
-                "95.0" : 12137.240583632454,
-                "99.0" : 12137.240583632454,
-                "99.9" : 12137.240583632454,
-                "99.99" : 12137.240583632454,
-                "99.999" : 12137.240583632454,
-                "99.9999" : 12137.240583632454,
-                "100.0" : 12137.240583632454
+                "0.0" : 17656.294389201594,
+                "50.0" : 18227.8832825316,
+                "90.0" : 18356.274390656134,
+                "95.0" : 18356.274390656134,
+                "99.0" : 18356.274390656134,
+                "99.9" : 18356.274390656134,
+                "99.99" : 18356.274390656134,
+                "99.999" : 18356.274390656134,
+                "99.9999" : 18356.274390656134,
+                "100.0" : 18356.274390656134
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    12137.240583632454
+                    18356.274390656134,
+                    18289.01714660381,
+                    18308.00737662843
+                ],
+                [
+                    18227.8832825316,
+                    18237.23381920441,
+                    18150.025738044158
+                ],
+                [
+                    17904.67586138759,
+                    17745.124974799714,
+                    17656.294389201594
                 ]
             ]
         },
@@ -116,51 +140,63 @@
         "benchmark" : "internal.tests.benchmarks.AspectBenchmark.aspect",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "aspectType" : "direct",
             "withPrimitive" : "true"
         },
         "primaryMetric" : {
-            "score" : 25292.26184839662,
-            "scoreError" : "NaN",
+            "score" : 35804.61683715951,
+            "scoreError" : 1993.724411726789,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                33810.89242543272,
+                37798.3412488863
             ],
             "scorePercentiles" : {
-                "0.0" : 25292.26184839662,
-                "50.0" : 25292.26184839662,
-                "90.0" : 25292.26184839662,
-                "95.0" : 25292.26184839662,
-                "99.0" : 25292.26184839662,
-                "99.9" : 25292.26184839662,
-                "99.99" : 25292.26184839662,
-                "99.999" : 25292.26184839662,
-                "99.9999" : 25292.26184839662,
-                "100.0" : 25292.26184839662
+                "0.0" : 34199.67338881867,
+                "50.0" : 36388.35072115659,
+                "90.0" : 36886.967532173,
+                "95.0" : 36886.967532173,
+                "99.0" : 36886.967532173,
+                "99.9" : 36886.967532173,
+                "99.99" : 36886.967532173,
+                "99.999" : 36886.967532173,
+                "99.9999" : 36886.967532173,
+                "100.0" : 36886.967532173
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    25292.26184839662
+                    36533.89606718063,
+                    36388.35072115659,
+                    36386.81549827587
+                ],
+                [
+                    34199.67338881867,
+                    34252.89432256332,
+                    34258.45263495254
+                ],
+                [
+                    36886.967532173,
+                    36754.937635172995,
+                    36579.563734142015
                 ]
             ]
         },
@@ -172,51 +208,63 @@
         "benchmark" : "internal.tests.benchmarks.AspectBenchmark.aspect",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "aspectType" : "direct",
             "withPrimitive" : "false"
         },
         "primaryMetric" : {
-            "score" : 13243.135160405132,
-            "scoreError" : "NaN",
+            "score" : 19474.154055434625,
+            "scoreError" : 1006.5669694234117,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                18467.58708601121,
+                20480.721024858038
             ],
             "scorePercentiles" : {
-                "0.0" : 13243.135160405132,
-                "50.0" : 13243.135160405132,
-                "90.0" : 13243.135160405132,
-                "95.0" : 13243.135160405132,
-                "99.0" : 13243.135160405132,
-                "99.9" : 13243.135160405132,
-                "99.99" : 13243.135160405132,
-                "99.999" : 13243.135160405132,
-                "99.9999" : 13243.135160405132,
-                "100.0" : 13243.135160405132
+                "0.0" : 18978.502727745647,
+                "50.0" : 19154.31223933586,
+                "90.0" : 20389.871510474215,
+                "95.0" : 20389.871510474215,
+                "99.0" : 20389.871510474215,
+                "99.9" : 20389.871510474215,
+                "99.99" : 20389.871510474215,
+                "99.999" : 20389.871510474215,
+                "99.9999" : 20389.871510474215,
+                "100.0" : 20389.871510474215
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    13243.135160405132
+                    20211.007638754763,
+                    20389.871510474215,
+                    20193.970156404725
+                ],
+                [
+                    19128.835098126772,
+                    19045.08418892619,
+                    18978.502727745647
+                ],
+                [
+                    19154.31223933586,
+                    19164.236447203868,
+                    19001.566491939586
                 ]
             ]
         },
@@ -228,50 +276,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "fs-simpleWeak"
         },
         "primaryMetric" : {
-            "score" : 74406.72764193494,
-            "scoreError" : "NaN",
+            "score" : 99044.67695689035,
+            "scoreError" : 23473.511906479467,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                75571.16505041088,
+                122518.18886336983
             ],
             "scorePercentiles" : {
-                "0.0" : 74406.72764193494,
-                "50.0" : 74406.72764193494,
-                "90.0" : 74406.72764193494,
-                "95.0" : 74406.72764193494,
-                "99.0" : 74406.72764193494,
-                "99.9" : 74406.72764193494,
-                "99.99" : 74406.72764193494,
-                "99.999" : 74406.72764193494,
-                "99.9999" : 74406.72764193494,
-                "100.0" : 74406.72764193494
+                "0.0" : 74539.69265760315,
+                "50.0" : 95684.45559832924,
+                "90.0" : 115782.00356711228,
+                "95.0" : 115782.00356711228,
+                "99.0" : 115782.00356711228,
+                "99.9" : 115782.00356711228,
+                "99.99" : 115782.00356711228,
+                "99.999" : 115782.00356711228,
+                "99.9999" : 115782.00356711228,
+                "100.0" : 115782.00356711228
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    74406.72764193494
+                    97471.04420412124,
+                    88745.59734299939,
+                    95684.45559832924
+                ],
+                [
+                    115782.00356711228,
+                    114645.57562267152,
+                    115573.38833362337
+                ],
+                [
+                    74539.69265760315,
+                    93414.25723650969,
+                    95546.0780490433
                 ]
             ]
         },
@@ -283,50 +343,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "fs-simpleSoft"
         },
         "primaryMetric" : {
-            "score" : 65806.89427257952,
-            "scoreError" : "NaN",
+            "score" : 82891.40296237706,
+            "scoreError" : 28817.381306858195,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                54074.02165551887,
+                111708.78426923526
             ],
             "scorePercentiles" : {
-                "0.0" : 65806.89427257952,
-                "50.0" : 65806.89427257952,
-                "90.0" : 65806.89427257952,
-                "95.0" : 65806.89427257952,
-                "99.0" : 65806.89427257952,
-                "99.9" : 65806.89427257952,
-                "99.99" : 65806.89427257952,
-                "99.999" : 65806.89427257952,
-                "99.9999" : 65806.89427257952,
-                "100.0" : 65806.89427257952
+                "0.0" : 53806.07349683834,
+                "50.0" : 85480.55691249302,
+                "90.0" : 101955.39739688764,
+                "95.0" : 101955.39739688764,
+                "99.0" : 101955.39739688764,
+                "99.9" : 101955.39739688764,
+                "99.99" : 101955.39739688764,
+                "99.999" : 101955.39739688764,
+                "99.9999" : 101955.39739688764,
+                "100.0" : 101955.39739688764
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    65806.89427257952
+                    96675.06229717024,
+                    101955.39739688764,
+                    101822.114367604
+                ],
+                [
+                    62025.89379486029,
+                    53806.07349683834,
+                    71719.10249613508
+                ],
+                [
+                    85480.55691249302,
+                    84660.7862753694,
+                    87877.63962403566
                 ]
             ]
         },
@@ -338,50 +410,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "caffeineWeak"
         },
         "primaryMetric" : {
-            "score" : 46663.83088183348,
-            "scoreError" : "NaN",
+            "score" : 70833.03326268884,
+            "scoreError" : 5206.677024772634,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                65626.3562379162,
+                76039.71028746148
             ],
             "scorePercentiles" : {
-                "0.0" : 46663.83088183348,
-                "50.0" : 46663.83088183348,
-                "90.0" : 46663.83088183348,
-                "95.0" : 46663.83088183348,
-                "99.0" : 46663.83088183348,
-                "99.9" : 46663.83088183348,
-                "99.99" : 46663.83088183348,
-                "99.999" : 46663.83088183348,
-                "99.9999" : 46663.83088183348,
-                "100.0" : 46663.83088183348
+                "0.0" : 65116.146276200685,
+                "50.0" : 71402.33722000242,
+                "90.0" : 74724.97723245044,
+                "95.0" : 74724.97723245044,
+                "99.0" : 74724.97723245044,
+                "99.9" : 74724.97723245044,
+                "99.99" : 74724.97723245044,
+                "99.999" : 74724.97723245044,
+                "99.9999" : 74724.97723245044,
+                "100.0" : 74724.97723245044
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    46663.83088183348
+                    71402.33722000242,
+                    67073.36623359895,
+                    71076.70448622729
+                ],
+                [
+                    73272.14060340723,
+                    69502.51432885784,
+                    65116.146276200685
+                ],
+                [
+                    74724.97723245044,
+                    72774.26488894798,
+                    72554.84809450663
                 ]
             ]
         },
@@ -393,50 +477,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "caffeineSoft"
         },
         "primaryMetric" : {
-            "score" : 46584.22223726706,
-            "scoreError" : "NaN",
+            "score" : 67364.36930584167,
+            "scoreError" : 2079.8174989868903,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                65284.551806854775,
+                69444.18680482855
             ],
             "scorePercentiles" : {
-                "0.0" : 46584.22223726706,
-                "50.0" : 46584.22223726706,
-                "90.0" : 46584.22223726706,
-                "95.0" : 46584.22223726706,
-                "99.0" : 46584.22223726706,
-                "99.9" : 46584.22223726706,
-                "99.99" : 46584.22223726706,
-                "99.999" : 46584.22223726706,
-                "99.9999" : 46584.22223726706,
-                "100.0" : 46584.22223726706
+                "0.0" : 65558.44370692679,
+                "50.0" : 67142.70617067472,
+                "90.0" : 69023.01860897266,
+                "95.0" : 69023.01860897266,
+                "99.0" : 69023.01860897266,
+                "99.9" : 69023.01860897266,
+                "99.99" : 69023.01860897266,
+                "99.999" : 69023.01860897266,
+                "99.9999" : 69023.01860897266,
+                "100.0" : 69023.01860897266
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    46584.22223726706
+                    66189.76412077017,
+                    67391.621466609,
+                    66883.80916669042
+                ],
+                [
+                    68764.49567986977,
+                    68767.9801996818,
+                    69023.01860897266
+                ],
+                [
+                    67142.70617067472,
+                    66557.48463237968,
+                    65558.44370692679
                 ]
             ]
         },
@@ -448,50 +544,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "caffeine"
         },
         "primaryMetric" : {
-            "score" : 3650.781595910705,
-            "scoreError" : "NaN",
+            "score" : 4870.792026517001,
+            "scoreError" : 271.1136241405538,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                4599.678402376448,
+                5141.905650657555
             ],
             "scorePercentiles" : {
-                "0.0" : 3650.781595910705,
-                "50.0" : 3650.781595910705,
-                "90.0" : 3650.781595910705,
-                "95.0" : 3650.781595910705,
-                "99.0" : 3650.781595910705,
-                "99.9" : 3650.781595910705,
-                "99.99" : 3650.781595910705,
-                "99.999" : 3650.781595910705,
-                "99.9999" : 3650.781595910705,
-                "100.0" : 3650.781595910705
+                "0.0" : 4641.219054970205,
+                "50.0" : 4893.919335619424,
+                "90.0" : 5115.348790377184,
+                "95.0" : 5115.348790377184,
+                "99.0" : 5115.348790377184,
+                "99.9" : 5115.348790377184,
+                "99.99" : 5115.348790377184,
+                "99.999" : 5115.348790377184,
+                "99.9999" : 5115.348790377184,
+                "100.0" : 5115.348790377184
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    3650.781595910705
+                    4893.919335619424,
+                    5115.348790377184,
+                    5057.378906325546
+                ],
+                [
+                    4902.478618919591,
+                    4839.02608490649,
+                    4954.40238059973
+                ],
+                [
+                    4672.71644965732,
+                    4641.219054970205,
+                    4760.638617277525
                 ]
             ]
         },
@@ -503,50 +611,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "guavaWeak"
         },
         "primaryMetric" : {
-            "score" : 30510.81926841417,
-            "scoreError" : "NaN",
+            "score" : 63222.091993847745,
+            "scoreError" : 1624.3333000885898,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                61597.758693759155,
+                64846.425293936336
             ],
             "scorePercentiles" : {
-                "0.0" : 30510.81926841417,
-                "50.0" : 30510.81926841417,
-                "90.0" : 30510.81926841417,
-                "95.0" : 30510.81926841417,
-                "99.0" : 30510.81926841417,
-                "99.9" : 30510.81926841417,
-                "99.99" : 30510.81926841417,
-                "99.999" : 30510.81926841417,
-                "99.9999" : 30510.81926841417,
-                "100.0" : 30510.81926841417
+                "0.0" : 61257.12143705741,
+                "50.0" : 63516.76279544881,
+                "90.0" : 64333.34481808195,
+                "95.0" : 64333.34481808195,
+                "99.0" : 64333.34481808195,
+                "99.9" : 64333.34481808195,
+                "99.99" : 64333.34481808195,
+                "99.999" : 64333.34481808195,
+                "99.9999" : 64333.34481808195,
+                "100.0" : 64333.34481808195
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    30510.81926841417
+                    63797.39771241901,
+                    63516.76279544881,
+                    63986.05881701896
+                ],
+                [
+                    64333.34481808195,
+                    63259.949622455264,
+                    63804.96543640597
+                ],
+                [
+                    61257.12143705741,
+                    62687.13141331459,
+                    62356.09589242777
                 ]
             ]
         },
@@ -558,50 +678,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "guavaSoft"
         },
         "primaryMetric" : {
-            "score" : 44413.15570598552,
-            "scoreError" : "NaN",
+            "score" : 56777.53785560258,
+            "scoreError" : 3870.9489735020693,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                52906.588882100514,
+                60648.48682910465
             ],
             "scorePercentiles" : {
-                "0.0" : 44413.15570598552,
-                "50.0" : 44413.15570598552,
-                "90.0" : 44413.15570598552,
-                "95.0" : 44413.15570598552,
-                "99.0" : 44413.15570598552,
-                "99.9" : 44413.15570598552,
-                "99.99" : 44413.15570598552,
-                "99.999" : 44413.15570598552,
-                "99.9999" : 44413.15570598552,
-                "100.0" : 44413.15570598552
+                "0.0" : 51496.26115682726,
+                "50.0" : 56836.11243543919,
+                "90.0" : 59108.69716543539,
+                "95.0" : 59108.69716543539,
+                "99.0" : 59108.69716543539,
+                "99.9" : 59108.69716543539,
+                "99.99" : 59108.69716543539,
+                "99.999" : 59108.69716543539,
+                "99.9999" : 59108.69716543539,
+                "100.0" : 59108.69716543539
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    44413.15570598552
+                    51496.26115682726,
+                    56472.466616914004,
+                    56678.69628316178
+                ],
+                [
+                    58867.880970259386,
+                    57451.05660215346,
+                    59108.69716543539
+                ],
+                [
+                    56836.11243543919,
+                    58466.964763400276,
+                    55619.7047068325
                 ]
             ]
         },
@@ -613,50 +745,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "guava"
         },
         "primaryMetric" : {
-            "score" : 1616.6301010656603,
-            "scoreError" : "NaN",
+            "score" : 2225.1671837512567,
+            "scoreError" : 270.75793346482834,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                1954.4092502864285,
+                2495.9251172160853
             ],
             "scorePercentiles" : {
-                "0.0" : 1616.6301010656603,
-                "50.0" : 1616.6301010656603,
-                "90.0" : 1616.6301010656603,
-                "95.0" : 1616.6301010656603,
-                "99.0" : 1616.6301010656603,
-                "99.9" : 1616.6301010656603,
-                "99.99" : 1616.6301010656603,
-                "99.999" : 1616.6301010656603,
-                "99.9999" : 1616.6301010656603,
-                "100.0" : 1616.6301010656603
+                "0.0" : 1953.677302449072,
+                "50.0" : 2282.1888131956985,
+                "90.0" : 2404.4263935616755,
+                "95.0" : 2404.4263935616755,
+                "99.0" : 2404.4263935616755,
+                "99.9" : 2404.4263935616755,
+                "99.99" : 2404.4263935616755,
+                "99.999" : 2404.4263935616755,
+                "99.9999" : 2404.4263935616755,
+                "100.0" : 2404.4263935616755
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    1616.6301010656603
+                    2017.6313531446142,
+                    2101.709615735137,
+                    1953.677302449072
+                ],
+                [
+                    2404.4263935616755,
+                    2364.755575681809,
+                    2310.4161581330272
+                ],
+                [
+                    2337.9059611675502,
+                    2253.7934806927215,
+                    2282.1888131956985
                 ]
             ]
         },
@@ -668,50 +812,62 @@
         "benchmark" : "internal.tests.benchmarks.CacheBenchmark.computeIfAbsent",
         "mode" : "thrpt",
         "threads" : 8,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "cacheType" : "concurrentHashMap"
         },
         "primaryMetric" : {
-            "score" : 86262.06491120285,
-            "scoreError" : "NaN",
+            "score" : 102606.45274491393,
+            "scoreError" : 78053.59722510187,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                24552.85551981206,
+                180660.0499700158
             ],
             "scorePercentiles" : {
-                "0.0" : 86262.06491120285,
-                "50.0" : 86262.06491120285,
-                "90.0" : 86262.06491120285,
-                "95.0" : 86262.06491120285,
-                "99.0" : 86262.06491120285,
-                "99.9" : 86262.06491120285,
-                "99.99" : 86262.06491120285,
-                "99.999" : 86262.06491120285,
-                "99.9999" : 86262.06491120285,
-                "100.0" : 86262.06491120285
+                "0.0" : 86.41131770251319,
+                "50.0" : 116107.0699239396,
+                "90.0" : 151348.22250218835,
+                "95.0" : 151348.22250218835,
+                "99.0" : 151348.22250218835,
+                "99.9" : 151348.22250218835,
+                "99.99" : 151348.22250218835,
+                "99.999" : 151348.22250218835,
+                "99.9999" : 151348.22250218835,
+                "100.0" : 151348.22250218835
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    86262.06491120285
+                    125218.43689215128,
+                    134825.38485287165,
+                    132005.78444722842
+                ],
+                [
+                    151348.22250218835,
+                    86.41131770251319,
+                    61773.138338719764
+                ],
+                [
+                    108305.2936750296,
+                    116107.0699239396,
+                    93788.33275439416
                 ]
             ]
         },
@@ -723,50 +879,62 @@
         "benchmark" : "internal.tests.benchmarks.CopyPropertiesBenchmark.copyProperties",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "copierType" : "fs"
         },
         "primaryMetric" : {
-            "score" : 2660.378674791611,
-            "scoreError" : "NaN",
+            "score" : 4344.84363180111,
+            "scoreError" : 89.58907684553888,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                4255.254554955571,
+                4434.432708646649
             ],
             "scorePercentiles" : {
-                "0.0" : 2660.378674791611,
-                "50.0" : 2660.378674791611,
-                "90.0" : 2660.378674791611,
-                "95.0" : 2660.378674791611,
-                "99.0" : 2660.378674791611,
-                "99.9" : 2660.378674791611,
-                "99.99" : 2660.378674791611,
-                "99.999" : 2660.378674791611,
-                "99.9999" : 2660.378674791611,
-                "100.0" : 2660.378674791611
+                "0.0" : 4288.4137313734755,
+                "50.0" : 4328.863739895891,
+                "90.0" : 4422.10764096593,
+                "95.0" : 4422.10764096593,
+                "99.0" : 4422.10764096593,
+                "99.9" : 4422.10764096593,
+                "99.99" : 4422.10764096593,
+                "99.999" : 4422.10764096593,
+                "99.9999" : 4422.10764096593,
+                "100.0" : 4422.10764096593
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    2660.378674791611
+                    4300.244307802719,
+                    4288.890549208562,
+                    4288.4137313734755
+                ],
+                [
+                    4316.227617735892,
+                    4328.863739895891,
+                    4422.10764096593
+                ],
+                [
+                    4411.877382948306,
+                    4398.5441552236325,
+                    4348.423561055576
                 ]
             ]
         },
@@ -778,50 +946,62 @@
         "benchmark" : "internal.tests.benchmarks.CopyPropertiesBenchmark.copyProperties",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "copierType" : "apache"
         },
         "primaryMetric" : {
-            "score" : 142.06071385914882,
-            "scoreError" : "NaN",
+            "score" : 190.2573642965979,
+            "scoreError" : 7.060994467233107,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                183.19636982936478,
+                197.31835876383101
             ],
             "scorePercentiles" : {
-                "0.0" : 142.06071385914882,
-                "50.0" : 142.06071385914882,
-                "90.0" : 142.06071385914882,
-                "95.0" : 142.06071385914882,
-                "99.0" : 142.06071385914882,
-                "99.9" : 142.06071385914882,
-                "99.99" : 142.06071385914882,
-                "99.999" : 142.06071385914882,
-                "99.9999" : 142.06071385914882,
-                "100.0" : 142.06071385914882
+                "0.0" : 183.5522149261691,
+                "50.0" : 191.82057902461182,
+                "90.0" : 194.6373220048375,
+                "95.0" : 194.6373220048375,
+                "99.0" : 194.6373220048375,
+                "99.9" : 194.6373220048375,
+                "99.99" : 194.6373220048375,
+                "99.999" : 194.6373220048375,
+                "99.9999" : 194.6373220048375,
+                "100.0" : 194.6373220048375
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    142.06071385914882
+                    193.22424945595805,
+                    194.6373220048375,
+                    193.75823004004215
+                ],
+                [
+                    192.63050990632644,
+                    191.82057902461182,
+                    191.74466009928156
+                ],
+                [
+                    185.44783323946996,
+                    185.50067997268448,
+                    183.5522149261691
                 ]
             ]
         },
@@ -833,50 +1013,62 @@
         "benchmark" : "internal.tests.benchmarks.CopyPropertiesBenchmark.copyProperties",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "copierType" : "hutool"
         },
         "primaryMetric" : {
-            "score" : 287.35985461486297,
-            "scoreError" : "NaN",
+            "score" : 401.70736267786344,
+            "scoreError" : 11.941294081852988,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                389.7660685960104,
+                413.64865675971646
             ],
             "scorePercentiles" : {
-                "0.0" : 287.35985461486297,
-                "50.0" : 287.35985461486297,
-                "90.0" : 287.35985461486297,
-                "95.0" : 287.35985461486297,
-                "99.0" : 287.35985461486297,
-                "99.9" : 287.35985461486297,
-                "99.99" : 287.35985461486297,
-                "99.999" : 287.35985461486297,
-                "99.9999" : 287.35985461486297,
-                "100.0" : 287.35985461486297
+                "0.0" : 392.13205183134386,
+                "50.0" : 404.8886728990408,
+                "90.0" : 409.53684258661804,
+                "95.0" : 409.53684258661804,
+                "99.0" : 409.53684258661804,
+                "99.9" : 409.53684258661804,
+                "99.99" : 409.53684258661804,
+                "99.999" : 409.53684258661804,
+                "99.9999" : 409.53684258661804,
+                "100.0" : 409.53684258661804
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    287.35985461486297
+                    407.55759361376596,
+                    409.53684258661804,
+                    404.8886728990408
+                ],
+                [
+                    395.8279323903535,
+                    392.25374631995004,
+                    392.13205183134386
+                ],
+                [
+                    405.7657782058193,
+                    398.3040539482265,
+                    409.0995923056529
                 ]
             ]
         },
@@ -888,51 +1080,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "byReflect",
             "methodType" : "static"
         },
         "primaryMetric" : {
-            "score" : 12939.785489173197,
-            "scoreError" : "NaN",
+            "score" : 18934.58549836645,
+            "scoreError" : 1220.5776394764223,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                17714.00785889003,
+                20155.163137842872
             ],
             "scorePercentiles" : {
-                "0.0" : 12939.785489173197,
-                "50.0" : 12939.785489173197,
-                "90.0" : 12939.785489173197,
-                "95.0" : 12939.785489173197,
-                "99.0" : 12939.785489173197,
-                "99.9" : 12939.785489173197,
-                "99.99" : 12939.785489173197,
-                "99.999" : 12939.785489173197,
-                "99.9999" : 12939.785489173197,
-                "100.0" : 12939.785489173197
+                "0.0" : 18055.09355263688,
+                "50.0" : 18894.251924024928,
+                "90.0" : 19857.095888544347,
+                "95.0" : 19857.095888544347,
+                "99.0" : 19857.095888544347,
+                "99.9" : 19857.095888544347,
+                "99.99" : 19857.095888544347,
+                "99.999" : 19857.095888544347,
+                "99.9999" : 19857.095888544347,
+                "100.0" : 19857.095888544347
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    12939.785489173197
+                    18894.251924024928,
+                    18744.673045888645,
+                    18940.390040952872
+                ],
+                [
+                    18168.45808310611,
+                    18055.09355263688,
+                    18195.490899202483
+                ],
+                [
+                    19815.147673346914,
+                    19857.095888544347,
+                    19740.668377594844
                 ]
             ]
         },
@@ -944,51 +1148,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "byReflect",
             "methodType" : "instance"
         },
         "primaryMetric" : {
-            "score" : 11442.554494970454,
-            "scoreError" : "NaN",
+            "score" : 19473.94577549206,
+            "scoreError" : 424.40551016331557,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                19049.540265328742,
+                19898.351285655375
             ],
             "scorePercentiles" : {
-                "0.0" : 11442.554494970454,
-                "50.0" : 11442.554494970454,
-                "90.0" : 11442.554494970454,
-                "95.0" : 11442.554494970454,
-                "99.0" : 11442.554494970454,
-                "99.9" : 11442.554494970454,
-                "99.99" : 11442.554494970454,
-                "99.999" : 11442.554494970454,
-                "99.9999" : 11442.554494970454,
-                "100.0" : 11442.554494970454
+                "0.0" : 19079.209975587313,
+                "50.0" : 19600.005190995354,
+                "90.0" : 19760.959577182442,
+                "95.0" : 19760.959577182442,
+                "99.0" : 19760.959577182442,
+                "99.9" : 19760.959577182442,
+                "99.99" : 19760.959577182442,
+                "99.999" : 19760.959577182442,
+                "99.9999" : 19760.959577182442,
+                "100.0" : 19760.959577182442
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    11442.554494970454
+                    19079.209975587313,
+                    19157.459453815758,
+                    19204.62186888897
+                ],
+                [
+                    19600.005190995354,
+                    19573.920739539026,
+                    19614.465632443655
+                ],
+                [
+                    19760.959577182442,
+                    19649.653878785844,
+                    19625.215662190163
                 ]
             ]
         },
@@ -1000,51 +1216,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "byAsm",
             "methodType" : "static"
         },
         "primaryMetric" : {
-            "score" : 13614.868558793187,
-            "scoreError" : "NaN",
+            "score" : 19879.89532242074,
+            "scoreError" : 419.3800034231014,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                19460.515318997637,
+                20299.275325843842
             ],
             "scorePercentiles" : {
-                "0.0" : 13614.868558793187,
-                "50.0" : 13614.868558793187,
-                "90.0" : 13614.868558793187,
-                "95.0" : 13614.868558793187,
-                "99.0" : 13614.868558793187,
-                "99.9" : 13614.868558793187,
-                "99.99" : 13614.868558793187,
-                "99.999" : 13614.868558793187,
-                "99.9999" : 13614.868558793187,
-                "100.0" : 13614.868558793187
+                "0.0" : 19475.058338995303,
+                "50.0" : 19910.782284419976,
+                "90.0" : 20226.107890439358,
+                "95.0" : 20226.107890439358,
+                "99.0" : 20226.107890439358,
+                "99.9" : 20226.107890439358,
+                "99.99" : 20226.107890439358,
+                "99.999" : 20226.107890439358,
+                "99.9999" : 20226.107890439358,
+                "100.0" : 20226.107890439358
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    13614.868558793187
+                    20030.795539825795,
+                    19475.058338995303,
+                    20226.107890439358
+                ],
+                [
+                    20112.55783136022,
+                    20022.870629704074,
+                    19910.782284419976
+                ],
+                [
+                    19708.37071576268,
+                    19845.16912329736,
+                    19587.34554798187
                 ]
             ]
         },
@@ -1056,51 +1284,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "byAsm",
             "methodType" : "instance"
         },
         "primaryMetric" : {
-            "score" : 13761.303695835764,
-            "scoreError" : "NaN",
+            "score" : 19638.985449967528,
+            "scoreError" : 293.8592539061419,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                19345.126196061385,
+                19932.84470387367
             ],
             "scorePercentiles" : {
-                "0.0" : 13761.303695835764,
-                "50.0" : 13761.303695835764,
-                "90.0" : 13761.303695835764,
-                "95.0" : 13761.303695835764,
-                "99.0" : 13761.303695835764,
-                "99.9" : 13761.303695835764,
-                "99.99" : 13761.303695835764,
-                "99.999" : 13761.303695835764,
-                "99.9999" : 13761.303695835764,
-                "100.0" : 13761.303695835764
+                "0.0" : 19397.044972365184,
+                "50.0" : 19706.678069617614,
+                "90.0" : 19853.81326626429,
+                "95.0" : 19853.81326626429,
+                "99.0" : 19853.81326626429,
+                "99.9" : 19853.81326626429,
+                "99.99" : 19853.81326626429,
+                "99.999" : 19853.81326626429,
+                "99.9999" : 19853.81326626429,
+                "100.0" : 19853.81326626429
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    13761.303695835764
+                    19853.81326626429,
+                    19792.378062999487,
+                    19591.1172962745
+                ],
+                [
+                    19706.678069617614,
+                    19801.288729879194,
+                    19721.19221356309
+                ],
+                [
+                    19452.607599175477,
+                    19397.044972365184,
+                    19434.748839568892
                 ]
             ]
         },
@@ -1112,51 +1352,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "byMethodHandle",
             "methodType" : "static"
         },
         "primaryMetric" : {
-            "score" : 11931.23429514097,
-            "scoreError" : "NaN",
+            "score" : 18431.306197585258,
+            "scoreError" : 730.7556257315177,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                17700.55057185374,
+                19162.061823316777
             ],
             "scorePercentiles" : {
-                "0.0" : 11931.23429514097,
-                "50.0" : 11931.23429514097,
-                "90.0" : 11931.23429514097,
-                "95.0" : 11931.23429514097,
-                "99.0" : 11931.23429514097,
-                "99.9" : 11931.23429514097,
-                "99.99" : 11931.23429514097,
-                "99.999" : 11931.23429514097,
-                "99.9999" : 11931.23429514097,
-                "100.0" : 11931.23429514097
+                "0.0" : 17483.897317550924,
+                "50.0" : 18432.610762562315,
+                "90.0" : 18902.09148894489,
+                "95.0" : 18902.09148894489,
+                "99.0" : 18902.09148894489,
+                "99.9" : 18902.09148894489,
+                "99.99" : 18902.09148894489,
+                "99.999" : 18902.09148894489,
+                "99.9999" : 18902.09148894489,
+                "100.0" : 18902.09148894489
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    11931.23429514097
+                    18867.55289106596,
+                    18902.09148894489,
+                    18820.036042838736
+                ],
+                [
+                    18382.875905430883,
+                    18432.610762562315,
+                    18290.403718908914
+                ],
+                [
+                    17483.897317550924,
+                    18443.705195755087,
+                    18258.5824552096
                 ]
             ]
         },
@@ -1168,51 +1420,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "byMethodHandle",
             "methodType" : "instance"
         },
         "primaryMetric" : {
-            "score" : 13108.171902754204,
-            "scoreError" : "NaN",
+            "score" : 18635.543881786845,
+            "scoreError" : 599.3995778213811,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                18036.144303965466,
+                19234.943459608225
             ],
             "scorePercentiles" : {
-                "0.0" : 13108.171902754204,
-                "50.0" : 13108.171902754204,
-                "90.0" : 13108.171902754204,
-                "95.0" : 13108.171902754204,
-                "99.0" : 13108.171902754204,
-                "99.9" : 13108.171902754204,
-                "99.99" : 13108.171902754204,
-                "99.999" : 13108.171902754204,
-                "99.9999" : 13108.171902754204,
-                "100.0" : 13108.171902754204
+                "0.0" : 17990.536376569464,
+                "50.0" : 18769.359346972316,
+                "90.0" : 19074.347221119573,
+                "95.0" : 19074.347221119573,
+                "99.0" : 19074.347221119573,
+                "99.9" : 19074.347221119573,
+                "99.99" : 19074.347221119573,
+                "99.999" : 19074.347221119573,
+                "99.9999" : 19074.347221119573,
+                "100.0" : 19074.347221119573
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    13108.171902754204
+                    18512.081004089407,
+                    18333.30536753623,
+                    18362.640664408493
+                ],
+                [
+                    18971.10337537393,
+                    18891.21548105343,
+                    18815.306098958754
+                ],
+                [
+                    19074.347221119573,
+                    17990.536376569464,
+                    18769.359346972316
                 ]
             ]
         },
@@ -1224,51 +1488,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "direct",
             "methodType" : "static"
         },
         "primaryMetric" : {
-            "score" : 13440.362432906883,
-            "scoreError" : "NaN",
+            "score" : 18048.537679882404,
+            "scoreError" : 2005.2492803337534,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                16043.28839954865,
+                20053.786960216155
             ],
             "scorePercentiles" : {
-                "0.0" : 13440.362432906883,
-                "50.0" : 13440.362432906883,
-                "90.0" : 13440.362432906883,
-                "95.0" : 13440.362432906883,
-                "99.0" : 13440.362432906883,
-                "99.9" : 13440.362432906883,
-                "99.99" : 13440.362432906883,
-                "99.999" : 13440.362432906883,
-                "99.9999" : 13440.362432906883,
-                "100.0" : 13440.362432906883
+                "0.0" : 15233.185332493522,
+                "50.0" : 18535.206747800123,
+                "90.0" : 18851.436344929563,
+                "95.0" : 18851.436344929563,
+                "99.0" : 18851.436344929563,
+                "99.9" : 18851.436344929563,
+                "99.99" : 18851.436344929563,
+                "99.999" : 18851.436344929563,
+                "99.9999" : 18851.436344929563,
+                "100.0" : 18851.436344929563
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    13440.362432906883
+                    18690.057430025066,
+                    18851.436344929563,
+                    18795.990232904373
+                ],
+                [
+                    18535.206747800123,
+                    18134.341811271228,
+                    18324.025274708463
+                ],
+                [
+                    18803.815766359676,
+                    17068.78017844963,
+                    15233.185332493522
                 ]
             ]
         },
@@ -1280,51 +1556,63 @@
         "benchmark" : "internal.tests.benchmarks.InvokerBenchmark.invoke",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "invokeType" : "direct",
             "methodType" : "instance"
         },
         "primaryMetric" : {
-            "score" : 12972.4508892437,
-            "scoreError" : "NaN",
+            "score" : 16117.470542219562,
+            "scoreError" : 766.5967877405534,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                15350.87375447901,
+                16884.067329960115
             ],
             "scorePercentiles" : {
-                "0.0" : 12972.4508892437,
-                "50.0" : 12972.4508892437,
-                "90.0" : 12972.4508892437,
-                "95.0" : 12972.4508892437,
-                "99.0" : 12972.4508892437,
-                "99.9" : 12972.4508892437,
-                "99.99" : 12972.4508892437,
-                "99.999" : 12972.4508892437,
-                "99.9999" : 12972.4508892437,
-                "100.0" : 12972.4508892437
+                "0.0" : 15470.950514164779,
+                "50.0" : 16037.185204518724,
+                "90.0" : 16680.37341413455,
+                "95.0" : 16680.37341413455,
+                "99.0" : 16680.37341413455,
+                "99.9" : 16680.37341413455,
+                "99.99" : 16680.37341413455,
+                "99.999" : 16680.37341413455,
+                "99.9999" : 16680.37341413455,
+                "100.0" : 16680.37341413455
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    12972.4508892437
+                    15759.24051133311,
+                    15470.950514164779,
+                    15596.545074734016
+                ],
+                [
+                    16561.76968247605,
+                    16574.232667104487,
+                    16680.37341413455
+                ],
+                [
+                    16420.600340696754,
+                    16037.185204518724,
+                    15956.337470813605
                 ]
             ]
         },
@@ -1336,51 +1624,63 @@
         "benchmark" : "internal.tests.benchmarks.ProxyBenchmark.proxy",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "proxyType" : "fs-asm",
             "withPrimitive" : "true"
         },
         "primaryMetric" : {
-            "score" : 21060.4412990774,
-            "scoreError" : "NaN",
+            "score" : 24373.182336169873,
+            "scoreError" : 937.7284692597447,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                23435.453866910128,
+                25310.91080542962
             ],
             "scorePercentiles" : {
-                "0.0" : 21060.4412990774,
-                "50.0" : 21060.4412990774,
-                "90.0" : 21060.4412990774,
-                "95.0" : 21060.4412990774,
-                "99.0" : 21060.4412990774,
-                "99.9" : 21060.4412990774,
-                "99.99" : 21060.4412990774,
-                "99.999" : 21060.4412990774,
-                "99.9999" : 21060.4412990774,
-                "100.0" : 21060.4412990774
+                "0.0" : 23424.204890815603,
+                "50.0" : 24493.01428573233,
+                "90.0" : 24987.64816192533,
+                "95.0" : 24987.64816192533,
+                "99.0" : 24987.64816192533,
+                "99.9" : 24987.64816192533,
+                "99.99" : 24987.64816192533,
+                "99.999" : 24987.64816192533,
+                "99.9999" : 24987.64816192533,
+                "100.0" : 24987.64816192533
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    21060.4412990774
+                    23424.204890815603,
+                    24417.624867676055,
+                    24446.3418731712
+                ],
+                [
+                    24493.01428573233,
+                    24655.149355646736,
+                    24987.64816192533
+                ],
+                [
+                    24831.66331939016,
+                    23462.146627741953,
+                    24640.847643429504
                 ]
             ]
         },
@@ -1392,51 +1692,63 @@
         "benchmark" : "internal.tests.benchmarks.ProxyBenchmark.proxy",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "proxyType" : "fs-asm",
             "withPrimitive" : "false"
         },
         "primaryMetric" : {
-            "score" : 12174.763820303613,
-            "scoreError" : "NaN",
+            "score" : 13817.320152948945,
+            "scoreError" : 798.4900924652861,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                13018.830060483659,
+                14615.810245414232
             ],
             "scorePercentiles" : {
-                "0.0" : 12174.763820303613,
-                "50.0" : 12174.763820303613,
-                "90.0" : 12174.763820303613,
-                "95.0" : 12174.763820303613,
-                "99.0" : 12174.763820303613,
-                "99.9" : 12174.763820303613,
-                "99.99" : 12174.763820303613,
-                "99.999" : 12174.763820303613,
-                "99.9999" : 12174.763820303613,
-                "100.0" : 12174.763820303613
+                "0.0" : 13076.881533691047,
+                "50.0" : 14009.633202205358,
+                "90.0" : 14262.682693116492,
+                "95.0" : 14262.682693116492,
+                "99.0" : 14262.682693116492,
+                "99.9" : 14262.682693116492,
+                "99.99" : 14262.682693116492,
+                "99.999" : 14262.682693116492,
+                "99.9999" : 14262.682693116492,
+                "100.0" : 14262.682693116492
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    12174.763820303613
+                    14009.633202205358,
+                    14249.185945244111,
+                    14113.642931035
+                ],
+                [
+                    13424.073707957315,
+                    13076.881533691047,
+                    13127.935183510963
+                ],
+                [
+                    13962.34011177625,
+                    14262.682693116492,
+                    14129.506068003975
                 ]
             ]
         },
@@ -1448,51 +1760,63 @@
         "benchmark" : "internal.tests.benchmarks.ProxyBenchmark.proxy",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "proxyType" : "fs-jdk",
             "withPrimitive" : "true"
         },
         "primaryMetric" : {
-            "score" : 14898.270949070058,
-            "scoreError" : "NaN",
+            "score" : 18444.654558843235,
+            "scoreError" : 1038.4878964036582,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                17406.166662439577,
+                19483.142455246892
             ],
             "scorePercentiles" : {
-                "0.0" : 14898.270949070058,
-                "50.0" : 14898.270949070058,
-                "90.0" : 14898.270949070058,
-                "95.0" : 14898.270949070058,
-                "99.0" : 14898.270949070058,
-                "99.9" : 14898.270949070058,
-                "99.99" : 14898.270949070058,
-                "99.999" : 14898.270949070058,
-                "99.9999" : 14898.270949070058,
-                "100.0" : 14898.270949070058
+                "0.0" : 17634.601542286386,
+                "50.0" : 18276.07114926417,
+                "90.0" : 19484.9630748675,
+                "95.0" : 19484.9630748675,
+                "99.0" : 19484.9630748675,
+                "99.9" : 19484.9630748675,
+                "99.99" : 19484.9630748675,
+                "99.999" : 19484.9630748675,
+                "99.9999" : 19484.9630748675,
+                "100.0" : 19484.9630748675
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    14898.270949070058
+                    18213.013845087928,
+                    18049.32661751372,
+                    18455.924246137416
+                ],
+                [
+                    18276.07114926417,
+                    17634.601542286386,
+                    17851.086391440618
+                ],
+                [
+                    19202.21995664515,
+                    18834.68420634621,
+                    19484.9630748675
                 ]
             ]
         },
@@ -1504,51 +1828,63 @@
         "benchmark" : "internal.tests.benchmarks.ProxyBenchmark.proxy",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "proxyType" : "fs-jdk",
             "withPrimitive" : "false"
         },
         "primaryMetric" : {
-            "score" : 8367.703791154288,
-            "scoreError" : "NaN",
+            "score" : 11849.351404973095,
+            "scoreError" : 1297.0922105302627,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                10552.259194442831,
+                13146.443615503358
             ],
             "scorePercentiles" : {
-                "0.0" : 8367.703791154288,
-                "50.0" : 8367.703791154288,
-                "90.0" : 8367.703791154288,
-                "95.0" : 8367.703791154288,
-                "99.0" : 8367.703791154288,
-                "99.9" : 8367.703791154288,
-                "99.99" : 8367.703791154288,
-                "99.999" : 8367.703791154288,
-                "99.9999" : 8367.703791154288,
-                "100.0" : 8367.703791154288
+                "0.0" : 10983.254605420563,
+                "50.0" : 11605.23245214342,
+                "90.0" : 13103.444693631262,
+                "95.0" : 13103.444693631262,
+                "99.0" : 13103.444693631262,
+                "99.9" : 13103.444693631262,
+                "99.99" : 13103.444693631262,
+                "99.999" : 13103.444693631262,
+                "99.9999" : 13103.444693631262,
+                "100.0" : 13103.444693631262
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    8367.703791154288
+                    11605.23245214342,
+                    10983.254605420563,
+                    11639.844554175552
+                ],
+                [
+                    11270.561387943617,
+                    11173.214445031204,
+                    11505.205290311706
+                ],
+                [
+                    12533.714139901655,
+                    12829.69107619887,
+                    13103.444693631262
                 ]
             ]
         },
@@ -1560,51 +1896,63 @@
         "benchmark" : "internal.tests.benchmarks.ProxyBenchmark.proxy",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "proxyType" : "direct",
             "withPrimitive" : "true"
         },
         "primaryMetric" : {
-            "score" : 20925.97910057817,
-            "scoreError" : "NaN",
+            "score" : 25106.960874988486,
+            "scoreError" : 1719.2268447930708,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                23387.734030195417,
+                26826.187719781556
             ],
             "scorePercentiles" : {
-                "0.0" : 20925.97910057817,
-                "50.0" : 20925.97910057817,
-                "90.0" : 20925.97910057817,
-                "95.0" : 20925.97910057817,
-                "99.0" : 20925.97910057817,
-                "99.9" : 20925.97910057817,
-                "99.99" : 20925.97910057817,
-                "99.999" : 20925.97910057817,
-                "99.9999" : 20925.97910057817,
-                "100.0" : 20925.97910057817
+                "0.0" : 23283.175664232018,
+                "50.0" : 25437.73788494366,
+                "90.0" : 26278.45281704301,
+                "95.0" : 26278.45281704301,
+                "99.0" : 26278.45281704301,
+                "99.9" : 26278.45281704301,
+                "99.99" : 26278.45281704301,
+                "99.999" : 26278.45281704301,
+                "99.9999" : 26278.45281704301,
+                "100.0" : 26278.45281704301
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    20925.97910057817
+                    26013.0317112371,
+                    25437.73788494366,
+                    25714.679829827997
+                ],
+                [
+                    26278.45281704301,
+                    25664.465065318484,
+                    25346.022376328092
+                ],
+                [
+                    23283.175664232018,
+                    23990.836400009448,
+                    24234.24612595657
                 ]
             ]
         },
@@ -1616,51 +1964,63 @@
         "benchmark" : "internal.tests.benchmarks.ProxyBenchmark.proxy",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 1,
-        "warmupTime" : "1 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 1,
-        "measurementTime" : "1 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "proxyType" : "direct",
             "withPrimitive" : "false"
         },
         "primaryMetric" : {
-            "score" : 10662.655721158113,
-            "scoreError" : "NaN",
+            "score" : 14643.571084897221,
+            "scoreError" : 2206.6105257335676,
             "scoreConfidence" : [
-                "NaN",
-                "NaN"
+                12436.960559163654,
+                16850.18161063079
             ],
             "scorePercentiles" : {
-                "0.0" : 10662.655721158113,
-                "50.0" : 10662.655721158113,
-                "90.0" : 10662.655721158113,
-                "95.0" : 10662.655721158113,
-                "99.0" : 10662.655721158113,
-                "99.9" : 10662.655721158113,
-                "99.99" : 10662.655721158113,
-                "99.999" : 10662.655721158113,
-                "99.9999" : 10662.655721158113,
-                "100.0" : 10662.655721158113
+                "0.0" : 13414.526250047922,
+                "50.0" : 14177.55488089732,
+                "90.0" : 17664.88131982622,
+                "95.0" : 17664.88131982622,
+                "99.0" : 17664.88131982622,
+                "99.9" : 17664.88131982622,
+                "99.99" : 17664.88131982622,
+                "99.999" : 17664.88131982622,
+                "99.9999" : 17664.88131982622,
+                "100.0" : 17664.88131982622
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    10662.655721158113
+                    14101.174875086515,
+                    14283.138991706259,
+                    13556.198421296673
+                ],
+                [
+                    14177.55488089732,
+                    14043.364696566165,
+                    13414.526250047922
+                ],
+                [
+                    14982.030981227472,
+                    15569.26934742045,
+                    17664.88131982622
                 ]
             ]
         },
@@ -1672,54 +2032,62 @@
         "benchmark" : "internal.tests.benchmarks.TcpServerBenchmark.request",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 5,
-        "warmupTime" : "5 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 5,
-        "measurementTime" : "5 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "serverType" : "fs"
         },
         "primaryMetric" : {
-            "score" : 1.1976772823501238,
-            "scoreError" : 0.07479315577272068,
+            "score" : 5.361488344218092,
+            "scoreError" : 0.10066319542448016,
             "scoreConfidence" : [
-                1.1228841265774032,
-                1.2724704381228444
+                5.260825148793612,
+                5.462151539642572
             ],
             "scorePercentiles" : {
-                "0.0" : 1.1658116914418146,
-                "50.0" : 1.2053554150457428,
-                "90.0" : 1.2141247617417557,
-                "95.0" : 1.2141247617417557,
-                "99.0" : 1.2141247617417557,
-                "99.9" : 1.2141247617417557,
-                "99.99" : 1.2141247617417557,
-                "99.999" : 1.2141247617417557,
-                "99.9999" : 1.2141247617417557,
-                "100.0" : 1.2141247617417557
+                "0.0" : 5.207272324708125,
+                "50.0" : 5.375032898936963,
+                "90.0" : 5.406853073350937,
+                "95.0" : 5.406853073350937,
+                "99.0" : 5.406853073350937,
+                "99.9" : 5.406853073350937,
+                "99.99" : 5.406853073350937,
+                "99.999" : 5.406853073350937,
+                "99.9999" : 5.406853073350937,
+                "100.0" : 5.406853073350937
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    1.2097403660291106,
-                    1.2053554150457428,
-                    1.1658116914418146,
-                    1.1933541774921959,
-                    1.2141247617417557
+                    5.207272324708125,
+                    5.3549268904887,
+                    5.365028310752152
+                ],
+                [
+                    5.389559722172066,
+                    5.375032898936963,
+                    5.392226846920061
+                ],
+                [
+                    5.406853073350937,
+                    5.373706951764731,
+                    5.388788078869091
                 ]
             ]
         },
@@ -1731,54 +2099,62 @@
         "benchmark" : "internal.tests.benchmarks.TcpServerBenchmark.request",
         "mode" : "thrpt",
         "threads" : 1,
-        "forks" : 1,
-        "jvm" : "C:\\Users\\SrcLab\\.jdks\\azul-17.0.17\\bin\\java.exe",
+        "forks" : 3,
+        "jvm" : "D:\\opt\\JDK\\azul-17.0.16\\bin\\java.exe",
         "jvmArgs" : [
             "-Dfile.encoding=UTF-8",
-            "-Djava.io.tmpdir=D:\\Projects\\fs\\fs-tests\\build\\tmp\\jmh",
+            "-Djava.io.tmpdir=D:\\projects\\fs\\fs-tests\\build\\tmp\\jmh",
             "-Duser.country=US",
             "-Duser.language=en",
             "-Duser.variant"
         ],
-        "jdkVersion" : "17.0.17",
+        "jdkVersion" : "17.0.16",
         "vmName" : "OpenJDK 64-Bit Server VM",
-        "vmVersion" : "17.0.17+10-LTS",
-        "warmupIterations" : 5,
-        "warmupTime" : "5 s",
+        "vmVersion" : "17.0.16+8-LTS",
+        "warmupIterations" : 3,
+        "warmupTime" : "3 s",
         "warmupBatchSize" : 1,
-        "measurementIterations" : 5,
-        "measurementTime" : "5 s",
+        "measurementIterations" : 3,
+        "measurementTime" : "3 s",
         "measurementBatchSize" : 1,
         "params" : {
             "serverType" : "netty"
         },
         "primaryMetric" : {
-            "score" : 1.002821132545345,
-            "scoreError" : 0.07508036604316783,
+            "score" : 5.282663000380657,
+            "scoreError" : 0.10381689385713085,
             "scoreConfidence" : [
-                0.9277407665021773,
-                1.077901498588513
+                5.178846106523526,
+                5.386479894237787
             ],
             "scorePercentiles" : {
-                "0.0" : 0.9809638884865335,
-                "50.0" : 1.0145648866460857,
-                "90.0" : 1.0202741856415571,
-                "95.0" : 1.0202741856415571,
-                "99.0" : 1.0202741856415571,
-                "99.9" : 1.0202741856415571,
-                "99.99" : 1.0202741856415571,
-                "99.999" : 1.0202741856415571,
-                "99.9999" : 1.0202741856415571,
-                "100.0" : 1.0202741856415571
+                "0.0" : 5.146984423935892,
+                "50.0" : 5.29367834712983,
+                "90.0" : 5.34401258802995,
+                "95.0" : 5.34401258802995,
+                "99.0" : 5.34401258802995,
+                "99.9" : 5.34401258802995,
+                "99.99" : 5.34401258802995,
+                "99.999" : 5.34401258802995,
+                "99.9999" : 5.34401258802995,
+                "100.0" : 5.34401258802995
             },
             "scoreUnit" : "ops/ms",
             "rawData" : [
                 [
-                    1.0160851953513583,
-                    0.9822175066011911,
-                    1.0202741856415571,
-                    0.9809638884865335,
-                    1.0145648866460857
+                    5.34401258802995,
+                    5.32881144129082,
+                    5.290471249830905
+                ],
+                [
+                    5.283533950351629,
+                    5.223063627046895,
+                    5.146984423935892
+                ],
+                [
+                    5.326161689365028,
+                    5.307249686444962,
+                    5.29367834712983
                 ]
             ]
         },

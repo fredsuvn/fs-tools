@@ -8,102 +8,122 @@
 
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.6;
+    line-height: 1.4;
     color: #333;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     background-attachment: fixed;
     background-size: cover;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    width: 100%;
+    height: 100vh;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Header Styles */
-.header {
-    text-align: center;
+/* Info Area Styles - Located at the bottom of right panel */
+.info-area {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    margin-bottom: 40px;
-    padding: 30px 0;
-    background: rgba(118, 75, 162, 0.1); /* 增强紫色调 */
-}
-
-.header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.subtitle {
-    font-size: 1.2rem;
-    opacity: 0.9;
-    margin-bottom: 20px;
-}
-
-.author-info {
+    padding: 10px;
     text-align: center;
-    color: rgba(255,255,255,0.8);
-    margin: 10px 0;
+    flex-shrink: 0;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+.info-area h1 {
     font-size: 0.9rem;
+    margin: 0;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.info-area .subtitle {
+    font-size: 0.7rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.info-area .author-info {
+    font-size: 0.65rem;
+    margin: 0;
+    opacity: 0.8;
 }
 
 main {
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+    height: calc(100vh - 80px);
+    position: relative;
 }
 
 .tool-container {
     display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 10px;
+    height: 100%;
+    justify-content: space-between;
 }
 
 .tool-controls {
-    flex: 0 0 280px;
+    flex: 0 0 200px;
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.tool-controls-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
 }
 
 .control-group {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .control-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-weight: 500;
     color: #555;
+    font-size: 13px;
 }
 
 .control-group select,
 .control-group input[type="color"] {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
+    border-radius: 4px;
+    font-size: 13px;
 }
 
 .control-group input[type="color"] {
-    height: 40px;
+    height: 32px;
     cursor: pointer;
 }
 
 .control-group button {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     background-color: #667eea;
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 16px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     transition: background-color 0.3s;
 }
 
@@ -112,20 +132,22 @@ main {
 }
 
 .palette {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .palette label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-weight: 500;
     color: #555;
+    font-size: 13px;
 }
 
 .color-palette {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 6px;
+    margin-top: 6px;
 }
 
 .color-swatch {
@@ -133,7 +155,7 @@ main {
     padding-bottom: 100%;
     border-radius: 3px;
     cursor: pointer;
-    border: 2px solid #eee;
+    border: 1px solid #eee;
     transition: transform 0.2s, border-color 0.2s;
 }
 
@@ -148,24 +170,26 @@ main {
 }
 
 .image-import {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .image-import label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     font-weight: 500;
     color: #555;
+    font-size: 13px;
 }
 
 .drop-area {
     border: 2px dashed #ccc;
-    border-radius: 5px;
-    padding: 20px;
+    border-radius: 4px;
+    padding: 12px;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     cursor: pointer;
     transition: border-color 0.3s;
+    font-size: 12px;
 }
 
 .drop-area:hover,
@@ -175,29 +199,30 @@ main {
 
 .image-import input[type="range"] {
     width: 100%;
-    margin: 10px 0;
+    margin: 6px 0;
 }
 
 #pixel-size-value {
     display: inline-block;
-    margin-left: 10px;
+    margin-left: 8px;
     font-weight: 500;
+    font-size: 13px;
 }
 
 .export-options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .export-options button {
-    padding: 10px;
+    padding: 8px;
     background-color: #667eea;
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 16px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     transition: background-color 0.3s;
 }
 
@@ -215,15 +240,16 @@ main {
 
 .canvas-container {
     flex: 1;
-    min-width: 300px;
-    max-width: 600px;
+    min-width: 0;
     background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
+    overflow: hidden;
 }
 
 #pixel-canvas {
@@ -232,6 +258,63 @@ main {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+}
+
+.tool-buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.tool-btn {
+    flex: 1;
+    padding: 8px;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+
+.tool-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.tool-btn.active {
+    background-color: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* 画笔尺寸样式 */
+#brush-size {
+    width: calc(100% - 40px);
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+#brush-size-value {
+    display: inline-block;
+    width: 25px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+/* Pixel Size信息样式 */
+.pixel-size-info {
+    margin-top: 6px;
+}
+
+.pixel-size-info small {
+    display: block;
+    margin-top: 4px;
+    color: #666;
+    font-size: 11px;
+    line-height: 1.3;
 }
 
 /* 光标样式 */
@@ -243,12 +326,50 @@ main {
     cursor: cell;
 }
 
+/* 不同画笔尺寸的光标样式 */
+.brush-size-1 {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"><circle cx="5" cy="5" r="1" fill="black"/></svg>') 5 5, crosshair;
+}
+
+.brush-size-2 {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"><rect x="4" y="4" width="4" height="4" fill="black"/></svg>') 6 6, crosshair;
+}
+
+.brush-size-3 {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"><rect x="3" y="3" width="8" height="8" fill="black"/></svg>') 7 7, crosshair;
+}
+
+.brush-size-4 {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect x="2" y="2" width="12" height="12" fill="black"/></svg>') 8 8, crosshair;
+}
+
+.brush-size-5 {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"><rect x="1" y="1" width="16" height="16" fill="black"/></svg>') 9 9, crosshair;
+}
+
+/* 背景色和网格线样式 */
+.canvas-background {
+    position: relative;
+}
+
+/* 透明背景的棋盘格图案 */
+.transparent-bg {
+    background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc),
+                      linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+}
+
 .output-container {
-    flex: 0 0 320px;
+    flex: 0 0 220px;
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    max-height: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .output-tabs {
@@ -258,11 +379,11 @@ main {
 
 .tab-btn {
     flex: 1;
-    padding: 12px;
+    padding: 8px;
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
     transition: background-color 0.3s;
 }
@@ -278,15 +399,16 @@ main {
 }
 
 .output-content {
-    height: 400px;
+    flex: 1;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    min-height: 0;
 }
 
 .output-panel {
     flex: 1;
-    padding: 15px;
+    padding: 10px;
     overflow: auto;
     display: none;
 }
@@ -297,25 +419,25 @@ main {
 
 .output-panel pre {
     background-color: #f8f8f8;
-    padding: 15px;
-    border-radius: 5px;
+    padding: 10px;
+    border-radius: 4px;
     overflow: auto;
-    max-height: 320px;
+    max-height: 200px;
     font-family: 'Courier New', Courier, monospace;
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: 11px;
+    line-height: 1.3;
 }
 
 .copy-btn {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     background-color: #667eea;
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 16px;
     cursor: pointer;
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: 12px;
+    margin-top: 8px;
     transition: background-color 0.3s;
 }
 
@@ -327,43 +449,73 @@ main {
 .footer {
     text-align: center;
     color: rgba(255,255,255,0.7);
-    padding: 30px 0;
-    margin-top: 40px;
+    padding: 8px 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .footer p {
-    margin: 5px 0;
+    margin: 0;
+    font-size: 0.7rem;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
     .tool-container {
         flex-direction: column;
-        align-items: center;
+        height: auto;
     }
 
     .tool-controls,
     .output-container {
         width: 100%;
-        max-width: 600px;
+        max-width: none;
+        height: auto;
+        max-height: 300px;
     }
 
     .canvas-container {
         order: -1;
+        width: 100%;
+        height: 50vh;
+    }
+
+    .color-palette {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .tool-buttons {
+        flex-wrap: wrap;
     }
 }
 
 @media (max-width: 600px) {
-    header h1 {
-        font-size: 2rem;
+    .header h1 {
+        font-size: 1.1rem;
     }
 
-    .tool-controls {
-        padding: 15px;
+    .container {
+        padding: 5px 10px;
     }
 
+    .tool-controls,
     .canvas-container {
-        padding: 15px;
+        padding: 12px;
     }
+}
+
+/* Ensure the entire interface fits in one screen */
+@media (max-height: 768px) {
+    .output-content {
+        height: 180px;
+    }
+
+    .output-panel pre {
+        max-height: 140px;
+    }
+
+
 }

@@ -14,68 +14,91 @@
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div style="position: relative; text-align: center; min-height: 100px;">
-                <h1>Pixel Logo Maker</h1>
-                <p class="subtitle" style="margin-bottom: 20px;">Create your own pixel art logo with ease!</p>
-                <p id="author-info" class="author-info" style="margin-top: 15px; text-align: left; margin-left: 61.8%; font-size: 0.9rem; opacity: 0.9;"></p>
-            </div>
-        </header>
-
     <main>
         <div class="tool-container">
             <div class="tool-controls">
-                <div class="control-group">
-                    <label for="canvas-size">Canvas Size:</label>
-                    <select id="canvas-size">
-                        <option value="32">32 x 32</option>
-                        <option value="64" selected>64 x 64</option>
-                    </select>
-                    <button id="clear-canvas">Clear Canvas</button>
-                </div>
-
-                <div class="control-group">
-                    <label for="tool-select">Tool:</label>
-                    <select id="tool-select">
-                        <option value="brush" selected>Brush</option>
-                        <option value="eraser">Eraser</option>
-                    </select>
-                </div>
-
-                <div class="control-group">
-                    <label for="color-picker">Color:</label>
-                    <input type="color" id="color-picker" value="#000000">
-                </div>
-
-                <div class="palette">
-                    <label>Quick Colors:</label>
-                    <div class="color-palette">
-                        <div class="color-swatch" data-color="#000000"></div>
-                        <div class="color-swatch" data-color="#FFFFFF"></div>
-                        <div class="color-swatch" data-color="#FF0000"></div>
-                        <div class="color-swatch" data-color="#00FF00"></div>
-                        <div class="color-swatch" data-color="#0000FF"></div>
-                        <div class="color-swatch" data-color="#FFFF00"></div>
-                        <div class="color-swatch" data-color="#FF00FF"></div>
-                        <div class="color-swatch" data-color="#00FFFF"></div>
+                <div class="tool-controls-content">
+                    <div class="control-group">
+                        <label for="canvas-size">Canvas Size:</label>
+                        <select id="canvas-size">
+                            <option value="32">32 x 32</option>
+                            <option value="64" selected>64 x 64</option>
+                        </select>
+                        <button id="clear-canvas">Clear Canvas</button>
                     </div>
-                </div>
 
-                <div class="image-import">
-                    <label for="image-import">Import Image:</label>
-                    <div class="drop-area" id="drop-area">
-                        <p>Drop image here or click to select</p>
-                        <input type="file" id="image-import" accept="image/*" style="display: none;">
+                    <div class="control-group">
+                        <label>Tools:</label>
+                        <div class="tool-buttons">
+                            <button id="tool-brush" class="tool-btn active" data-tool="brush">Brush</button>
+                            <button id="tool-eraser" class="tool-btn" data-tool="eraser">Eraser</button>
+                        </div>
                     </div>
-                    <label for="pixel-size">Pixel Size for Import:</label>
-                    <input type="range" id="pixel-size" min="1" max="16" value="8">
-                    <span id="pixel-size-value">8</span>
-                </div>
 
-                <div class="export-options">
-                    <button id="export-svg">Export as SVG</button>
-                    <button id="export-markdown">Export as Markdown</button>
-                    <button id="download-image">Download Image</button>
+                    <div class="control-group">
+                        <label for="brush-size">Brush Size:</label>
+                        <input type="range" id="brush-size" min="1" max="5" value="1">
+                        <span id="brush-size-value">1</span>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="show-grid">Show Grid:</label>
+                        <input type="checkbox" id="show-grid">
+                    </div>
+
+                    <div class="control-group">
+                        <label for="background-color">Background Color:</label>
+                        <input type="color" id="background-color" value="#FFFFFF">
+                        <button id="bg-transparent" style="margin-top: 6px;">Transparent</button>
+                    </div>
+
+                    <div class="control-group">
+                        <label for="color-picker">Color:</label>
+                        <input type="color" id="color-picker" value="#000000">
+                    </div>
+
+                    <div class="palette">
+                        <label>Quick Colors:</label>
+                        <div class="color-palette">
+                            <div class="color-swatch" data-color="#000000"></div>
+                            <div class="color-swatch" data-color="#FFFFFF"></div>
+                            <div class="color-swatch" data-color="#FF0000"></div>
+                            <div class="color-swatch" data-color="#00FF00"></div>
+                            <div class="color-swatch" data-color="#0000FF"></div>
+                            <div class="color-swatch" data-color="#FFFF00"></div>
+                            <div class="color-swatch" data-color="#FF00FF"></div>
+                            <div class="color-swatch" data-color="#00FFFF"></div>
+                            <div class="color-swatch" data-color="#FFA500"></div>
+                            <div class="color-swatch" data-color="#800080"></div>
+                            <div class="color-swatch" data-color="#A52A2A"></div>
+                            <div class="color-swatch" data-color="#008000"></div>
+                            <div class="color-swatch" data-color="#008080"></div>
+                            <div class="color-swatch" data-color="#000080"></div>
+                            <div class="color-swatch" data-color="#800000"></div>
+                            <div class="color-swatch" data-color="#808080"></div>
+                        <div class="color-swatch" data-color="transparent" style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="image-import">
+                        <label for="image-import">Import Image:</label>
+                        <div class="drop-area" id="drop-area">
+                            <p>Drop image here or click to select</p>
+                            <input type="file" id="image-import" accept="image/*" style="display: none;">
+                        </div>
+                        <label for="pixel-size">Pixel Size for Import (Controls detail level):</label>
+                        <div class="pixel-size-info">
+                            <input type="range" id="pixel-size" min="1" max="16" value="8">
+                            <span id="pixel-size-value">8</span>
+                            <small>Higher value = fewer pixels, lower value = more detail</small>
+                        </div>
+                    </div>
+
+                    <div class="export-options">
+                        <button id="export-svg">Export as SVG</button>
+                        <button id="export-base64">Export as Base64</button>
+                        <button id="download-image">Download Image</button>
+                    </div>
                 </div>
             </div>
 
@@ -86,17 +109,22 @@
             <div class="output-container">
                 <div class="output-tabs">
                     <button class="tab-btn active" data-tab="svg">SVG Output</button>
-                    <button class="tab-btn" data-tab="markdown">Markdown Output</button>
+                    <button class="tab-btn" data-tab="base64">Base64 Output</button>
                 </div>
                 <div class="output-content">
                     <div id="svg-output" class="output-panel active">
                         <pre><code></code></pre>
                         <button class="copy-btn">Copy to Clipboard</button>
                     </div>
-                    <div id="markdown-output" class="output-panel">
+                    <div id="base64-output" class="output-panel">
                         <pre><code></code></pre>
                         <button class="copy-btn">Copy to Clipboard</button>
                     </div>
+                </div>
+                <div class="info-area">
+                    <h1>Pixel Logo Maker</h1>
+                    <p class="subtitle">Create your own pixel art logo with ease!</p>
+                    <p id="author-info" class="author-info"></p>
                 </div>
             </div>
         </div>
@@ -105,6 +133,8 @@
         <footer class="footer">
             <p>Powered by fs-tools and <span id="footer-author"></span></p>
         </footer>
+
+        <!-- Info area will be in the right panel now -->
     </div>
 
     <script src="pixel-logo.js"></script>

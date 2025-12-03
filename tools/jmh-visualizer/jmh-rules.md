@@ -18,3 +18,4 @@
 - 生成3个文件：jmh-visualizer.html，jmh-visualizer.js和jmh-visualizer.css；
 - 结果集results.json默认就在和html同目录；
 - 界面使用英语，代码内部注释可以用中文；
+- 删掉调试用的日志语句；

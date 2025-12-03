@@ -8,17 +8,21 @@ let ctx;
 let currentSize = 64;
 let currentTool = 'brush';
 let currentColor = '#000000';
+let currentBrushSize = 1;
 let isDrawing = false;
 let pixelData = [];
+let currentBackgroundColor = '#FFFFFF';
+let showGrid = false;
+let gridCanvas;
+let gridCtx;
 
 // DOM元素
 let canvasElement;
 let colorPicker;
 let sizeSelector;
-let toolSelector;
 let clearButton;
 let exportSvgButton;
-let exportMarkdownButton;
+let exportBase64Button;
 let downloadImageButton;
 let dropArea;
 let imageImport;
@@ -27,31 +31,51 @@ let pixelSizeValue;
 let tabButtons;
 let outputPanels;
 let copyButtons;
+let brushSizeSlider;
+let brushSizeValue;
+let toolButtons;
+let showGridCheckbox;
+let backgroundColorPicker;
+let bgTransparentButton;
 
 // 初始化函数
 function init() {
-    fsLogger.info('Initializing Pixel Logo Maker');
+
 
     // 获取DOM元素
     canvasElement = document.getElementById('pixel-canvas');
     colorPicker = document.getElementById('color-picker');
     sizeSelector = document.getElementById('canvas-size');
-    toolSelector = document.getElementById('tool-select');
     clearButton = document.getElementById('clear-canvas');
     exportSvgButton = document.getElementById('export-svg');
-    exportMarkdownButton = document.getElementById('export-markdown');
+    exportBase64Button = document.getElementById('export-base64');
     downloadImageButton = document.getElementById('download-image');
     dropArea = document.getElementById('drop-area');
     imageImport = document.getElementById('image-import');
     pixelSizeSlider = document.getElementById('pixel-size');
     pixelSizeValue = document.getElementById('pixel-size-value');
+    brushSizeSlider = document.getElementById('brush-size');
+    brushSizeValue = document.getElementById('brush-size-value');
+    toolButtons = document.querySelectorAll('.tool-btn');
     tabButtons = document.querySelectorAll('.tab-btn');
     outputPanels = document.querySelectorAll('.output-panel');
     copyButtons = document.querySelectorAll('.copy-btn');
+    showGridCheckbox = document.getElementById('show-grid');
+    backgroundColorPicker = document.getElementById('background-color');
+    bgTransparentButton = document.getElementById('bg-transparent');
 
     // 设置Canvas
     canvas = canvasElement;
     ctx = canvas.getContext('2d');
+
+    // 创建网格画布
+    gridCanvas = document.createElement('canvas');
+    gridCtx = gridCanvas.getContext('2d');
+    gridCanvas.style.position = 'absolute';
+    gridCanvas.style.top = '0';
+    gridCanvas.style.left = '0';
+    gridCanvas.style.pointerEvents = 'none';
+    canvas.parentElement.appendChild(gridCanvas);
 
     // 初始化画布
     resizeCanvas(currentSize);
@@ -60,33 +84,63 @@ function init() {
     // 绑定事件监听器
     bindEvents();
 
-    fsLogger.info('Pixel Logo Maker initialized successfully');
+
 }
 
 // 调整画布大小
 function resizeCanvas(size) {
     currentSize = size;
-    const pixelSize = 8; // 每个像素的显示大小
 
     canvas.width = size;
     canvas.height = size;
+
+    // 设置网格画布大小
+    gridCanvas.width = size;
+    gridCanvas.height = size;
+
+    // 计算最佳像素大小以适应容器
+    const canvasContainer = document.querySelector('.canvas-container') || canvas.parentElement;
+    const containerRect = canvasContainer.getBoundingClientRect();
+    const availableWidth = containerRect.width - 30; // 考虑内边距
+    const availableHeight = containerRect.height - 30; // 考虑内边距
+
+    // 计算像素大小以尽可能填充空间
+    let pixelSize = Math.floor(Math.min(availableWidth, availableHeight) / currentSize);
+    // 确保像素大小至少为4px以保证可用性
+    pixelSize = Math.max(pixelSize, 4);
+
     canvas.style.width = `${size * pixelSize}px`;
     canvas.style.height = `${size * pixelSize}px`;
+
+    // 设置网格画布样式
+    gridCanvas.style.width = `${size * pixelSize}px`;
+    gridCanvas.style.height = `${size * pixelSize}px`;
 
     // 重新初始化像素数据
     pixelData = Array(size).fill().map(() => Array(size).fill('#FFFFFF'));
 
     // 清空画布
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, size, size);
+    if (currentBackgroundColor === 'transparent') {
+        ctx.clearRect(0, 0, size, size);
+    } else {
+        ctx.fillStyle = currentBackgroundColor;
+        ctx.fillRect(0, 0, size, size);
+    }
 
-    fsLogger.info(`Canvas resized to ${size}x${size}`);
+    // 更新网格
+    updateGrid();
+
+
 }
 
 // 清空画布
 function clearCanvas() {
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, currentSize, currentSize);
+    if (currentBackgroundColor === 'transparent') {
+        ctx.clearRect(0, 0, currentSize, currentSize);
+    } else {
+        ctx.fillStyle = currentBackgroundColor;
+        ctx.fillRect(0, 0, currentSize, currentSize);
+    }
 
     // 重置像素数据
     for (let y = 0; y < currentSize; y++) {
@@ -95,7 +149,80 @@ function clearCanvas() {
         }
     }
 
-    fsLogger.info('Canvas cleared');
+}
+
+// 更新网格显示
+function updateGrid() {
+    if (!showGrid) {
+        gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+        return;
+    }
+
+    // 清空网格画布
+    gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
+
+    // 设置网格样式
+    gridCtx.strokeStyle = '#CCCCCC';
+    gridCtx.lineWidth = 0.5;
+
+    // 绘制垂直线
+    for (let x = 0; x <= currentSize; x++) {
+        gridCtx.beginPath();
+        gridCtx.moveTo(x, 0);
+        gridCtx.lineTo(x, currentSize);
+        gridCtx.stroke();
+    }
+
+    // 绘制水平线
+    for (let y = 0; y <= currentSize; y++) {
+        gridCtx.beginPath();
+        gridCtx.moveTo(0, y);
+        gridCtx.lineTo(currentSize, y);
+        gridCtx.stroke();
+    }
+}
+
+// 设置背景色
+function setBackgroundColor(color) {
+    currentBackgroundColor = color;
+
+    // 更新画布容器样式
+    if (color === 'transparent') {
+        canvas.parentElement.classList.add('transparent-bg');
+        backgroundColorPicker.style.opacity = '0.5';
+    } else {
+        canvas.parentElement.classList.remove('transparent-bg');
+        backgroundColorPicker.style.opacity = '1';
+        backgroundColorPicker.value = color;
+    }
+
+    // 重绘画布
+    redrawCanvas();
+}
+
+// 重绘画布
+function redrawCanvas() {
+    // 清空背景
+    if (currentBackgroundColor === 'transparent') {
+        ctx.clearRect(0, 0, currentSize, currentSize);
+    } else {
+        ctx.fillStyle = currentBackgroundColor;
+        ctx.fillRect(0, 0, currentSize, currentSize);
+    }
+
+    // 重绘所有像素
+    for (let y = 0; y < currentSize; y++) {
+        for (let x = 0; x < currentSize; x++) {
+            const color = pixelData[y][x];
+            if (color !== 'transparent') {
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y, 1, 1);
+            }
+        }
+    }
+
+    // 更新网格
+    updateGrid();
 }
 
 // 获取鼠标在画布上的像素坐标
@@ -110,12 +237,29 @@ function getPixelCoordinates(event) {
     };
 }
 
-// 绘制像素点
+// 绘制像素点（支持不同画笔尺寸和透明色）
 function drawPixel(x, y, color) {
-    if (x >= 0 && x < currentSize && y >= 0 && y < currentSize) {
-        pixelData[y][x] = color;
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, 1, 1);
+    const halfSize = Math.floor(currentBrushSize / 2);
+
+    // 根据画笔尺寸绘制多个像素
+    for (let dy = -halfSize; dy <= halfSize; dy++) {
+        for (let dx = -halfSize; dx <= halfSize; dx++) {
+            const nx = x + dx;
+            const ny = y + dy;
+
+            // 确保在画布范围内
+            if (nx >= 0 && nx < currentSize && ny >= 0 && ny < currentSize) {
+                pixelData[ny][nx] = color;
+
+                // 处理透明色
+                if (color === 'transparent') {
+                    ctx.clearRect(nx, ny, 1, 1);
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(nx, ny, 1, 1);
+                }
+            }
+        }
     }
 }
 
@@ -163,7 +307,7 @@ function createPixelArtFromImage(img, pixelSize) {
         }
     }
 
-    fsLogger.info(`Created pixel art from image with pixel size: ${pixelSize}`);
+
 }
 
 // RGB转十六进制
@@ -179,11 +323,16 @@ function exportAsSvg() {
     const pixelSize = 10; // SVG中每个像素的大小
     let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${currentSize * pixelSize}" height="${currentSize * pixelSize}" viewBox="0 0 ${currentSize * pixelSize} ${currentSize * pixelSize}">`;
 
+    // 添加背景
+    if (currentBackgroundColor !== 'transparent') {
+        svgContent += `<rect x="0" y="0" width="${currentSize * pixelSize}" height="${currentSize * pixelSize}" fill="${currentBackgroundColor}" />`;
+    }
+
     // 添加每个像素作为矩形
     for (let y = 0; y < currentSize; y++) {
         for (let x = 0; x < currentSize; x++) {
             const color = pixelData[y][x];
-            if (color !== '#FFFFFF') { // 跳过白色像素
+            if (color !== 'transparent') { // 跳过透明像素
                 svgContent += `<rect x="${x * pixelSize}" y="${y * pixelSize}" width="${pixelSize}" height="${pixelSize}" fill="${color}" />`;
             }
         }
@@ -194,41 +343,44 @@ function exportAsSvg() {
     // 更新输出面板
     document.querySelector('#svg-output code').textContent = svgContent;
 
-    fsLogger.info('Exported as SVG');
+
     return svgContent;
 }
 
-// 导出为Markdown（使用GitHub Markdown的表格语法）
-function exportAsMarkdown() {
-    let markdown = '```markdown\n';
-    markdown += '<!-- Pixel Art Logo -->\n';
-    markdown += '|' + ' '.repeat(currentSize * 2 - 1) + '|\n';
-    markdown += '|' + '-'.repeat(currentSize * 2 - 1) + '|\n';
+// 导出为Base64
+function exportAsBase64() {
+    // 创建导出用的画布
+    const exportCanvas = document.createElement('canvas');
+    const exportCtx = exportCanvas.getContext('2d');
+    const scale = 4; // 适当的缩放比例
 
-    for (let y = 0; y < currentSize; y++) {
-        let row = '|';
-        for (let x = 0; x < currentSize; x++) {
-            const color = pixelData[y][x];
-            // 使用不同的字符表示不同的颜色深浅
-            if (color === '#000000') {
-                row += '█';
-            } else if (color === '#FFFFFF') {
-                row += ' ';
-            } else {
-                row += '▓';
-            }
-            row += ' ';
-        }
-        markdown += row.slice(0, -1) + '|\n'; // 移除最后的空格
+    exportCanvas.width = currentSize * scale;
+    exportCanvas.height = currentSize * scale;
+
+    // 填充背景
+    if (currentBackgroundColor !== 'transparent') {
+        exportCtx.fillStyle = currentBackgroundColor;
+        exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
     }
 
-    markdown += '```\n';
+    // 绘制放大的像素
+    for (let y = 0; y < currentSize; y++) {
+        for (let x = 0; x < currentSize; x++) {
+            const color = pixelData[y][x];
+            if (color !== 'transparent') {
+                exportCtx.fillStyle = color;
+                exportCtx.fillRect(x * scale, y * scale, scale, scale);
+            }
+        }
+    }
+
+    // 获取Base64数据
+    const base64 = exportCanvas.toDataURL('image/png');
 
     // 更新输出面板
-    document.querySelector('#markdown-output code').textContent = markdown;
+    document.querySelector('#base64-output code').textContent = base64;
 
-    fsLogger.info('Exported as Markdown');
-    return markdown;
+    return base64;
 }
 
 // 下载画布为图片
@@ -242,14 +394,19 @@ function downloadCanvasAsImage() {
     exportCanvas.height = currentSize * scale;
 
     // 填充背景
-    exportCtx.fillStyle = '#FFFFFF';
-    exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+    if (currentBackgroundColor !== 'transparent') {
+        exportCtx.fillStyle = currentBackgroundColor;
+        exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+    }
 
     // 绘制放大的像素
     for (let y = 0; y < currentSize; y++) {
         for (let x = 0; x < currentSize; x++) {
-            exportCtx.fillStyle = pixelData[y][x];
-            exportCtx.fillRect(x * scale, y * scale, scale, scale);
+            const color = pixelData[y][x];
+            if (color !== 'transparent') {
+                exportCtx.fillStyle = color;
+                exportCtx.fillRect(x * scale, y * scale, scale, scale);
+            }
         }
     }
 
@@ -259,7 +416,7 @@ function downloadCanvasAsImage() {
     link.href = exportCanvas.toDataURL('image/png');
     link.click();
 
-    fsLogger.info('Canvas downloaded as image');
+
 }
 
 // 复制文本到剪贴板
@@ -274,9 +431,9 @@ function copyToClipboard(text, button) {
             button.style.backgroundColor = '';
         }, 2000);
 
-        fsLogger.info('Text copied to clipboard');
+
     }).catch(err => {
-        fsLogger.error('Failed to copy text: ' + err);
+
         alert('Failed to copy text');
     });
 }
@@ -284,7 +441,7 @@ function copyToClipboard(text, button) {
 // 处理图片上传
 function handleImageUpload(file) {
     if (!file.type.match('image.*')) {
-        fsLogger.error('File is not an image');
+
         alert('Please select an image file');
         return;
     }
@@ -326,7 +483,7 @@ function bindEvents() {
     // 颜色选择器
     colorPicker.addEventListener('input', () => {
         currentColor = colorPicker.value;
-        fsLogger.info(`Color changed to ${currentColor}`);
+
     });
 
     // 快速颜色选择
@@ -335,13 +492,15 @@ function bindEvents() {
 
         swatch.addEventListener('click', () => {
             currentColor = swatch.dataset.color;
-            colorPicker.value = currentColor;
+            if (currentColor !== 'transparent') {
+                colorPicker.value = currentColor;
+            }
 
             // 更新活动状态
             document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
             swatch.classList.add('active');
 
-            fsLogger.info(`Quick color selected: ${currentColor}`);
+
         });
     });
 
@@ -350,18 +509,73 @@ function bindEvents() {
         resizeCanvas(parseInt(sizeSelector.value));
     });
 
-    // 工具选择
-    toolSelector.addEventListener('change', () => {
-        currentTool = toolSelector.value;
-        // 使用CSS类来设置光标，避免直接在代码中嵌入SVG数据
-        if (currentTool === 'eraser') {
-            canvas.classList.add('cursor-eraser');
-            canvas.classList.remove('cursor-brush');
-        } else {
-            canvas.classList.remove('cursor-eraser');
-            canvas.classList.add('cursor-brush');
+    // 窗口大小改变事件，动态调整画布大小
+    window.addEventListener('resize', () => {
+        // 重新应用当前大小，但使用新的像素尺寸计算
+        resizeCanvas(currentSize);
+    });
+
+    // 工具选择 - 按钮方式
+    toolButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // 更新工具
+            currentTool = button.dataset.tool;
+
+            // 更新按钮状态
+            toolButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // 更新光标
+            if (currentTool === 'eraser') {
+                canvas.classList.add('cursor-eraser');
+                canvas.classList.remove('cursor-brush');
+                // 移除所有画笔尺寸类
+                for (let i = 1; i <= 5; i++) {
+                    canvas.classList.remove(`brush-size-${i}`);
+                }
+            } else {
+                canvas.classList.remove('cursor-eraser');
+                canvas.classList.add('cursor-brush');
+                // 更新画笔尺寸光标
+                updateBrushSizeCursor();
+            }
+        });
+    });
+
+    // 画笔尺寸选择
+    brushSizeSlider.addEventListener('input', () => {
+        currentBrushSize = parseInt(brushSizeSlider.value);
+        brushSizeValue.textContent = currentBrushSize;
+        // 更新光标
+        if (currentTool === 'brush') {
+            updateBrushSizeCursor();
         }
-        fsLogger.info(`Tool changed to ${currentTool}`);
+    });
+
+    // 更新画笔尺寸光标
+    function updateBrushSizeCursor() {
+        // 移除所有画笔尺寸类
+        for (let i = 1; i <= 5; i++) {
+            canvas.classList.remove(`brush-size-${i}`);
+        }
+        // 添加当前尺寸的光标类
+        canvas.classList.add(`brush-size-${currentBrushSize}`);
+    }
+
+    // 网格线显示开关
+    showGridCheckbox.addEventListener('change', () => {
+        showGrid = showGridCheckbox.checked;
+        updateGrid();
+    });
+
+    // 背景色选择
+    backgroundColorPicker.addEventListener('input', () => {
+        setBackgroundColor(backgroundColorPicker.value);
+    });
+
+    // 透明背景按钮
+    bgTransparentButton.addEventListener('click', () => {
+        setBackgroundColor('transparent');
     });
 
     // 清空画布
@@ -374,10 +588,10 @@ function bindEvents() {
         tabButtons[0].click();
     });
 
-    // 导出Markdown
-    exportMarkdownButton.addEventListener('click', () => {
-        const markdown = exportAsMarkdown();
-        // 切换到Markdown选项卡
+    // 导出Base64
+    exportBase64Button.addEventListener('click', () => {
+        const base64 = exportAsBase64();
+        // 切换到Base64选项卡
         tabButtons[1].click();
     });
 
@@ -437,7 +651,7 @@ function bindEvents() {
     // 复制按钮
     copyButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
-            const panelId = index === 0 ? '#svg-output' : '#markdown-output';
+            const panelId = index === 0 ? '#svg-output' : '#base64-output';
             const codeElement = document.querySelector(`${panelId} code`);
             const text = codeElement.textContent;
 
@@ -446,6 +660,9 @@ function bindEvents() {
             }
         });
     });
+
+    // 初始化画笔尺寸光标
+    updateBrushSizeCursor();
 }
 
 // 当页面加载完成后初始化
