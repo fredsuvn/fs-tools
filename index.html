@@ -24,6 +24,8 @@
       line-height: 1.6;
       color: #333;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-attachment: fixed;
+      background-size: cover;
       min-height: 100vh;
     }
 
@@ -225,13 +227,15 @@
       <div class="logo">
         <img src="docs/pics/logo.svg" alt="fs-tools Logo">
       </div>
-      <h1>fs-tools</h1>
-      <p class="subtitle">JavaScript Tools Collection</p>
+      <div style="text-align: center;">
+        <h1>fs-tools</h1>
+        <p class="subtitle">JavaScript Tools Collection</p>
+        <p class="author-info" id="author-info" style="text-align: left; margin-left: 61.8%; margin-top: 10px; font-size: 0.9rem; opacity: 0.9;"></p>
+      </div>
       <div class="search-container">
         <input type="text" id="search-input" class="search-input" placeholder="Search tools by ID, name or tags...">
         <span class="search-icon">Search</span>
       </div>
-      <p class="author-info" id="author-info"></p>
     </header>
 
     <!-- Tools List -->

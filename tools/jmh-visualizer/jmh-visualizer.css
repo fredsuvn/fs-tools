@@ -8,23 +8,37 @@
 body {
   font-family: 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f5f5f5;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100vh;
 }
 
 /* Header styles */
 .header {
-  background: white;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
+  text-align: center;
+  color: white;
+  margin-bottom: 40px;
+  padding: 30px 0;
+  background: rgba(118, 75, 162, 0.1); /* 增强紫色调 */
 }
 
 .header h1 {
-  color: #2c3e50;
-  margin-bottom: 15px;
-  font-size: 2em;
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 2.5em;
   text-align: center;
+  font-weight: 300;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.author-info {
+  color: rgba(255,255,255,0.9);
+  font-size: 1.1em;
+  margin-bottom: 20px;
+  font-weight: 300;
+  opacity: 0.9;
 }
 
 .global-controls {
@@ -39,18 +53,31 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  background: rgba(255,255,255,0.9);
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(118, 75, 162, 0.2);
 }
 
 .control-group label {
-  font-weight: 600;
-  color: #555;
+  font-weight: 500;
+  color: #764ba2;
+  font-size: 14px;
 }
 
 .control-group select {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   background: white;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.control-group select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
 /* File upload section */
@@ -59,38 +86,44 @@ body {
 }
 
 .toggle-btn {
-  background: #3498db;
-  color: white;
+  background: #ffffff;
+  color: #764ba2;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
 .toggle-btn:hover {
-  background: #2980b9;
+  background: #f0e6f6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .drop-zone {
-  border: 2px dashed #3498db;
+  border: 2px dashed #667eea;
   border-radius: 8px;
   padding: 30px;
   text-align: center;
   margin: 10px 0;
-  background: #f8f9fa;
+  background: rgba(255,255,255,0.9);
   cursor: pointer;
   transition: all 0.3s ease;
+  color: #333;
 }
 
 .drop-zone:hover {
-  background: #e3f2fd;
-  border-color: #2980b9;
+  background: rgba(255,255,255,0.95);
+  border-color: #764ba2;
 }
 
 .drop-zone.dragover {
-  background: #bbdefb;
-  border-color: #1565c0;
+  background: rgba(255,255,255,0.98);
+  border-color: #5a6fd8;
 }
 
 .collapsed {
@@ -167,6 +200,9 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
+  background: rgba(255,255,255,0.1);
+  padding: 5px 10px;
+  border-radius: 4px;
 }
 
 .group-toggle {
@@ -189,18 +225,19 @@ body {
 }
 
 .back-to-toc {
-  background: #27ae60;
-  color: white;
+  background: #ffffff;
+  color: #27ae60;
   border: none;
   padding: 8px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
-  transition: background-color 0.2s;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 .back-to-toc:hover {
-  background: #229954;
+  background: #f1f9f5;
 }
 
 .group-content {
@@ -223,14 +260,20 @@ body {
 }
 
 .environment-toggle {
-  background: #95a5a6;
-  color: white;
+  background: #ffffff;
+  color: #95a5a6;
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 600;
   margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.environment-toggle:hover {
+  background: #f8f9fa;
 }
 
 /* Chart container */
@@ -272,17 +315,19 @@ body {
 }
 
 .copy-svg-btn {
-  background: #9b59b6;
-  color: white;
+  background: #ffffff;
+  color: #9b59b6;
   border: none;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
 }
 
 .copy-svg-btn:hover {
-  background: #8e44ad;
+  background: #fdf2ff;
 }
 
 .chart {
@@ -302,12 +347,14 @@ body {
   font-size: 12px;
   max-height: 200px;
   overflow-y: auto;
+  color: #333333; /* 深色文本确保可读性 */
 }
 
 .detailed-data pre {
   margin: 0;
   white-space: pre-wrap;
   word-wrap: break-word;
+  color: #333333; /* 深色文本确保可读性 */
 }
 
 /* Loading indicator */
@@ -360,25 +407,23 @@ body {
 
 /* Author information styles */
 .author-info {
-  color: #666;
+  color: rgba(255,255,255,0.8);
   font-size: 14px;
   margin: 5px 0 15px 0;
-  font-style: italic;
+  font-style: normal;
 }
 
 /* Footer styles */
 .footer {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #ddd;
   text-align: center;
-  font-size: 14px;
-  color: #666;
+  color: rgba(255,255,255,0.7);
+  padding: 30px 0;
+  margin-top: 40px;
+  border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .footer p {
-  margin: 0;
+  margin: 5px 0;
 }
 
 /* Utility classes */
@@ -397,18 +442,22 @@ body {
 
 /* 折叠/展开所有分组按钮样式 */
 .toggle-groups-btn {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
+  background: #ffffff;
+  color: #667eea;
   border: none;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
 .toggle-groups-btn:hover {
-  background-color: #0056b3;
+  background: #eef2ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 /* Toast notifications */
@@ -419,7 +468,7 @@ body {
   background: #27ae60;
   color: white;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   z-index: 1000;
   animation: slideIn 0.3s ease-out;
