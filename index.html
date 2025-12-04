@@ -130,7 +130,10 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-decoration: none;
       color: inherit;
-      display: block;
+      position: relative;
+      min-height: 350px; /* 固定最小高度 */
+      display: flex;
+      flex-direction: column;
     }
 
     .tool-card:hover {
@@ -161,6 +164,49 @@
     .tool-description {
       color: #666;
       margin-bottom: 15px;
+    }
+
+    /* Tags Styles */
+    .tool-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+      position: absolute;
+      bottom: 60px;
+      left: 30px;
+      right: 30px;
+    }
+
+    .tool-tag {
+      display: inline-block;
+      background: rgba(102, 126, 234, 0.1);
+      color: #667eea;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: background 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .tool-tag:hover {
+      background: rgba(102, 126, 234, 0.2);
+      text-decoration: underline;
+    }
+
+    .tool-card:hover .tool-tag {
+      background: rgba(102, 126, 234, 0.2);
+    }
+
+    .tool-card-content {
+      margin-bottom: 80px; /* 为底部的标签和按钮预留空间 */
+    }
+
+    .tool-card-footer {
+      position: absolute;
+      bottom: 30px;
+      left: 30px;
     }
 
     .tool-link {
@@ -390,14 +436,37 @@
             'pixel-logo': '🎨'
           };
 
+          // 生成标签HTML
+          let tagsHtml = '';
+          if (tool.tags && Array.isArray(tool.tags) && tool.tags.length > 0) {
+            tagsHtml = '<div class="tool-tags">';
+            tool.tags.forEach(tag => {
+              tagsHtml += `<span class="tool-tag" data-tag="${tag}">${tag}</span>`;
+            });
+            tagsHtml += '</div>';
+          }
+
           toolCard.html(`
-            <div class="tool-icon">${iconMap[tool.id] || '🔧'}</div>
-            <h3 class="tool-title">${tool.name}</h3>
-            <p class="tool-description">${tool.description}</p>
-            <span class="tool-link">Get Started →</span>
+            <div class="tool-card-content">
+              <div class="tool-icon">${iconMap[tool.id] || '🔧'}</div>
+              <h3 class="tool-title">${tool.name}</h3>
+              <p class="tool-description">${tool.description}</p>
+            </div>
+            ${tagsHtml}
+            <div class="tool-card-footer">
+              <span class="tool-link">Get Started →</span>
+            </div>
           `);
 
           toolsGrid.append(toolCard);
+        });
+
+        // 为标签添加点击事件
+        $('.tool-tag').on('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const tag = $(this).data('tag');
+          $('#search-input').val(tag).trigger('input');
         });
       }
     });
