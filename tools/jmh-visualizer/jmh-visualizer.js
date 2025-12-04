@@ -515,7 +515,39 @@ class JMHVisualizer {
 
   updateAllCharts() {
     this.charts.forEach((config, chartId) => {
+      // 首先更新图表局部按钮的UI显示，使其与全局按钮保持一致
+      this.syncLocalButtonsWithGlobal(chartId);
+      // 然后更新图表渲染
       this.updateChart(chartId);
+    });
+  }
+
+  // 同步图表局部按钮与全局按钮
+  syncLocalButtonsWithGlobal(chartId) {
+    const settingTypes = ['chart-type', 'renderer', 'sort-metric', 'sort-order', 'show-errors'];
+
+    settingTypes.forEach(type => {
+      // 获取全局设置值
+      const globalValue = this.getGlobalSetting(type);
+      // 获取对应的局部按钮class名称
+      const classMapping = {
+        'chart-type': 'chart-type',
+        'renderer': 'chart-renderer',
+        'sort-metric': 'sort-metric',
+        'sort-order': 'sort-order',
+        'show-errors': 'show-errors'
+      };
+
+      const className = classMapping[type];
+      const localElement = $(`#${chartId} .${className}`);
+
+      if (localElement && localElement.length > 0) {
+        // 更新局部按钮的值，但不触发change事件，避免循环更新
+        localElement.val(globalValue);
+
+        // 记录这次更新的来源为global
+        this.setLastChanged(chartId, 'global', type);
+      }
     });
   }
 
