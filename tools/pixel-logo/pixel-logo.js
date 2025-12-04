@@ -12,7 +12,7 @@ let currentBrushSize = 1;
 let isDrawing = false;
 let pixelData = [];
 let currentBackgroundColor = '#FFFFFF';
-let showGrid = false;
+let showGrid = true;
 let gridCanvas;
 let gridCtx;
 
@@ -35,8 +35,7 @@ let brushSizeSlider;
 let brushSizeValue;
 let toolButtons;
 let showGridCheckbox;
-let backgroundColorPicker;
-let bgTransparentButton;
+// 背景按钮已移除，默认使用半透明背景
 
 // 初始化函数
 function init() {
@@ -61,8 +60,7 @@ function init() {
     outputPanels = document.querySelectorAll('.output-panel');
     copyButtons = document.querySelectorAll('.copy-btn');
     showGridCheckbox = document.getElementById('show-grid');
-    backgroundColorPicker = document.getElementById('background-color');
-    bgTransparentButton = document.getElementById('bg-transparent');
+    // 背景按钮已移除
 
     // 设置Canvas
     canvas = canvasElement;
@@ -72,14 +70,23 @@ function init() {
     gridCanvas = document.createElement('canvas');
     gridCtx = gridCanvas.getContext('2d');
     gridCanvas.style.position = 'absolute';
-    gridCanvas.style.top = '0';
-    gridCanvas.style.left = '0';
     gridCanvas.style.pointerEvents = 'none';
+
+    // 确保画布容器有相对定位
+    canvas.parentElement.style.position = 'relative';
     canvas.parentElement.appendChild(gridCanvas);
 
     // 初始化画布
     resizeCanvas(currentSize);
     clearCanvas();
+
+    // 设置默认显示网格线
+    showGridCheckbox.checked = true;
+
+
+
+    // 更新网格显示
+    updateGrid();
 
     // 绑定事件监听器
     bindEvents();
@@ -94,10 +101,6 @@ function resizeCanvas(size) {
     canvas.width = size;
     canvas.height = size;
 
-    // 设置网格画布大小
-    gridCanvas.width = size;
-    gridCanvas.height = size;
-
     // 计算最佳像素大小以适应容器
     const canvasContainer = document.querySelector('.canvas-container') || canvas.parentElement;
     const containerRect = canvasContainer.getBoundingClientRect();
@@ -109,23 +112,26 @@ function resizeCanvas(size) {
     // 确保像素大小至少为4px以保证可用性
     pixelSize = Math.max(pixelSize, 4);
 
+    // 设置主画布尺寸
+    canvas.width = size;
+    canvas.height = size;
     canvas.style.width = `${size * pixelSize}px`;
     canvas.style.height = `${size * pixelSize}px`;
 
-    // 设置网格画布样式
+    // 设置网格画布尺寸 - 与实际显示尺寸一致
+    gridCanvas.width = size * pixelSize;
+    gridCanvas.height = size * pixelSize;
     gridCanvas.style.width = `${size * pixelSize}px`;
     gridCanvas.style.height = `${size * pixelSize}px`;
 
-    // 重新初始化像素数据
-    pixelData = Array(size).fill().map(() => Array(size).fill('#FFFFFF'));
+    // 确保网格画布与主画布对齐
+    alignGridCanvas();
+
+    // 重新初始化像素数据 - 使用空字符串表示透明/无像素
+    pixelData = Array(size).fill().map(() => Array(size).fill(''));
 
     // 清空画布
-    if (currentBackgroundColor === 'transparent') {
-        ctx.clearRect(0, 0, size, size);
-    } else {
-        ctx.fillStyle = currentBackgroundColor;
-        ctx.fillRect(0, 0, size, size);
-    }
+    ctx.clearRect(0, 0, size, size);
 
     // 更新网格
     updateGrid();
@@ -135,20 +141,28 @@ function resizeCanvas(size) {
 
 // 清空画布
 function clearCanvas() {
-    if (currentBackgroundColor === 'transparent') {
-        ctx.clearRect(0, 0, currentSize, currentSize);
-    } else {
-        ctx.fillStyle = currentBackgroundColor;
-        ctx.fillRect(0, 0, currentSize, currentSize);
-    }
+    ctx.clearRect(0, 0, currentSize, currentSize);
 
-    // 重置像素数据
+    // 重置像素数据 - 使用空字符串表示透明/无像素
     for (let y = 0; y < currentSize; y++) {
         for (let x = 0; x < currentSize; x++) {
-            pixelData[y][x] = '#FFFFFF';
+            pixelData[y][x] = '';
         }
     }
+}
 
+// 确保网格画布与主画布对齐
+function alignGridCanvas() {
+    const canvasRect = canvas.getBoundingClientRect();
+    const containerRect = canvas.parentElement.getBoundingClientRect();
+
+    // 计算主画布在容器中的偏移量
+    const offsetX = canvasRect.left - containerRect.left;
+    const offsetY = canvasRect.top - containerRect.top;
+
+    // 设置网格画布位置与主画布对齐
+    gridCanvas.style.left = `${offsetX}px`;
+    gridCanvas.style.top = `${offsetY}px`;
 }
 
 // 更新网格显示
@@ -161,60 +175,42 @@ function updateGrid() {
     // 清空网格画布
     gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
 
-    // 设置网格样式
-    gridCtx.strokeStyle = '#CCCCCC';
-    gridCtx.lineWidth = 0.5;
+    // 设置网格样式 - 在半透明背景下更明显
+    gridCtx.strokeStyle = '#AAAAAA';
+    gridCtx.lineWidth = 1;
+
+    // 计算像素大小
+    const pixelSize = gridCanvas.width / currentSize;
 
     // 绘制垂直线
     for (let x = 0; x <= currentSize; x++) {
         gridCtx.beginPath();
-        gridCtx.moveTo(x, 0);
-        gridCtx.lineTo(x, currentSize);
+        gridCtx.moveTo(x * pixelSize, 0);
+        gridCtx.lineTo(x * pixelSize, gridCanvas.height);
         gridCtx.stroke();
     }
 
     // 绘制水平线
     for (let y = 0; y <= currentSize; y++) {
         gridCtx.beginPath();
-        gridCtx.moveTo(0, y);
-        gridCtx.lineTo(currentSize, y);
+        gridCtx.moveTo(0, y * pixelSize);
+        gridCtx.lineTo(gridCanvas.width, y * pixelSize);
         gridCtx.stroke();
     }
 }
 
-// 设置背景色
-function setBackgroundColor(color) {
-    currentBackgroundColor = color;
 
-    // 更新画布容器样式
-    if (color === 'transparent') {
-        canvas.parentElement.classList.add('transparent-bg');
-        backgroundColorPicker.style.opacity = '0.5';
-    } else {
-        canvas.parentElement.classList.remove('transparent-bg');
-        backgroundColorPicker.style.opacity = '1';
-        backgroundColorPicker.value = color;
-    }
-
-    // 重绘画布
-    redrawCanvas();
-}
 
 // 重绘画布
 function redrawCanvas() {
     // 清空背景
-    if (currentBackgroundColor === 'transparent') {
-        ctx.clearRect(0, 0, currentSize, currentSize);
-    } else {
-        ctx.fillStyle = currentBackgroundColor;
-        ctx.fillRect(0, 0, currentSize, currentSize);
-    }
+    ctx.clearRect(0, 0, currentSize, currentSize);
 
     // 重绘所有像素
     for (let y = 0; y < currentSize; y++) {
         for (let x = 0; x < currentSize; x++) {
             const color = pixelData[y][x];
-            if (color !== 'transparent') {
+            if (color && color !== 'transparent') {
                 ctx.fillStyle = color;
                 ctx.fillRect(x, y, 1, 1);
             }
@@ -237,6 +233,60 @@ function getPixelCoordinates(event) {
     };
 }
 
+// 获取画布上指定像素的颜色
+function getPixelColor(x, y) {
+    // 确保在画布范围内
+    if (x >= 0 && x < currentSize && y >= 0 && y < currentSize) {
+        return pixelData[y][x];
+    }
+    return null;
+}
+
+// 填充算法（墨水瓶功能）
+function floodFill(startX, startY, targetColor, replacementColor) {
+    // 如果目标颜色和替换颜色相同，直接返回
+    if (targetColor === replacementColor) return;
+
+    // 使用队列进行广度优先搜索
+    const queue = [];
+    queue.push({x: startX, y: startY});
+
+    // 记录已访问的像素
+    const visited = Array(currentSize).fill().map(() => Array(currentSize).fill(false));
+
+    while (queue.length > 0) {
+        const {x, y} = queue.shift();
+
+        // 检查边界和是否已访问
+        if (x < 0 || x >= currentSize || y < 0 || y >= currentSize || visited[y][x]) {
+            continue;
+        }
+
+        // 检查当前像素颜色是否匹配目标颜色（处理空字符串的情况）
+        if (pixelData[y][x] === targetColor) {
+            // 标记为已访问
+            visited[y][x] = true;
+
+            // 填充像素
+            pixelData[y][x] = replacementColor;
+
+            // 根据颜色类型进行不同的绘制处理
+            if (replacementColor === '' || replacementColor === 'transparent') {
+                ctx.clearRect(x, y, 1, 1);
+            } else {
+                ctx.fillStyle = replacementColor;
+                ctx.fillRect(x, y, 1, 1);
+            }
+
+            // 将相邻像素加入队列
+            queue.push({x: x + 1, y: y});
+            queue.push({x: x - 1, y: y});
+            queue.push({x: x, y: y + 1});
+            queue.push({x: x, y: y - 1});
+        }
+    }
+}
+
 // 绘制像素点（支持不同画笔尺寸和透明色）
 function drawPixel(x, y, color) {
     const halfSize = Math.floor(currentBrushSize / 2);
@@ -249,10 +299,11 @@ function drawPixel(x, y, color) {
 
             // 确保在画布范围内
             if (nx >= 0 && nx < currentSize && ny >= 0 && ny < currentSize) {
+                // 更新像素数据
                 pixelData[ny][nx] = color;
 
-                // 处理透明色
-                if (color === 'transparent') {
+                // 根据颜色类型进行不同的绘制处理
+                if (color === '' || color === 'transparent') {
                     ctx.clearRect(nx, ny, 1, 1);
                 } else {
                     ctx.fillStyle = color;
@@ -323,10 +374,7 @@ function exportAsSvg() {
     const pixelSize = 10; // SVG中每个像素的大小
     let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${currentSize * pixelSize}" height="${currentSize * pixelSize}" viewBox="0 0 ${currentSize * pixelSize} ${currentSize * pixelSize}">`;
 
-    // 添加背景
-    if (currentBackgroundColor !== 'transparent') {
-        svgContent += `<rect x="0" y="0" width="${currentSize * pixelSize}" height="${currentSize * pixelSize}" fill="${currentBackgroundColor}" />`;
-    }
+
 
     // 添加每个像素作为矩形
     for (let y = 0; y < currentSize; y++) {
@@ -357,11 +405,7 @@ function exportAsBase64() {
     exportCanvas.width = currentSize * scale;
     exportCanvas.height = currentSize * scale;
 
-    // 填充背景
-    if (currentBackgroundColor !== 'transparent') {
-        exportCtx.fillStyle = currentBackgroundColor;
-        exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-    }
+
 
     // 绘制放大的像素
     for (let y = 0; y < currentSize; y++) {
@@ -393,11 +437,7 @@ function downloadCanvasAsImage() {
     exportCanvas.width = currentSize * scale;
     exportCanvas.height = currentSize * scale;
 
-    // 填充背景
-    if (currentBackgroundColor !== 'transparent') {
-        exportCtx.fillStyle = currentBackgroundColor;
-        exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-    }
+
 
     // 绘制放大的像素
     for (let y = 0; y < currentSize; y++) {
@@ -462,16 +502,26 @@ function handleImageUpload(file) {
 function bindEvents() {
     // 画布事件
     canvas.addEventListener('mousedown', (e) => {
-        isDrawing = true;
         const coords = getPixelCoordinates(e);
-        const color = currentTool === 'eraser' ? '#FFFFFF' : currentColor;
-        drawPixel(coords.x, coords.y, color);
+
+        if (currentTool === 'fill') {
+            // 填充工具：执行区域填充
+            const targetColor = getPixelColor(coords.x, coords.y);
+            if (targetColor) {
+                floodFill(coords.x, coords.y, targetColor, currentColor);
+            }
+        } else {
+            // 画笔和橡皮擦工具：开始绘制
+            isDrawing = true;
+            const color = currentTool === 'eraser' ? '' : currentColor;
+            drawPixel(coords.x, coords.y, color);
+        }
     });
 
     canvas.addEventListener('mousemove', (e) => {
-        if (isDrawing) {
+        if (isDrawing && currentTool !== 'fill') {
             const coords = getPixelCoordinates(e);
-            const color = currentTool === 'eraser' ? '#FFFFFF' : currentColor;
+            const color = currentTool === 'eraser' ? '' : currentColor;
             drawPixel(coords.x, coords.y, color);
         }
     });
@@ -529,12 +579,22 @@ function bindEvents() {
             if (currentTool === 'eraser') {
                 canvas.classList.add('cursor-eraser');
                 canvas.classList.remove('cursor-brush');
+                canvas.classList.remove('cursor-fill');
+                // 移除所有画笔尺寸类
+                for (let i = 1; i <= 5; i++) {
+                    canvas.classList.remove(`brush-size-${i}`);
+                }
+            } else if (currentTool === 'fill') {
+                canvas.classList.remove('cursor-eraser');
+                canvas.classList.remove('cursor-brush');
+                canvas.classList.add('cursor-fill');
                 // 移除所有画笔尺寸类
                 for (let i = 1; i <= 5; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
             } else {
                 canvas.classList.remove('cursor-eraser');
+                canvas.classList.remove('cursor-fill');
                 canvas.classList.add('cursor-brush');
                 // 更新画笔尺寸光标
                 updateBrushSizeCursor();
@@ -568,15 +628,37 @@ function bindEvents() {
         updateGrid();
     });
 
-    // 背景色选择
-    backgroundColorPicker.addEventListener('input', () => {
-        setBackgroundColor(backgroundColorPicker.value);
-    });
+    // 背景按钮已移除，默认使用半透明背景
+    canvas.parentElement.classList.add('transparent-bg');
+    currentBackgroundColor = 'transparent';
 
-    // 透明背景按钮
-    bgTransparentButton.addEventListener('click', () => {
-        setBackgroundColor('transparent');
-    });
+
+
+    // 调色板确认按钮
+    const paletteConfirmButton = document.getElementById('palette-confirm');
+    if (paletteConfirmButton) {
+        paletteConfirmButton.addEventListener('click', () => {
+            // 应用当前选择的颜色到画笔
+            const activeSwatch = document.querySelector('.color-swatch.active');
+            if (activeSwatch) {
+                currentColor = activeSwatch.dataset.color;
+                if (currentColor !== 'transparent') {
+                    colorPicker.value = currentColor;
+                }
+                // 关闭调色板或隐藏调色板区域
+                document.querySelector('.palette').style.display = 'none';
+            }
+        });
+    }
+
+    // 调色板取消按钮
+    const paletteCancelButton = document.getElementById('palette-cancel');
+    if (paletteCancelButton) {
+        paletteCancelButton.addEventListener('click', () => {
+            // 关闭调色板或隐藏调色板区域
+            document.querySelector('.palette').style.display = 'none';
+        });
+    }
 
     // 清空画布
     clearButton.addEventListener('click', clearCanvas);

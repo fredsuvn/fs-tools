@@ -30,8 +30,9 @@
                     <div class="control-group">
                         <label>Tools:</label>
                         <div class="tool-buttons">
-                            <button id="tool-brush" class="tool-btn active" data-tool="brush">Brush</button>
-                            <button id="tool-eraser" class="tool-btn" data-tool="eraser">Eraser</button>
+                            <button id="tool-brush" class="tool-btn active" data-tool="brush"></button>
+                            <button id="tool-fill" class="tool-btn" data-tool="fill"></button>
+                            <button id="tool-eraser" class="tool-btn" data-tool="eraser"></button>
                         </div>
                     </div>
 
@@ -46,11 +47,7 @@
                         <input type="checkbox" id="show-grid">
                     </div>
 
-                    <div class="control-group">
-                        <label for="background-color">Background Color:</label>
-                        <input type="color" id="background-color" value="#FFFFFF">
-                        <button id="bg-transparent" style="margin-top: 6px;">Transparent</button>
-                    </div>
+                    <!-- 背景控制已移除，默认使用半透明背景 -->
 
                     <div class="control-group">
                         <label for="color-picker">Color:</label>
@@ -58,7 +55,13 @@
                     </div>
 
                     <div class="palette">
-                        <label>Quick Colors:</label>
+                        <div class="palette-header">
+                            <span>Quick Colors</span>
+                            <div class="palette-controls">
+                                <button id="palette-confirm" class="palette-btn confirm-btn">Confirm</button>
+                                <button id="palette-cancel" class="palette-btn cancel-btn">Cancel</button>
+                            </div>
+                        </div>
                         <div class="color-palette">
                             <div class="color-swatch" data-color="#000000"></div>
                             <div class="color-swatch" data-color="#FFFFFF"></div>
@@ -76,7 +79,7 @@
                             <div class="color-swatch" data-color="#000080"></div>
                             <div class="color-swatch" data-color="#800000"></div>
                             <div class="color-swatch" data-color="#808080"></div>
-                        <div class="color-swatch" data-color="transparent" style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
+                            <div class="color-swatch" data-color="transparent" style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
                         </div>
                     </div>
 
