@@ -227,7 +227,9 @@ class JMHVisualizer {
     const controls = $('<div>').addClass('group-controls');
     controls.append($('<button>').addClass('back-to-toc').text('Back to TOC').on('click', (e) => {
       e.stopPropagation();
-      $('html, body').animate({ scrollTop: 0 }, 500);
+      // 跳转到目录而不是页面顶部
+      const tocPosition = $('#toc').offset().top;
+      $('html, body').animate({ scrollTop: tocPosition }, 500);
     }));
 
     const toggleBtn = $('<button>').addClass('group-toggle').html('▼');
@@ -248,10 +250,6 @@ class JMHVisualizer {
     // Group content
     const content = $('<div>').addClass('group-content');
 
-    // Environment info
-    const envSection = this.createEnvironmentSection(group.environment);
-    content.append(envSection);
-
     // Single chart for the entire group - pass className as second parameter and methodName as third
     // For group chart, we'll use className as both since it's a group-level chart
     const chartSection = this.createChartSection(group.benchmarks, className, '');
@@ -267,7 +265,13 @@ class JMHVisualizer {
     const toggleBtn = $('<button>').addClass('environment-toggle').text('Show Environment Info');
     const envInfo = $('<div>').addClass('environment-info collapsed');
 
-    const envContent = $('<pre>').text(JSON.stringify(environment, null, 2));
+    // 检查环境信息是否为空
+    let envContent;
+    if (!environment || Object.keys(environment).length === 0) {
+      envContent = $('<p>').text('No environment information available.');
+    } else {
+      envContent = $('<pre>').text(JSON.stringify(environment, null, 2));
+    }
     envInfo.append(envContent);
 
     toggleBtn.on('click', () => {
@@ -301,42 +305,57 @@ class JMHVisualizer {
     const chartDiv = $('<div>').addClass('chart-container').attr('id', chartId);
 
     // Chart header with controls only (no title)
-    const header = $('<div>').addClass('chart-header');
+    const header = $('<div>').addClass('chart-header').css({
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexWrap: 'nowrap',  // 不换行
+      width: '100%',
+      overflow: 'hidden'  // 防止内容溢出
+    });
 
-    const controls = $('<div>').addClass('chart-controls');
+    // 左侧控制按钮组 - 包含所有图表控制按钮和copy svg
+    const leftControls = $('<div>').addClass('chart-controls').css({
+      display: 'flex',
+      gap: '10px',
+      alignItems: 'center',
+      flexWrap: 'nowrap',  // 不换行
+      flex: '1',  // 占据剩余空间
+      overflow: 'hidden'  // 防止内容溢出
+    });
 
     // Chart type with event listener - default to horizontalBar
-    const chartTypeSelect = $('<select>').addClass('chart-type').append(
+    const chartTypeSelect = $('<select>').addClass('chart-type').css({flexShrink: 0}).append(
       $('<option>').val('bar').text('Vertical'),
       $('<option>').val('horizontalBar').text('Horizontal').prop('selected', true)
     ).on('change', () => {
       this.setLastChanged(chartId, 'local', 'chart-type');
       this.updateChart(chartId);
     });
-    controls.append(chartTypeSelect);
+    leftControls.append(chartTypeSelect);
 
     // Renderer with event listener
-    const rendererSelect = $('<select>').addClass('chart-renderer').append(
+    const rendererSelect = $('<select>').addClass('chart-renderer').css({flexShrink: 0}).append(
       $('<option>').val('canvas').text('Canvas'),
       $('<option>').val('svg').text('SVG')
     ).on('change', () => {
       this.setLastChanged(chartId, 'local', 'renderer');
       this.updateChart(chartId);
     });
-    controls.append(rendererSelect);
+    leftControls.append(rendererSelect);
 
     // Sort metric with event listener
-    const sortMetricSelect = $('<select>').addClass('sort-metric').append(
+    const sortMetricSelect = $('<select>').addClass('sort-metric').css({flexShrink: 0}).append(
       $('<option>').val('score').text('Score'),
       $('<option>').val('throughput').text('Throughput')
     ).on('change', () => {
       this.setLastChanged(chartId, 'local', 'sort-metric');
       this.updateChart(chartId);
     });
-    controls.append(sortMetricSelect);
+    leftControls.append(sortMetricSelect);
 
     // Sort order with event listener
-    const sortOrderSelect = $('<select>').addClass('sort-order').append(
+    const sortOrderSelect = $('<select>').addClass('sort-order').css({flexShrink: 0}).append(
       $('<option>').val('original').text('Original'),
       $('<option>').val('asc').text('Ascending'),
       $('<option>').val('desc').text('Descending')
@@ -344,34 +363,75 @@ class JMHVisualizer {
       this.setLastChanged(chartId, 'local', 'sort-order');
       this.updateChart(chartId);
     });
-    controls.append(sortOrderSelect);
+    leftControls.append(sortOrderSelect);
 
     // Show errors with event listener
-    const showErrorsSelect = $('<select>').addClass('show-errors').append(
+    const showErrorsSelect = $('<select>').addClass('show-errors').css({flexShrink: 0}).append(
       $('<option>').val('true').text('Show Errors'),
       $('<option>').val('false').text('Hide Errors')
     ).on('change', () => {
       this.setLastChanged(chartId, 'local', 'show-errors');
       this.updateChart(chartId);
     });
-    controls.append(showErrorsSelect);
+    leftControls.append(showErrorsSelect);
 
     // Copy SVG button
-    controls.append($('<button>').addClass('copy-svg-btn').text('Copy SVG')
+    leftControls.append($('<button>').addClass('copy-svg-btn').text('Copy SVG').css({flexShrink: 0})
       .on('click', () => this.copyChartSVG(chartId)));
 
-    header.append(controls);
+    // 右侧环境信息按钮 - 单独右对齐，不换行
+    const envToggleBtn = $('<button>').addClass('environment-toggle').text('Show Environment Info').css({flexShrink: 0});
+
+    header.append(leftControls);
+    header.append(envToggleBtn);
     chartDiv.append(header);
+
+    // Environment info section - 放在header下方
+    const envInfo = $('<div>').addClass('environment-info collapsed');
+
+    // 检查环境信息是否为空
+    const envData = benchmarks.length > 0 ? this.extractEnvironmentInfo(benchmarks[0]) : null;
+    const hasEnvInfo = envData && Object.keys(envData).length > 0;
+    const preElement = $('<pre>').text(hasEnvInfo ? JSON.stringify(envData, null, 2) : 'No environment information available.');
+    envInfo.append(preElement);
+
+    // 添加环境信息切换事件
+    envToggleBtn.on('click', () => {
+      envInfo.toggleClass('collapsed');
+      envToggleBtn.text(envInfo.hasClass('collapsed') ? 'Show Environment Info' : 'Hide Environment Info');
+    });
+
+    chartDiv.append(envInfo);
 
     // Chart container
     const chartElement = $('<div>').addClass('chart').attr('id', `${chartId}_chart`);
     chartDiv.append(chartElement);
 
-    // Detailed data
+    // Detailed data section with toggle
+    const detailedDataContainer = $('<div>').addClass('detailed-data-container');
+
+    // 创建单独的按钮容器
+    const toggleContainer = $('<div>').addClass('detailed-data-toggle-container');
+    const detailedDataToggle = $('<button>').addClass('detailed-data-toggle').text('Hide Detailed Data');
+
+    // 创建详细数据区域
     const detailedData = $('<div>').addClass('detailed-data');
+
+    // 添加切换事件
+    detailedDataToggle.on('click', () => {
+      detailedData.toggleClass('collapsed');
+      detailedDataToggle.text(detailedData.hasClass('collapsed') ? 'Show Detailed Data' : 'Hide Detailed Data');
+    });
+
+    // 创建数据表格
     const dataTable = this.createDetailedDataTable(benchmarks);
     detailedData.append(dataTable);
-    chartDiv.append(detailedData);
+
+    // 组装布局
+    toggleContainer.append(detailedDataToggle);
+    detailedDataContainer.append(toggleContainer);
+    detailedDataContainer.append(detailedData);
+    chartDiv.append(detailedDataContainer);
 
     // Store chart configuration
     this.charts.set(chartId, {
@@ -582,7 +642,10 @@ class JMHVisualizer {
       label: {
         show: true,
         position: isHorizontal ? 'right' : 'top',
-        formatter: (params) => params.value.toLocaleString()
+        formatter: (params) => params.value.toLocaleString(),
+        fontSize: 13,
+        fontWeight: 'normal',
+        offset: [isHorizontal ? 15 : 0, 0]
       }
     }];
 
@@ -634,16 +697,17 @@ class JMHVisualizer {
         symbol: 'none',
         lineStyle: {
           color: '#ff6b6b',
-          width: 2,
+          width: 0.8,
           type: 'dashed'
         },
         data: errorLinesData,
         markLine: {
           silent: true,
-          symbol: 'none',
+          symbol: ['bar', 'bar'],
+          symbolSize: [isHorizontal ? 0 : 5, isHorizontal ? 5 : 0],
           lineStyle: {
             color: '#ff6b6b',
-            width: 2,
+            width: 0.8,
             type: 'dashed'
           },
           data: errorLinesData.map((point, index) => {
@@ -656,36 +720,7 @@ class JMHVisualizer {
         }
       };
 
-      // 添加误差线标记（上下限点）
-      const errorPointsSeries = {
-        name: 'Error Range',
-        type: 'scatter',
-        symbol: 'circle',
-        symbolSize: 6,
-        itemStyle: {
-          color: '#ff6b6b'
-        },
-        data: sortedData.map((b, index) => {
-          if (b.primaryMetric.scoreError && b.primaryMetric.scoreError !== 'NaN') {
-            const error = b.primaryMetric.scoreError;
-            const score = b.primaryMetric.score;
-            // 返回上限和下限两个点
-            return [
-              {
-                value: isHorizontal ? [score + error, index] : [index, score + error],
-                symbolOffset: isHorizontal ? [0, 0] : [0, 0]
-              },
-              {
-                value: isHorizontal ? [score - error, index] : [index, score - error],
-                symbolOffset: isHorizontal ? [0, 0] : [0, 0]
-              }
-            ];
-          }
-          return null;
-        }).filter(item => item !== null).flat()
-      };
-
-      series.push(errorPointsSeries, errorLinesSeries);
+      series.push(errorLinesSeries);
     }
 
     return {
@@ -709,7 +744,7 @@ class JMHVisualizer {
         }
       },
       grid: {
-        left: isHorizontal ? '20%' : '3%',
+        left: isHorizontal ? '5%' : '3%',
         right: '4%',
         bottom: '3%',
         containLabel: true
@@ -720,14 +755,16 @@ class JMHVisualizer {
         axisLabel: {
           interval: 0,
           rotate: isHorizontal ? 0 : 45,
-          fontSize: 10
+          fontSize: 13,
+          fontWeight: 'normal'
         }
       },
       yAxis: {
         type: isHorizontal ? 'category' : 'value',
         data: isHorizontal ? xAxisData : null,
         axisLabel: {
-          fontSize: 10
+          fontSize: 13,
+          fontWeight: 'normal'
         }
       },
       series: series

@@ -22,6 +22,18 @@
           <p class="subtitle" style="margin-bottom: 20px;">Visualize JMH benchmark results in an elegant way</p>
           <p id="author-info" class="author-info" style="margin-top: 15px; text-align: left; margin-left: 61.8%; font-size: 0.9rem; opacity: 0.9;"></p>
         </div>
+        <!-- File upload section (collapsed by default) -->
+        <div class="file-upload-section">
+          <button id="toggle-file-upload" class="toggle-btn">Upload Results.json</button>
+          <div id="file-upload-area" class="collapsed">
+            <div class="drop-zone" id="drop-zone">
+              <p>Drag & drop results.json file here or click to select</p>
+              <input type="file" id="file-input" accept=".json" style="display: none;">
+            </div>
+            <p>Default file: <code>results.json</code> (same directory)</p>
+          </div>
+        </div>
+
       <div class="global-controls">
         <!-- 全局控制按钮放在一起 -->
         <div class="control-group">
@@ -66,18 +78,6 @@
           </select>
         </div>
       </div>
-
-        <!-- File upload section (collapsed by default) -->
-        <div class="file-upload-section">
-          <button id="toggle-file-upload" class="toggle-btn">Upload Results.json</button>
-          <div id="file-upload-area" class="collapsed">
-            <div class="drop-zone" id="drop-zone">
-              <p>Drag & drop results.json file here or click to select</p>
-              <input type="file" id="file-input" accept=".json" style="display: none;">
-            </div>
-            <p>Default file: <code>results.json</code> (same directory)</p>
-          </div>
-        </div>
     </header>
 
     <!-- Table of Contents -->

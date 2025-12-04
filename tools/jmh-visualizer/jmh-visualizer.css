@@ -19,15 +19,14 @@ body {
 .header {
   text-align: center;
   color: white;
-  margin-bottom: 40px;
-  padding: 30px 0;
+  padding: 20px 0;
   background: rgba(118, 75, 162, 0.1); /* 增强紫色调 */
 }
 
 .header h1 {
   color: #fff;
   margin-bottom: 10px;
-  font-size: 2.5em;
+  font-size: 2.2em;
   text-align: center;
   font-weight: 300;
   text-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -35,26 +34,31 @@ body {
 
 .author-info {
   color: rgba(255,255,255,0.9);
-  font-size: 1.1em;
-  margin-bottom: 20px;
+  font-size: 1em;
+  margin-bottom: 15px;
   font-weight: 300;
   opacity: 0.9;
 }
 
 .global-controls {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 15px;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.file-upload-section {
+  margin-top: 5px;
 }
 
 .control-group {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: rgba(255,255,255,0.9);
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 4px;
   border: 1px solid rgba(118, 75, 162, 0.2);
 }
@@ -62,15 +66,15 @@ body {
 .control-group label {
   font-weight: 500;
   color: #764ba2;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .control-group select {
-  padding: 6px 12px;
+  padding: 4px 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   background: white;
-  font-size: 14px;
+  font-size: 12px;
   outline: none;
   transition: border-color 0.3s ease;
 }
@@ -133,16 +137,16 @@ body {
 /* Table of Contents */
 .toc {
   background: white;
-  padding: 20px;
-  margin: 0 20px 20px 20px;
+  padding: 15px;
+  margin: 0 20px 15px 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .toc h2 {
   color: #2c3e50;
-  margin-bottom: 15px;
-  font-size: 1.5em;
+  margin-bottom: 12px;
+  font-size: 1.2em;
 }
 
 #toc-list {
@@ -150,16 +154,17 @@ body {
 }
 
 #toc-list li {
-  margin: 5px 0;
+  margin: 3px 0;
 }
 
 #toc-list a {
   color: #3498db;
   text-decoration: none;
-  padding: 5px 10px;
+  padding: 3px 8px;
   border-radius: 4px;
   display: block;
   transition: background-color 0.2s;
+  font-size: 0.9em;
 }
 
 #toc-list a:hover {
@@ -169,7 +174,7 @@ body {
 /* Benchmark groups */
 .benchmark-group {
   background: white;
-  margin: 0 20px 20px 20px;
+  margin: 0 20px 15px 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow: hidden;
@@ -178,7 +183,7 @@ body {
 .group-header {
   background: #34495e;
   color: white;
-  padding: 15px 20px;
+  padding: 10px 12px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -192,7 +197,7 @@ body {
 
 .group-header h3 {
   margin: 0;
-  font-size: 1.3em;
+  font-size: 1.0em;
   flex: 1;
 }
 
@@ -241,7 +246,7 @@ body {
 }
 
 .group-content {
-  padding: 20px;
+  padding: 10px;
 }
 
 .collapsed .group-content {
@@ -257,6 +262,7 @@ body {
   margin-bottom: 20px;
   font-family: 'Courier New', monospace;
   font-size: 12px;
+  color: #333333;
 }
 
 .environment-toggle {
@@ -278,7 +284,6 @@ body {
 
 /* Chart container */
 .chart-container {
-  margin: 20px 0;
   border: 1px solid #e9ecef;
   border-radius: 8px;
   padding: 15px;
@@ -289,7 +294,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
   flex-wrap: wrap;
   gap: 10px;
 }
@@ -305,6 +309,7 @@ body {
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .chart-controls select {
@@ -332,8 +337,8 @@ body {
 
 .chart {
   width: 100%;
-  height: 400px;
-  min-height: 300px;
+  height: 350px;
+  min-height: 250px;
 }
 
 /* Detailed data */
@@ -342,12 +347,44 @@ body {
   border: 1px solid #e9ecef;
   border-radius: 4px;
   padding: 15px;
-  margin-top: 15px;
+  margin-top: 2px;
   font-family: 'Courier New', monospace;
   font-size: 12px;
-  max-height: 200px;
-  overflow-y: auto;
   color: #333333; /* 深色文本确保可读性 */
+}
+
+.detailed-data.collapsed {
+  max-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: none;
+  margin-top: 0;
+}
+
+.detailed-data-container {
+  margin-top: 15px;
+}
+
+.detailed-data-toggle-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2px;
+}
+
+.detailed-data-toggle {
+  background: #ffffff;
+  color: #95a5a6;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.detailed-data-toggle:hover {
+  background: #f8f9fa;
 }
 
 .detailed-data pre {
@@ -442,22 +479,22 @@ body {
 
 /* 折叠/展开所有分组按钮样式 */
 .toggle-groups-btn {
-  background: #ffffff;
-  color: #667eea;
-  border: none;
-  padding: 10px 20px;
+  background: rgba(255,255,255,0.9);
+  color: #764ba2;
+  border: 1px solid rgba(118, 75, 162, 0.2);
+  padding: 6px 10px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-size: 12px;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .toggle-groups-btn:hover {
-  background: #eef2ff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  background: rgba(255,255,255,1);
+  border-color: rgba(118, 75, 162, 0.4);
+  transform: none;
+  box-shadow: none;
 }
 
 /* Toast notifications */
