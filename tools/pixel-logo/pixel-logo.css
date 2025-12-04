@@ -8,13 +8,14 @@
 
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    line-height: 1.4;
+    line-height: 1.3;
     color: #333;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     background-attachment: fixed;
     background-size: cover;
     min-height: 100vh;
     overflow-x: hidden;
+    font-size: 12px;
 }
 
 .container {
@@ -58,6 +59,56 @@ body {
     opacity: 0.8;
 }
 
+/* 提取颜色区域样式 */
+.extracted-colors {
+    background: white;
+    border-top: 1px solid #eee;
+    flex-shrink: 0;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.extracted-colors-header {
+    background-color: #f8f9fa;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e9ecef;
+    font-weight: 600;
+    font-size: 12px;
+    color: #495057;
+}
+
+.extracted-colors-content {
+    flex: 1;
+    padding: 8px;
+    overflow-y: auto;
+}
+
+#extracted-colors-palette {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
+    margin-top: 0;
+}
+
+#extracted-colors-palette .color-swatch {
+    height: 14px;
+    border-radius: 0;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    transition: transform 0.2s;
+}
+
+#extracted-colors-palette .color-swatch:hover {
+    transform: scale(1.2);
+    z-index: 1;
+    position: relative;
+}
+
+#extracted-colors-palette .color-swatch.active {
+    border-color: #333;
+    transform: scale(1.1);
+}
+
 main {
     width: 100%;
     height: calc(100vh - 80px);
@@ -98,16 +149,16 @@ main {
     margin-bottom: 4px;
     font-weight: 500;
     color: #555;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .control-group select,
 .control-group input[type="color"] {
     width: 100%;
-    padding: 8px;
+    padding: 6px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .control-group input[type="color"] {
@@ -117,13 +168,13 @@ main {
 
 .control-group button {
     width: 100%;
-    padding: 8px;
+    padding: 6px;
     background-color: #667eea;
     color: white;
     border: none;
     border-radius: 16px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 11px;
     transition: background-color 0.3s;
 }
 
@@ -133,6 +184,10 @@ main {
 
 .palette {
     margin-bottom: 12px;
+    background: #f8f9fa;
+    padding: 8px;
+    border-radius: 0;
+    border: 1px solid #e9ecef;
 }
 
 .palette label {
@@ -140,7 +195,7 @@ main {
     margin-bottom: 4px;
     font-weight: 500;
     color: #555;
-    font-size: 13px;
+    font-size: 11px;
 }
 
 .palette-header {
@@ -148,8 +203,9 @@ main {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 8px;
-    font-weight: bold;
-    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    font-size: 11px;
 }
 
 .palette-controls {
@@ -158,10 +214,10 @@ main {
 }
 
 .palette-btn {
-    padding: 4px 8px;
+    padding: 3px 6px;
     border: 1px solid #ddd;
-    border-radius: 2px;
-    font-size: 12px;
+    border-radius: 0;
+    font-size: 10px;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -188,29 +244,36 @@ main {
 
 .color-palette {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 4px;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1px;
     margin-top: 6px;
+    background: #fff;
+    padding: 4px;
+    border: 1px solid #e9ecef;
 }
 
 .color-swatch {
-    width: 16px;
+    width: 100%;
     height: 16px;
     border-radius: 0;
     cursor: pointer;
-    border: 1px solid #eee;
+    border: none;
     transition: transform 0.2s, border-color 0.2s;
-    justify-self: center;
+    justify-self: stretch;
 }
 
 .color-swatch:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
     border-color: #333;
+    z-index: 1;
+    position: relative;
 }
 
 .color-swatch.active {
-    border-color: #333;
-    transform: scale(1.05);
+    border: 2px solid #333;
+    transform: scale(1.1);
+    z-index: 2;
+    position: relative;
 }
 
 .image-import {
@@ -285,7 +348,7 @@ main {
 .canvas-container {
     flex: 1;
     min-width: 0;
-    background: white;
+    background: #f8f8f8;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -313,15 +376,15 @@ main {
 }
 
 .tool-btn {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     padding: 0;
     background-color: #f0f0f0;
     color: #333;
     border: 1px solid #ddd;
     border-radius: 0;
     cursor: pointer;
-    font-size: 8px;
+    font-size: 10px;
     transition: all 0.3s;
     display: flex;
     align-items: center;
@@ -353,20 +416,29 @@ main {
     visibility: visible;
 }
 
-/* 画笔、填充和橡皮擦图标 */
+/* 画笔、填充、橡皮擦和滴管图标 - 全部改为方形设计 */
 .tool-btn[data-tool="brush"]::before {
-    content: "✏️";
+    content: "■";
     font-size: 12px;
+    font-weight: bold;
 }
 
 .tool-btn[data-tool="fill"]::before {
-    content: "🖌️";
+    content: "▣";
     font-size: 12px;
+    font-weight: bold;
 }
 
 .tool-btn[data-tool="eraser"]::before {
-    content: "🧽";
+    content: "□";
     font-size: 12px;
+    font-weight: bold;
+}
+
+.tool-btn[data-tool="dropper"]::before {
+    content: "◈";
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .tool-btn:hover {
@@ -386,6 +458,153 @@ main {
 
 .tool-btn.active::before {
     filter: brightness(0) invert(1);
+}
+
+/* 颜色选择器容器 */
+.color-picker-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 颜色选择器按钮 */
+.color-picker-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 11px;
+}
+
+.color-picker-btn:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+}
+
+.color-preview {
+    width: 16px;
+    height: 16px;
+    border-radius: 0;
+    border: 1px solid #ddd;
+    transition: all 0.3s;
+}
+
+.color-value {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #555;
+    min-width: 50px;
+}
+
+/* 颜色选择器对话框 */
+.color-picker-dialog {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    z-index: 1000;
+    min-width: 180px;
+    display: none;
+    margin-top: 4px;
+}
+
+.color-picker-dialog.show {
+    display: block;
+}
+
+.color-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
+}
+
+.color-picker-header span {
+    font-weight: 500;
+    font-size: 12px;
+    color: #333;
+}
+
+.color-picker-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    transition: all 0.2s;
+}
+
+.color-picker-close:hover {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.color-picker-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-picker-content input[type="color"] {
+    width: 100%;
+    height: 32px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.color-picker-controls {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.color-picker-ok,
+.color-picker-cancel {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 10px;
+    transition: all 0.2s;
+}
+
+.color-picker-ok {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.color-picker-ok:hover {
+    background-color: #45a049;
+}
+
+.color-picker-cancel {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.color-picker-cancel:hover {
+    background-color: #e9e9e9;
 }
 
 /* 背景切换按钮样式 */
@@ -459,6 +678,10 @@ main {
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="rgba(0,0,255,0.5)" stroke="blue" stroke-width="2"/></svg>') 12 12, crosshair;
 }
 
+.cursor-dropper {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4,16H20V18H4V16M6,4V7L17,7V4H19V7L20,7C21.1,7 22,7.9 22,9V15C22,16.1 21.1,17 20,17H10C8.9,17 8,16.1 8,15V9C8,7.9 8.9,7 10,7V4H6Z" fill="rgba(0,0,255,0.7)"/></svg>') 12 12, crosshair;
+}
+
 /* 不同画笔尺寸的光标样式 */
 .brush-size-1 {
     cursor: crosshair;
@@ -485,13 +708,13 @@ main {
     position: relative;
 }
 
-/* 透明背景棋盘格效果 */
+/* 透明背景棋盘格效果 - 增强对比度 */
 .transparent-bg {
     background-image:
-        linear-gradient(45deg, #E0E0E0 25%, transparent 25%),
-        linear-gradient(-45deg, #E0E0E0 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, #E0E0E0 75%),
-        linear-gradient(-45deg, transparent 75%, #E0E0E0 75%);
+        linear-gradient(45deg, #C0C0C0 25%, transparent 25%),
+        linear-gradient(-45deg, #C0C0C0 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #C0C0C0 75%),
+        linear-gradient(-45deg, transparent 75%, #C0C0C0 75%);
     background-size: 12px 12px;
     background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
     background-attachment: fixed;

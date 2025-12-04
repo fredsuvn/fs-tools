@@ -175,9 +175,10 @@ function updateGrid() {
     // 清空网格画布
     gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
 
-    // 设置网格样式 - 在半透明背景下更明显
-    gridCtx.strokeStyle = '#AAAAAA';
-    gridCtx.lineWidth = 1;
+    // 设置网格样式 - 加深网格线颜色，提高对比度
+    gridCtx.strokeStyle = '#444444';
+    gridCtx.lineWidth = 1.0;
+    gridCtx.setLineDash([1, 1]);
 
     // 计算像素大小
     const pixelSize = gridCanvas.width / currentSize;
@@ -237,12 +238,12 @@ function getPixelCoordinates(event) {
 function getPixelColor(x, y) {
     // 确保在画布范围内
     if (x >= 0 && x < currentSize && y >= 0 && y < currentSize) {
-        return pixelData[y][x];
+        return pixelData[y][x] || ''; // 确保空字符串处理
     }
-    return null;
+    return '';
 }
 
-// 填充算法（墨水瓶功能）
+// 填充算法（区域填充功能）
 function floodFill(startX, startY, targetColor, replacementColor) {
     // 如果目标颜色和替换颜色相同，直接返回
     if (targetColor === replacementColor) return;
@@ -262,8 +263,11 @@ function floodFill(startX, startY, targetColor, replacementColor) {
             continue;
         }
 
-        // 检查当前像素颜色是否匹配目标颜色（处理空字符串的情况）
-        if (pixelData[y][x] === targetColor) {
+        // 检查当前像素颜色是否匹配目标颜色（处理空字符串和透明的情况）
+        const currentPixelColor = pixelData[y][x] || ''; // 确保空字符串处理
+        const normalizedTargetColor = targetColor || ''; // 确保目标颜色处理
+
+        if (currentPixelColor === normalizedTargetColor) {
             // 标记为已访问
             visited[y][x] = true;
 
@@ -341,6 +345,9 @@ function createPixelArtFromImage(img, pixelSize) {
     const offsetX = Math.floor((currentSize - width) / 2);
     const offsetY = Math.floor((currentSize - height) / 2);
 
+    // 提取颜色集合
+    const colorSet = new Set();
+
     // 将像素数据绘制到主画布
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
@@ -354,10 +361,13 @@ function createPixelArtFromImage(img, pixelSize) {
             if (a > 128) {
                 const hexColor = rgbToHex(r, g, b);
                 drawPixel(x + offsetX, y + offsetY, hexColor);
+                colorSet.add(hexColor);
             }
         }
     }
 
+    // 显示提取的颜色
+    displayExtractedColors(Array.from(colorSet));
 
 }
 
@@ -507,8 +517,22 @@ function bindEvents() {
         if (currentTool === 'fill') {
             // 填充工具：执行区域填充
             const targetColor = getPixelColor(coords.x, coords.y);
-            if (targetColor) {
-                floodFill(coords.x, coords.y, targetColor, currentColor);
+            // 允许填充空区域（透明区域）
+            floodFill(coords.x, coords.y, targetColor, currentColor);
+        } else if (currentTool === 'dropper') {
+            // 墨水瓶工具：拾取颜色
+            const pickedColor = getPixelColor(coords.x, coords.y);
+            if (pickedColor && pickedColor !== 'transparent') {
+                currentColor = pickedColor;
+                colorPicker.value = currentColor;
+
+                // 更新快速颜色选择器的活动状态
+                document.querySelectorAll('.color-swatch').forEach(swatch => {
+                    swatch.classList.remove('active');
+                    if (swatch.dataset.color === currentColor) {
+                        swatch.classList.add('active');
+                    }
+                });
             }
         } else {
             // 画笔和橡皮擦工具：开始绘制
@@ -530,11 +554,59 @@ function bindEvents() {
         isDrawing = false;
     });
 
-    // 颜色选择器
-    colorPicker.addEventListener('input', () => {
-        currentColor = colorPicker.value;
+    // 自定义颜色选择器
+    const colorPickerBtn = document.getElementById('color-picker-btn');
+    const colorPickerDialog = document.getElementById('color-picker-dialog');
+    const colorPickerInput = document.getElementById('color-picker-input');
+    const colorPickerOk = document.getElementById('color-picker-ok');
+    const colorPickerCancel = document.getElementById('color-picker-cancel');
+    const colorPickerClose = document.getElementById('color-picker-close');
+    const colorPreview = document.querySelector('.color-preview');
+    const colorValue = document.querySelector('.color-value');
 
+    // 更新颜色预览
+    function updateColorPreview(color) {
+        colorPreview.style.backgroundColor = color;
+        colorValue.textContent = color;
+    }
+
+    // 打开颜色选择器
+    colorPickerBtn.addEventListener('click', () => {
+        colorPickerInput.value = currentColor;
+        colorPickerDialog.classList.add('show');
     });
+
+    // 关闭颜色选择器
+    function closeColorPicker() {
+        colorPickerDialog.classList.remove('show');
+    }
+
+    // 确定按钮
+    colorPickerOk.addEventListener('click', () => {
+        currentColor = colorPickerInput.value;
+        colorPicker.value = currentColor;
+        updateColorPreview(currentColor);
+        closeColorPicker();
+    });
+
+    // 取消按钮
+    colorPickerCancel.addEventListener('click', closeColorPicker);
+    colorPickerClose.addEventListener('click', closeColorPicker);
+
+    // 点击外部关闭
+    document.addEventListener('click', (e) => {
+        if (!colorPickerBtn.contains(e.target) && !colorPickerDialog.contains(e.target)) {
+            closeColorPicker();
+        }
+    });
+
+    // 颜色选择器输入事件
+    colorPickerInput.addEventListener('input', () => {
+        updateColorPreview(colorPickerInput.value);
+    });
+
+    // 初始化颜色预览
+    updateColorPreview(currentColor);
 
     // 快速颜色选择
     document.querySelectorAll('.color-swatch').forEach(swatch => {
@@ -580,6 +652,7 @@ function bindEvents() {
                 canvas.classList.add('cursor-eraser');
                 canvas.classList.remove('cursor-brush');
                 canvas.classList.remove('cursor-fill');
+                canvas.classList.remove('cursor-dropper');
                 // 移除所有画笔尺寸类
                 for (let i = 1; i <= 5; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
@@ -588,6 +661,16 @@ function bindEvents() {
                 canvas.classList.remove('cursor-eraser');
                 canvas.classList.remove('cursor-brush');
                 canvas.classList.add('cursor-fill');
+                canvas.classList.remove('cursor-dropper');
+                // 移除所有画笔尺寸类
+                for (let i = 1; i <= 5; i++) {
+                    canvas.classList.remove(`brush-size-${i}`);
+                }
+            } else if (currentTool === 'dropper') {
+                canvas.classList.remove('cursor-eraser');
+                canvas.classList.remove('cursor-brush');
+                canvas.classList.remove('cursor-fill');
+                canvas.classList.add('cursor-dropper');
                 // 移除所有画笔尺寸类
                 for (let i = 1; i <= 5; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
@@ -595,6 +678,7 @@ function bindEvents() {
             } else {
                 canvas.classList.remove('cursor-eraser');
                 canvas.classList.remove('cursor-fill');
+                canvas.classList.remove('cursor-dropper');
                 canvas.classList.add('cursor-brush');
                 // 更新画笔尺寸光标
                 updateBrushSizeCursor();
@@ -634,31 +718,7 @@ function bindEvents() {
 
 
 
-    // 调色板确认按钮
-    const paletteConfirmButton = document.getElementById('palette-confirm');
-    if (paletteConfirmButton) {
-        paletteConfirmButton.addEventListener('click', () => {
-            // 应用当前选择的颜色到画笔
-            const activeSwatch = document.querySelector('.color-swatch.active');
-            if (activeSwatch) {
-                currentColor = activeSwatch.dataset.color;
-                if (currentColor !== 'transparent') {
-                    colorPicker.value = currentColor;
-                }
-                // 关闭调色板或隐藏调色板区域
-                document.querySelector('.palette').style.display = 'none';
-            }
-        });
-    }
-
-    // 调色板取消按钮
-    const paletteCancelButton = document.getElementById('palette-cancel');
-    if (paletteCancelButton) {
-        paletteCancelButton.addEventListener('click', () => {
-            // 关闭调色板或隐藏调色板区域
-            document.querySelector('.palette').style.display = 'none';
-        });
-    }
+    // 快速颜色选择器现在直接应用颜色，无需确认取消按钮
 
     // 清空画布
     clearButton.addEventListener('click', clearCanvas);
@@ -745,6 +805,52 @@ function bindEvents() {
 
     // 初始化画笔尺寸光标
     updateBrushSizeCursor();
+}
+
+// 显示提取的颜色
+function displayExtractedColors(colors) {
+    const extractedColorsPalette = document.getElementById('extracted-colors-palette');
+
+    // 清空现有的颜色
+    extractedColorsPalette.innerHTML = '';
+
+    // 如果没有颜色，显示提示
+    if (colors.length === 0) {
+        const emptyMessage = document.createElement('div');
+        emptyMessage.textContent = 'No colors extracted from image';
+        emptyMessage.style.textAlign = 'center';
+        emptyMessage.style.color = '#666';
+        emptyMessage.style.fontSize = '11px';
+        emptyMessage.style.padding = '10px';
+        extractedColorsPalette.appendChild(emptyMessage);
+        return;
+    }
+
+    // 按颜色值排序
+    colors.sort();
+
+    // 添加颜色小方格
+    colors.forEach(color => {
+        const colorSwatch = document.createElement('div');
+        colorSwatch.className = 'color-swatch';
+        colorSwatch.dataset.color = color;
+        colorSwatch.style.backgroundColor = color;
+        colorSwatch.title = color;
+
+        // 点击颜色小方格时设置为当前颜色
+        colorSwatch.addEventListener('click', () => {
+            currentColor = color;
+            if (currentColor !== 'transparent') {
+                colorPicker.value = currentColor;
+            }
+
+            // 更新活动状态
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            colorSwatch.classList.add('active');
+        });
+
+        extractedColorsPalette.appendChild(colorSwatch);
+    });
 }
 
 // 当页面加载完成后初始化

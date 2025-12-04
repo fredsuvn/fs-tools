@@ -33,6 +33,7 @@
                             <button id="tool-brush" class="tool-btn active" data-tool="brush"></button>
                             <button id="tool-fill" class="tool-btn" data-tool="fill"></button>
                             <button id="tool-eraser" class="tool-btn" data-tool="eraser"></button>
+                            <button id="tool-dropper" class="tool-btn" data-tool="dropper"></button>
                         </div>
                     </div>
 
@@ -51,16 +52,31 @@
 
                     <div class="control-group">
                         <label for="color-picker">Color:</label>
-                        <input type="color" id="color-picker" value="#000000">
+                        <div class="color-picker-container">
+                            <input type="color" id="color-picker" value="#000000" style="display: none;">
+                            <button id="color-picker-btn" class="color-picker-btn">
+                                <span class="color-preview" style="background-color: #000000;"></span>
+                                <span class="color-value">#000000</span>
+                            </button>
+                            <div id="color-picker-dialog" class="color-picker-dialog">
+                                <div class="color-picker-header">
+                                    <span>Select Color</span>
+                                    <button id="color-picker-close" class="color-picker-close">×</button>
+                                </div>
+                                <div class="color-picker-content">
+                                    <input type="color" id="color-picker-input" value="#000000">
+                                    <div class="color-picker-controls">
+                                        <button id="color-picker-ok" class="color-picker-ok">OK</button>
+                                        <button id="color-picker-cancel" class="color-picker-cancel">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="palette">
                         <div class="palette-header">
                             <span>Quick Colors</span>
-                            <div class="palette-controls">
-                                <button id="palette-confirm" class="palette-btn confirm-btn">Confirm</button>
-                                <button id="palette-cancel" class="palette-btn cancel-btn">Cancel</button>
-                            </div>
                         </div>
                         <div class="color-palette">
                             <div class="color-swatch" data-color="#000000"></div>
@@ -79,6 +95,21 @@
                             <div class="color-swatch" data-color="#000080"></div>
                             <div class="color-swatch" data-color="#800000"></div>
                             <div class="color-swatch" data-color="#808080"></div>
+                            <div class="color-swatch" data-color="#C0C0C0"></div>
+                            <div class="color-swatch" data-color="#FFC0CB"></div>
+                            <div class="color-swatch" data-color="#FFD700"></div>
+                            <div class="color-swatch" data-color="#90EE90"></div>
+                            <div class="color-swatch" data-color="#87CEEB"></div>
+                            <div class="color-swatch" data-color="#DDA0DD"></div>
+                            <div class="color-swatch" data-color="#F0E68C"></div>
+                            <div class="color-swatch" data-color="#98FB98"></div>
+                            <div class="color-swatch" data-color="#AFEEEE"></div>
+                            <div class="color-swatch" data-color="#FFB6C1"></div>
+                            <div class="color-swatch" data-color="#FFA07A"></div>
+                            <div class="color-swatch" data-color="#20B2AA"></div>
+                            <div class="color-swatch" data-color="#9370DB"></div>
+                            <div class="color-swatch" data-color="#F08080"></div>
+                            <div class="color-swatch" data-color="#48D1CC"></div>
                             <div class="color-swatch" data-color="transparent" style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
                         </div>
                     </div>
@@ -122,6 +153,16 @@
                     <div id="base64-output" class="output-panel">
                         <pre><code></code></pre>
                         <button class="copy-btn">Copy to Clipboard</button>
+                    </div>
+                </div>
+                <div class="extracted-colors">
+                    <div class="extracted-colors-header">
+                        <span>Extracted Colors from Image</span>
+                    </div>
+                    <div class="extracted-colors-content">
+                        <div class="color-palette" id="extracted-colors-palette">
+                            <!-- 提取的颜色将动态添加到这里 -->
+                        </div>
                     </div>
                 </div>
                 <div class="info-area">
