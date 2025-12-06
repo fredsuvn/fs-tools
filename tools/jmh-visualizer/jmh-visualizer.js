@@ -324,7 +324,8 @@ class JMHVisualizer {
       overflow: 'hidden'  // 防止内容溢出
     });
 
-    // Chart type with event listener - default to horizontalBar
+    // 隐藏Chart Type选择框，但保留代码
+    /*
     const chartTypeSelect = $('<select>').addClass('chart-type').css({flexShrink: 0}).append(
       $('<option>').val('bar').text('Vertical'),
       $('<option>').val('horizontalBar').text('Horizontal').prop('selected', true)
@@ -333,6 +334,7 @@ class JMHVisualizer {
       this.updateChart(chartId);
     });
     leftControls.append(chartTypeSelect);
+    */
 
     // Renderer with event listener
     const rendererSelect = $('<select>').addClass('chart-renderer').css({flexShrink: 0}).append(
@@ -547,11 +549,20 @@ class JMHVisualizer {
     const sortMetric = this.getSettingWithPriority(chartId, 'sort-metric');
     const sortOrder = this.getSettingWithPriority(chartId, 'sort-order');
 
+    // 动态调整图表高度，根据横条数量等比增加
+    const barCount = config.benchmarks.length;
+    const baseHeight = 300; // 基础高度
+    const barHeight = 40; // 每个横条的大致高度
+    const newHeight = Math.max(baseHeight, barCount * barHeight);
+    $(chartElement).css('height', `${newHeight}px`);
+
     fsLogger.debug(`Updating chart ${chartId} with settings:`, {
       renderer,
       chartType,
       sortMetric,
-      sortOrder
+      sortOrder,
+      barCount,
+      height: newHeight
     });
 
     const chart = echarts.init(chartElement, null, {
@@ -635,10 +646,14 @@ class JMHVisualizer {
     // 准备误差线数据
     const hasErrors = sortedData.some(b => b.primaryMetric.scoreError && b.primaryMetric.scoreError !== 'NaN');
 
+    // 设置横条宽度，根据是否为水平图表调整
+    const barWidth = isHorizontal ? '70%' : '70%';
+
     const series = [{
       name: 'Score',
       type: 'bar',
       data: seriesData,
+      barWidth: barWidth,
       label: {
         show: true,
         position: isHorizontal ? 'right' : 'top',
@@ -803,8 +818,8 @@ class JMHVisualizer {
   }
 
   isHorizontalChart(chartId) {
-    const chartType = this.getChartType(chartId);
-    return chartType === 'horizontalBar';
+    // 强制始终使用水平图表
+    return true;
   }
 
   getSortMetric(chartId) {

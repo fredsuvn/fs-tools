@@ -19,13 +19,12 @@ body {
 .header {
   text-align: center;
   color: white;
-  padding: 20px 0;
+  padding: 20px 0 0 0;
   background: rgba(118, 75, 162, 0.1); /* 增强紫色调 */
 }
 
 .header h1 {
   color: #fff;
-  margin-bottom: 10px;
   font-size: 2.2em;
   text-align: center;
   font-weight: 300;
@@ -35,7 +34,6 @@ body {
 .author-info {
   color: rgba(255,255,255,0.9);
   font-size: 1em;
-  margin-bottom: 15px;
   font-weight: 300;
   opacity: 0.9;
 }
@@ -45,12 +43,13 @@ body {
   gap: 15px;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   margin-bottom: 5px;
-}
-
-.file-upload-section {
   margin-top: 5px;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .control-group {
@@ -61,6 +60,7 @@ body {
   padding: 6px 10px;
   border-radius: 4px;
   border: 1px solid rgba(118, 75, 162, 0.2);
+  height: 34px; /* 与toggle-groups-btn高度一致 */
 }
 
 .control-group label {
@@ -84,9 +84,21 @@ body {
   box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
 }
 
-/* File upload section */
-.file-upload-section {
-  margin-top: 15px;
+.toggle-groups-btn {
+  background: #ffffff;
+  color: #764ba2;
+  border: 1px solid rgba(118, 75, 162, 0.2);
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .toggle-btn {
@@ -446,7 +458,6 @@ body {
 .author-info {
   color: rgba(255,255,255,0.8);
   font-size: 14px;
-  margin: 5px 0 15px 0;
   font-style: normal;
 }
 

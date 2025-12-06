@@ -14,106 +14,106 @@
   <script src="../../libs/tools.js"></script>
 </head>
 <body>
-  <div id="app">
-    <!-- Header with global controls -->
-    <header class="header">
-      <div style="position: relative; text-align: center; min-height: 100px;">
-          <h1>JMH Benchmark Visualizer</h1>
-          <p class="subtitle" style="margin-bottom: 20px;">Visualize JMH benchmark results in an elegant way</p>
-          <p id="author-info" class="author-info" style="margin-top: 15px; text-align: left; margin-left: 61.8%; font-size: 0.9rem; opacity: 0.9;"></p>
-        </div>
-        <!-- File upload section (collapsed by default) -->
-        <div class="file-upload-section">
-          <button id="toggle-file-upload" class="toggle-btn">Upload Results.json</button>
-          <div id="file-upload-area" class="collapsed">
-            <div class="drop-zone" id="drop-zone">
-              <p>Drag & drop results.json file here or click to select</p>
-              <input type="file" id="file-input" accept=".json" style="display: none;">
-            </div>
-            <p>Default file: <code>results.json</code> (same directory)</p>
-          </div>
-        </div>
-
-      <div class="global-controls">
-        <!-- 全局控制按钮放在一起 -->
-        <div class="control-group">
-          <button id="toggle-groups-btn" class="toggle-groups-btn">Collapse All Groups</button>
-        </div>
-
-        <!-- 其他全局控制按钮 -->
-        <div class="control-group">
-          <label>Chart Type:</label>
-          <select id="global-chart-type">
-            <option value="bar">Vertical Bar</option>
-            <option value="horizontalBar" selected>Horizontal Bar</option>
-          </select>
-        </div>
-        <div class="control-group">
-          <label>Renderer:</label>
-          <select id="global-renderer">
-            <option value="canvas">Canvas</option>
-            <option value="svg">SVG</option>
-          </select>
-        </div>
-        <div class="control-group">
-          <label>Sort By:</label>
-          <select id="global-sort-metric">
-            <option value="score">Score</option>
-            <option value="throughput">Throughput</option>
-          </select>
-        </div>
-        <div class="control-group">
-          <label>Sort Order:</label>
-          <select id="global-sort-order">
-            <option value="original">Original</option>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-          </select>
-        </div>
-        <div class="control-group">
-          <label>Show Error Lines:</label>
-          <select id="global-show-errors">
-            <option value="true">Show</option>
-            <option value="false">Hide</option>
-          </select>
-        </div>
-      </div>
-    </header>
-
-    <!-- Table of Contents -->
-    <nav id="toc" class="toc">
-      <h2>Table of Contents</h2>
-      <ul id="toc-list"></ul>
-    </nav>
-
-    <!-- Benchmark groups -->
-    <main id="benchmark-groups"></main>
-
-    <!-- Loading indicator -->
-    <div id="loading" class="loading">
-      <div class="spinner"></div>
-      <p>Loading benchmark data...</p>
+<div id="app">
+  <!-- Header with global controls -->
+  <header class="header">
+    <div style="position: relative; text-align: center; min-height: 100px;">
+      <h1>JMH Benchmark Visualizer</h1>
+      <p class="subtitle">Visualize JMH benchmark results in an elegant way</p>
+      <p id="author-info" class="author-info"
+         style="text-align: left; margin-left: 61.8%; font-size: 0.9rem; opacity: 0.9;"></p>
     </div>
+    <!-- File upload section (collapsed by default) -->
+    <div class="file-upload-section">
+      <button id="toggle-file-upload" class="toggle-btn">Upload Results.json</button>
+      <div id="file-upload-area" class="collapsed">
+        <div class="drop-zone" id="drop-zone">
+          <p>Drag & drop results.json file here or click to select</p>
+          <input type="file" id="file-input" accept=".json" style="display: none;">
+        </div>
+        <p>Default file: <code>results.json</code> (same directory)</p>
+      </div>
+    </div>
+
+    <div class="global-controls">
+      <!-- 全局控制按钮放在一起 -->
+      <button id="toggle-groups-btn" class="toggle-groups-btn">Collapse All Groups</button>
+
+      <!-- 其他全局控制按钮 -->
+      <!-- 隐藏Chart Type选择框，但保留代码 -->
+      <!-- <div class="control-group">
+        <label>Chart Type:</label>
+        <select id="global-chart-type">
+          <option value="bar">Vertical Bar</option>
+          <option value="horizontalBar" selected>Horizontal Bar</option>
+        </select>
+      </div> -->
+      <div class="control-group">
+        <label>Renderer:</label>
+        <select id="global-renderer">
+          <option value="canvas">Canvas</option>
+          <option value="svg">SVG</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Sort By:</label>
+        <select id="global-sort-metric">
+          <option value="score">Score</option>
+          <option value="throughput">Throughput</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Sort Order:</label>
+        <select id="global-sort-order">
+          <option value="original">Original</option>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Show Error Lines:</label>
+        <select id="global-show-errors">
+          <option value="true">Show</option>
+          <option value="false">Hide</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Table of Contents -->
+  <nav id="toc" class="toc">
+    <h2>Table of Contents</h2>
+    <ul id="toc-list"></ul>
+  </nav>
+
+  <!-- Benchmark groups -->
+  <main id="benchmark-groups"></main>
+
+  <!-- Loading indicator -->
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading benchmark data...</p>
   </div>
+</div>
 
-  <script src="jmh-visualizer.js"></script>
+<script src="jmh-visualizer.js"></script>
 
-  <!-- Footer -->
-  <footer id="footer" class="footer">
-    <p>Powered by fs-tools and <span id="footer-author"></span></p>
-  </footer>
+<!-- Footer -->
+<footer id="footer" class="footer">
+  <p>Powered by fs-tools and <span id="footer-author"></span></p>
+</footer>
 
-  <script>
-    // 获取并显示作者信息（使用回调函数形式）
-    fsTools.getToolAuthorAsync('jmh-visualizer', function(author) {
-      if (author) {
-        document.getElementById('author-info').textContent = 'Author: ' + author;
-        const footerAuthor = document.getElementById('footer-author');
-        if (footerAuthor) {
-          footerAuthor.textContent = author;
-        }
+<script>
+  // 获取并显示作者信息（使用回调函数形式）
+  fsTools.getToolAuthorAsync('jmh-visualizer', function(author) {
+    if (author) {
+      document.getElementById('author-info').textContent = 'Author: ' + author;
+      const footerAuthor = document.getElementById('footer-author');
+      if (footerAuthor) {
+        footerAuthor.textContent = author;
       }
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 </html>
