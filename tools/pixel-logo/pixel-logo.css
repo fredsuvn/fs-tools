@@ -1409,15 +1409,15 @@ main {
 
 /* 光标样式 */
 .cursor-pencil {
-    cursor: url('../../materials/pencil.svg') 8 8, pointer;
+    cursor: url('../../assets/pencil.svg') 8 8, pointer;
 }
 
 .cursor-eraser {
-    cursor: url('../../materials/eraser.svg') 8 8, default;
+    cursor: url('../../assets/eraser.svg') 8 8, default;
 }
 
 .cursor-color-extractor {
-    cursor: url('../../materials/color-extractor.svg') 8 8, crosshair;
+    cursor: url('../../assets/color-extractor.svg') 8 8, crosshair;
 }
 
 .preview-btn {
@@ -1674,7 +1674,7 @@ main {
 }
 
 .cursor-fill {
-    cursor: url('../../materials/paint-bucket.svg') 8 8, crosshair;
+    cursor: url('../../assets/paint-bucket.svg') 8 8, crosshair;
 }
 
 /* 不同画笔尺寸的光标样式 - 仅用于铅笔工具 */

@@ -25,4 +25,3 @@
 - 生成3个文件：pixel-logo.html，pixel-logo.js和pixel-logo.css；
 - 界面使用英语，代码内部注释可以用中文；
 - 删掉调试用的日志语句；
-- 项目material文件夹下有所有需要的图标素材，包括铅笔，橡皮擦，墨水瓶，刷子等；
