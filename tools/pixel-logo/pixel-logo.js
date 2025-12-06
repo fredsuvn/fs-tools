@@ -6,7 +6,7 @@
 let canvas;
 let ctx;
 let currentSize = 64;
-let currentTool = 'brush';
+let currentTool = 'pencil';
 let currentColor = '#000000';
 let currentBrushSize = 1;
 let isDrawing = false;
@@ -16,6 +16,52 @@ let showGrid = true;
 let gridCanvas;
 let gridCtx;
 
+// 文件上传相关变量
+let uploadArea;
+let fileInput;
+
+// 初始化颜色预览
+function updateColorPreview() {
+    const colorPreview = document.getElementById('color-preview');
+    if (colorPreview) {
+        if (currentColor === '' || currentColor === 'transparent') {
+            // 使用棋盘格背景表示透明色
+            colorPreview.style.backgroundImage = 'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)';
+            colorPreview.style.backgroundSize = '8px 8px';
+            colorPreview.style.backgroundPosition = '0 0, 4px 4px';
+            colorPreview.style.backgroundColor = 'transparent';
+        } else {
+            // 普通颜色直接设置背景色
+            colorPreview.style.backgroundImage = 'none';
+            colorPreview.style.backgroundColor = currentColor;
+        }
+    }
+
+    // 更新画笔大小指示器的边框颜色
+    const brushSizeIndicator = document.getElementById('brush-size-indicator');
+    if (brushSizeIndicator && brushSizeIndicator.classList.contains('visible')) {
+        if (currentTool === 'eraser') {
+            // 橡皮擦工具始终使用白色边框
+            brushSizeIndicator.style.borderColor = '#ffffff';
+        } else {
+            // 其他工具使用当前选择的颜色作为边框颜色
+            brushSizeIndicator.style.borderColor = currentColor;
+        }
+    }
+}
+
+// 更新画笔尺寸光标
+function updateBrushSizeCursor() {
+    if (!canvas) return;
+    // 移除所有画笔尺寸类
+    for (let i = 1; i <= 6; i++) {
+        canvas.classList.remove(`brush-size-${i}`);
+    }
+
+    // 铅笔和橡皮擦工具都不应用圆形光标，使用各自的SVG图标
+    // 铅笔工具使用铅笔SVG图标，橡皮擦工具使用橡皮擦SVG图标
+}
+
 // DOM元素
 let canvasElement;
 let colorPicker;
@@ -24,6 +70,9 @@ let clearButton;
 let exportSvgButton;
 let exportBase64Button;
 let downloadImageButton;
+let exportSvgBtn;
+let exportBase64Btn;
+let exportMarkdownBtn;
 let dropArea;
 let imageImport;
 let pixelSizeSlider;
@@ -46,9 +95,13 @@ function init() {
     colorPicker = document.getElementById('color-picker');
     sizeSelector = document.getElementById('canvas-size');
     clearButton = document.getElementById('clear-canvas');
+    previewButton = document.getElementById('preview-button');
     exportSvgButton = document.getElementById('export-svg');
     exportBase64Button = document.getElementById('export-base64');
     downloadImageButton = document.getElementById('download-image');
+    exportSvgBtn = document.getElementById('export-svg-btn');
+    exportBase64Btn = document.getElementById('export-base64-btn');
+    exportMarkdownBtn = document.getElementById('export-markdown-btn');
     dropArea = document.getElementById('drop-area');
     imageImport = document.getElementById('image-import');
     pixelSizeSlider = document.getElementById('pixel-size');
@@ -60,6 +113,9 @@ function init() {
     outputPanels = document.querySelectorAll('.output-panel');
     copyButtons = document.querySelectorAll('.copy-btn');
     showGridCheckbox = document.getElementById('show-grid');
+    // 初始化上传区域
+    uploadArea = document.getElementById('upload-area');
+    fileInput = document.getElementById('file-input');
     // 背景按钮已移除
 
     // 设置Canvas
@@ -83,16 +139,208 @@ function init() {
     // 设置默认显示网格线
     showGridCheckbox.checked = true;
 
-
-
     // 更新网格显示
     updateGrid();
+
+    // 初始化工具状态
+    // 1. 设置铅笔工具按钮为激活状态
+    const pencilBtn = document.querySelector('.tool-btn[data-tool="pencil"]');
+    if (pencilBtn) {
+        toolButtons.forEach(btn => btn.classList.remove('active'));
+        pencilBtn.classList.add('active');
+    }
+
+    // 2. 设置初始光标样式
+    canvas.classList.remove('cursor-eraser', 'cursor-fill', 'cursor-color-extractor');
+    canvas.classList.add('cursor-pencil');
+
+    // 3. 更新画笔尺寸光标
+    updateBrushSizeCursor();
+
+    // 4. 显示画笔大小指示器
+    const brushSizeIndicator = document.getElementById('brush-size-indicator');
+    if (brushSizeIndicator) {
+        brushSizeIndicator.classList.add('visible');
+    }
 
     // 绑定事件监听器
     bindEvents();
 
-
+    // 绑定文件上传事件
+    bindUploadEvents();
 }
+
+// 绑定文件上传事件
+function bindUploadEvents() {
+    // 点击上传区域触发文件选择
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // 文件选择变化事件
+    fileInput.addEventListener('change', (e) => {
+        handleFile(e.target.files[0]);
+    });
+
+    // 拖拽上传事件
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // 添加拖拽效果
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    // 处理文件放置
+    uploadArea.addEventListener('drop', handleDrop, false);
+}
+
+// 阻止默认拖拽行为
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+// 添加拖拽高亮效果
+function highlight() {
+    uploadArea.classList.add('drag-over');
+}
+
+// 移除拖拽高亮效果
+function unhighlight() {
+    uploadArea.classList.remove('drag-over');
+}
+
+// 处理文件放置
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+
+    if (files.length > 0) {
+        handleFile(files[0]);
+    }
+}
+
+// 处理上传的文件
+function handleFile(file) {
+    if (!file || !file.type.match('image.*')) {
+        alert('Please upload an image file.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+            // 将图像绘制到画布
+            drawImageToCanvas(img);
+            // 提取颜色
+            extractColorsFromImage(img);
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// 将图像绘制到画布
+function drawImageToCanvas(img) {
+    // 清空画布
+    clearCanvas();
+
+    // 创建临时画布用于处理图像
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = currentSize;
+    tempCanvas.height = currentSize;
+
+    // 将图像绘制到临时画布，调整大小以适应
+    tempCtx.drawImage(img, 0, 0, currentSize, currentSize);
+
+    // 获取像素数据
+    const imageData = tempCtx.getImageData(0, 0, currentSize, currentSize);
+    const data = imageData.data;
+
+    // 将图像像素转换为像素艺术
+    for (let y = 0; y < currentSize; y++) {
+        for (let x = 0; x < currentSize; x++) {
+            const index = (y * currentSize + x) * 4;
+            const r = data[index];
+            const g = data[index + 1];
+            const b = data[index + 2];
+            const a = data[index + 3];
+
+            // 检查透明度
+            if (a < 128) {
+                // 透明像素
+                drawPixel(x, y, '');
+            } else {
+                // 将RGB转换为十六进制颜色
+                const color = rgbToHex(r, g, b);
+                drawPixel(x, y, color);
+            }
+        }
+    }
+
+    // 更新网格显示
+    updateGrid();
+}
+
+// 从图像中提取颜色
+function extractColorsFromImage(img) {
+    // 创建临时画布
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = img.width;
+    tempCanvas.height = img.height;
+    tempCtx.drawImage(img, 0, 0);
+
+    // 获取图像数据
+    const imageData = tempCtx.getImageData(0, 0, img.width, img.height);
+    const data = imageData.data;
+
+    // 使用Map存储颜色及其出现频率
+    const colorMap = new Map();
+
+    // 遍历像素
+    for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const a = data[i + 3];
+
+        // 跳过透明像素
+        if (a < 128) continue;
+
+        const color = rgbToHex(r, g, b);
+
+        if (colorMap.has(color)) {
+            colorMap.set(color, colorMap.get(color) + 1);
+        } else {
+            colorMap.set(color, 1);
+        }
+    }
+
+    // 按出现频率排序颜色
+    const sortedColors = Array.from(colorMap.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(entry => entry[0]);
+
+    // 限制颜色数量
+    const maxColors = 64;
+    const extractedColors = sortedColors.slice(0, maxColors);
+
+    // 显示提取的颜色
+    displayExtractedColors(extractedColors);
+}
+
+// 显示提取的颜色
+
+// RGB转十六进制颜色
 
 // 调整画布大小
 function resizeCanvas(size) {
@@ -105,7 +353,11 @@ function resizeCanvas(size) {
     const canvasContainer = document.querySelector('.canvas-container') || canvas.parentElement;
     const containerRect = canvasContainer.getBoundingClientRect();
     const availableWidth = containerRect.width - 30; // 考虑内边距
-    const availableHeight = containerRect.height - 30; // 考虑内边距
+
+    // 获取canvas-controls的高度，从可用高度中减去
+    const canvasControls = document.querySelector('.canvas-controls');
+    const controlsHeight = canvasControls ? canvasControls.offsetHeight : 0;
+    const availableHeight = containerRect.height - 30 - controlsHeight; // 考虑内边距和预览按钮高度
 
     // 计算像素大小以尽可能填充空间
     let pixelSize = Math.floor(Math.min(availableWidth, availableHeight) / currentSize);
@@ -127,8 +379,8 @@ function resizeCanvas(size) {
     // 确保网格画布与主画布对齐
     alignGridCanvas();
 
-    // 重新初始化像素数据 - 使用空字符串表示透明/无像素
-    pixelData = Array(size).fill().map(() => Array(size).fill(''));
+    // 重新初始化像素数据 - 使用'transparent'表示透明/无像素
+    pixelData = Array(size).fill().map(() => Array(size).fill('transparent'));
 
     // 清空画布
     ctx.clearRect(0, 0, size, size);
@@ -175,10 +427,10 @@ function updateGrid() {
     // 清空网格画布
     gridCtx.clearRect(0, 0, gridCanvas.width, gridCanvas.height);
 
-    // 设置网格样式 - 加深网格线颜色，提高对比度
-    gridCtx.strokeStyle = '#444444';
+    // 设置网格样式 - 半透明黑色实线
+    gridCtx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
     gridCtx.lineWidth = 1.0;
-    gridCtx.setLineDash([1, 1]);
+    gridCtx.setLineDash([]);
 
     // 计算像素大小
     const pixelSize = gridCanvas.width / currentSize;
@@ -238,9 +490,11 @@ function getPixelCoordinates(event) {
 function getPixelColor(x, y) {
     // 确保在画布范围内
     if (x >= 0 && x < currentSize && y >= 0 && y < currentSize) {
-        return pixelData[y][x] || ''; // 确保空字符串处理
+        const color = pixelData[y][x] || '';
+        // 统一透明色表示
+        return color === '' ? 'transparent' : color;
     }
-    return '';
+    return 'transparent';
 }
 
 // 填充算法（区域填充功能）
@@ -263,11 +517,12 @@ function floodFill(startX, startY, targetColor, replacementColor) {
             continue;
         }
 
-        // 检查当前像素颜色是否匹配目标颜色（处理空字符串和透明的情况）
-        const currentPixelColor = pixelData[y][x] || ''; // 确保空字符串处理
-        const normalizedTargetColor = targetColor || ''; // 确保目标颜色处理
+        // 检查当前像素颜色是否匹配目标颜色（统一处理透明色）
+        const currentPixelColor = pixelData[y][x] || '';
+        const normalizedCurrentColor = currentPixelColor === '' ? 'transparent' : currentPixelColor;
+        const normalizedTargetColor = targetColor === '' ? 'transparent' : targetColor;
 
-        if (currentPixelColor === normalizedTargetColor) {
+        if (normalizedCurrentColor === normalizedTargetColor) {
             // 标记为已访问
             visited[y][x] = true;
 
@@ -291,23 +546,45 @@ function floodFill(startX, startY, targetColor, replacementColor) {
     }
 }
 
+// 计算画笔覆盖的网格范围（与drawPixel函数逻辑一致）
+function getBrushCoverage(x, y) {
+    const halfSize = Math.floor(currentBrushSize / 2);
+    const startX = x - halfSize;
+    const startY = y - halfSize;
+    const endX = x + halfSize;
+    const endY = y + halfSize;
+
+    return {
+        startX: startX,
+        startY: startY,
+        endX: endX,
+        endY: endY,
+        width: currentBrushSize,
+        height: currentBrushSize
+    };
+}
+
 // 绘制像素点（支持不同画笔尺寸和透明色）
 function drawPixel(x, y, color) {
-    const halfSize = Math.floor(currentBrushSize / 2);
+    const coverage = getBrushCoverage(x, y);
 
     // 根据画笔尺寸绘制多个像素
-    for (let dy = -halfSize; dy <= halfSize; dy++) {
-        for (let dx = -halfSize; dx <= halfSize; dx++) {
-            const nx = x + dx;
-            const ny = y + dy;
+    for (let dy = 0; dy < coverage.height; dy++) {
+        for (let dx = 0; dx < coverage.width; dx++) {
+            const nx = coverage.startX + dx;
+            const ny = coverage.startY + dy;
 
             // 确保在画布范围内
             if (nx >= 0 && nx < currentSize && ny >= 0 && ny < currentSize) {
-                // 更新像素数据
-                pixelData[ny][nx] = color;
+                // 更新像素数据 - 统一使用'transparent'表示透明色
+                if (color === '') {
+                    pixelData[ny][nx] = 'transparent';
+                } else {
+                    pixelData[ny][nx] = color;
+                }
 
                 // 根据颜色类型进行不同的绘制处理
-                if (color === '' || color === 'transparent') {
+                if (color === 'transparent' || color === '') {
                     ctx.clearRect(nx, ny, 1, 1);
                 } else {
                     ctx.fillStyle = color;
@@ -316,6 +593,67 @@ function drawPixel(x, y, color) {
             }
         }
     }
+}
+
+// 添加颜色到最近颜色列表
+function addToRecentColors(color) {
+    // 移除已存在的相同颜色
+    recentColors = recentColors.filter(c => c !== color);
+
+    // 添加到开头
+    recentColors.unshift(color);
+
+    // 限制最多8个颜色
+    if (recentColors.length > 8) {
+        recentColors = recentColors.slice(0, 8);
+    }
+
+    // 保存到本地存储
+    localStorage.setItem('pixelLogoRecentColors', JSON.stringify(recentColors));
+
+    // 重新渲染
+    renderRecentColors();
+}
+
+// 最近颜色数组（全局变量）
+let recentColors = [];
+
+// 渲染最近颜色
+function renderRecentColors() {
+    const recentColorsGrid = document.getElementById('recent-colors-grid');
+    if (!recentColorsGrid) return;
+
+    recentColorsGrid.innerHTML = '';
+    recentColors.forEach(color => {
+        let swatch = document.createElement('div');
+        swatch.className = 'color-swatch';
+        swatch.setAttribute('data-color', color);
+        swatch.setAttribute('title', color);
+        if (color === 'transparent') {
+            swatch.style.backgroundImage = 'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)';
+            swatch.style.backgroundSize = '8px 8px';
+            swatch.style.backgroundPosition = '0 0, 4px 4px';
+        } else {
+            swatch.style.backgroundColor = color;
+        }
+
+        swatch.addEventListener('click', function() {
+            // 移除所有active状态
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            // 添加active状态到当前点击的样本
+            swatch.classList.add('active');
+
+            // 设置当前颜色
+            currentColor = color;
+            // 如果颜色不是透明色，才更新颜色选择器的值
+            if (color !== 'transparent') {
+                colorPicker.value = color;
+            }
+            updateColorPreview();
+        });
+
+        recentColorsGrid.appendChild(swatch);
+    });
 }
 
 // 从图片创建像素画
@@ -357,8 +695,8 @@ function createPixelArtFromImage(img, pixelSize) {
             const b = imageData[index + 2];
             const a = imageData[index + 3];
 
-            // 如果像素不是透明的
-            if (a > 128) {
+            // 如果像素不是完全透明的（a > 0）
+            if (a > 0) {
                 const hexColor = rgbToHex(r, g, b);
                 drawPixel(x + offsetX, y + offsetY, hexColor);
                 colorSet.add(hexColor);
@@ -381,8 +719,8 @@ function rgbToHex(r, g, b) {
 
 // 导出为SVG
 function exportAsSvg() {
-    const pixelSize = 10; // SVG中每个像素的大小
-    let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${currentSize * pixelSize}" height="${currentSize * pixelSize}" viewBox="0 0 ${currentSize * pixelSize} ${currentSize * pixelSize}">`;
+    const pixelSize = 1; // SVG中每个像素的大小为1x1
+    let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="${currentSize}" height="${currentSize}" viewBox="0 0 ${currentSize} ${currentSize}">`;
 
 
 
@@ -390,8 +728,8 @@ function exportAsSvg() {
     for (let y = 0; y < currentSize; y++) {
         for (let x = 0; x < currentSize; x++) {
             const color = pixelData[y][x];
-            if (color !== 'transparent') { // 跳过透明像素
-                svgContent += `<rect x="${x * pixelSize}" y="${y * pixelSize}" width="${pixelSize}" height="${pixelSize}" fill="${color}" />`;
+            if (color !== '') { // 只有有颜色的像素才添加
+                svgContent += `<rect x="${x}" y="${y}" width="1" height="1" fill="${color}" />`;
             }
         }
     }
@@ -410,7 +748,7 @@ function exportAsBase64() {
     // 创建导出用的画布
     const exportCanvas = document.createElement('canvas');
     const exportCtx = exportCanvas.getContext('2d');
-    const scale = 4; // 适当的缩放比例
+    const scale = 1; // 缩放比例为1，与像素大小相同
 
     exportCanvas.width = currentSize * scale;
     exportCanvas.height = currentSize * scale;
@@ -421,15 +759,16 @@ function exportAsBase64() {
     for (let y = 0; y < currentSize; y++) {
         for (let x = 0; x < currentSize; x++) {
             const color = pixelData[y][x];
-            if (color !== 'transparent') {
+            if (color !== '') { // 只有有颜色的像素才绘制
                 exportCtx.fillStyle = color;
                 exportCtx.fillRect(x * scale, y * scale, scale, scale);
             }
         }
     }
 
-    // 获取Base64数据
-    const base64 = exportCanvas.toDataURL('image/png');
+    // 获取Base64数据并去掉data前缀
+    const base64WithPrefix = exportCanvas.toDataURL('image/png');
+    const base64 = base64WithPrefix.replace('data:image/png;base64,', '');
 
     // 更新输出面板
     document.querySelector('#base64-output code').textContent = base64;
@@ -438,6 +777,19 @@ function exportAsBase64() {
 }
 
 // 下载画布为图片
+// 导出为Markdown
+function exportAsMarkdown() {
+    // 获取Base64数据（没有前缀）
+    const base64WithoutPrefix = exportAsBase64();
+    // 添加前缀以形成完整的data URL
+    const base64WithPrefix = `data:image/png;base64,${base64WithoutPrefix}`;
+    // 创建Markdown格式
+    const markdown = `![Pixel Logo](${base64WithPrefix})`;
+    // 更新输出面板
+    document.querySelector('#markdown-output code').textContent = markdown;
+    return markdown;
+}
+
 function downloadCanvasAsImage() {
     // 创建一个新画布用于导出
     const exportCanvas = document.createElement('canvas');
@@ -453,7 +805,7 @@ function downloadCanvasAsImage() {
     for (let y = 0; y < currentSize; y++) {
         for (let x = 0; x < currentSize; x++) {
             const color = pixelData[y][x];
-            if (color !== 'transparent') {
+            if (color !== '') { // 只有有颜色的像素才绘制
                 exportCtx.fillStyle = color;
                 exportCtx.fillRect(x * scale, y * scale, scale, scale);
             }
@@ -500,8 +852,8 @@ function handleImageUpload(file) {
     reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-            const pixelSize = parseInt(pixelSizeSlider.value);
-            createPixelArtFromImage(img, pixelSize);
+            // 对于颜色提取，使用pixelSize=1来确保提取所有颜色
+            createPixelArtFromImage(img, 1);
         };
         img.src = e.target.result;
     };
@@ -510,6 +862,9 @@ function handleImageUpload(file) {
 
 // 绑定事件监听器
 function bindEvents() {
+    // 获取画笔大小指示器元素
+    const brushSizeIndicator = document.getElementById('brush-size-indicator');
+
     // 画布事件
     canvas.addEventListener('mousedown', (e) => {
         const coords = getPixelCoordinates(e);
@@ -519,59 +874,120 @@ function bindEvents() {
             const targetColor = getPixelColor(coords.x, coords.y);
             // 允许填充空区域（透明区域）
             floodFill(coords.x, coords.y, targetColor, currentColor);
-        } else if (currentTool === 'dropper') {
-            // 墨水瓶工具：拾取颜色
-            const pickedColor = getPixelColor(coords.x, coords.y);
-            if (pickedColor && pickedColor !== 'transparent') {
-                currentColor = pickedColor;
-                colorPicker.value = currentColor;
-
-                // 更新快速颜色选择器的活动状态
-                document.querySelectorAll('.color-swatch').forEach(swatch => {
-                    swatch.classList.remove('active');
-                    if (swatch.dataset.color === currentColor) {
-                        swatch.classList.add('active');
-                    }
-                });
-            }
+        } else if (currentTool === 'color-extractor') {
+            // 颜色吸取器工具：不执行绘制逻辑，由click事件处理
+            return;
         } else {
-            // 画笔和橡皮擦工具：开始绘制
+            // 铅笔和橡皮擦工具：开始绘制
             isDrawing = true;
-            const color = currentTool === 'eraser' ? '' : currentColor;
+            // 如果是橡皮擦工具，使用'transparent'表示透明
+            // 如果是铅笔工具，直接使用currentColor（包括透明色）
+            const color = currentTool === 'eraser' ? 'transparent' : currentColor;
             drawPixel(coords.x, coords.y, color);
         }
     });
 
     canvas.addEventListener('mousemove', (e) => {
-        if (isDrawing && currentTool !== 'fill') {
+        if (isDrawing && currentTool !== 'fill' && currentTool !== 'color-extractor') {
             const coords = getPixelCoordinates(e);
-            const color = currentTool === 'eraser' ? '' : currentColor;
+            const color = currentTool === 'eraser' ? 'transparent' : currentColor;
             drawPixel(coords.x, coords.y, color);
         }
+
+        // 更新画笔大小指示器位置
+        updateBrushSizeIndicator(e, brushSizeIndicator);
     });
 
     window.addEventListener('mouseup', () => {
         isDrawing = false;
     });
 
+    // 鼠标进入画布时显示画笔大小指示器
+    canvas.addEventListener('mouseenter', (e) => {
+        // 所有工具都显示指示器
+        brushSizeIndicator.classList.add('visible');
+        updateBrushSizeIndicator(e, brushSizeIndicator);
+    });
+
+    // 鼠标离开画布时隐藏画笔大小指示器
+    canvas.addEventListener('mouseleave', () => {
+        brushSizeIndicator.classList.remove('visible');
+    });
+
+    // 更新画笔大小指示器位置和大小的函数
+    function updateBrushSizeIndicator(e, indicator) {
+        // 所有工具都显示指示器
+        if (!indicator) return;
+
+        // 使用与鼠标事件完全相同的坐标计算方法
+        const coords = getPixelCoordinates(e);
+
+        // 完全照搬drawPixel函数的逻辑
+        const coverage = getBrushCoverage(coords.x, coords.y);
+
+        // 获取画布容器的边界矩形（而不是画布本身）
+        const canvasContainer = document.querySelector('.canvas-container');
+        if (!canvasContainer) return;
+
+        const containerRect = canvasContainer.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+
+        // 计算画布在容器内的偏移量
+        const offsetX = canvasRect.left - containerRect.left;
+        const offsetY = canvasRect.top - containerRect.top;
+
+        // 计算缩放因子（与getPixelCoordinates函数一致）
+        const scaleX = canvas.width / canvasRect.width;
+        const scaleY = canvas.height / canvasRect.height;
+
+        // 完全照搬drawPixel中的循环逻辑
+        // 计算指示器应该覆盖的像素范围
+        let minX = coverage.startX;
+        let minY = coverage.startY;
+        let maxX = coverage.startX + coverage.width - 1;
+        let maxY = coverage.startY + coverage.height - 1;
+
+        // 确保在画布范围内（与drawPixel中的边界检查一致）
+        minX = Math.max(0, minX);
+        minY = Math.max(0, minY);
+        maxX = Math.min(currentSize - 1, maxX);
+        maxY = Math.min(currentSize - 1, maxY);
+
+        // 计算指示器的位置和大小
+        // 将画布坐标转换为屏幕坐标，并加上容器内偏移量
+        const left = minX / scaleX + offsetX;
+        const top = minY / scaleY + offsetY;
+        const width = (maxX - minX + 1) / scaleX;
+        const height = (maxY - minY + 1) / scaleY;
+
+        // 设置指示器位置和大小
+        indicator.style.left = `${left}px`;
+        indicator.style.top = `${top}px`;
+        indicator.style.width = `${width}px`;
+        indicator.style.height = `${height}px`;
+
+        // 设置指示器边框颜色与选择颜色一致
+        // 对于橡皮擦工具，使用白色边框
+        if (currentTool === 'eraser') {
+            indicator.style.borderColor = '#ffffff';
+        } else {
+            indicator.style.borderColor = currentColor;
+        }
+    }
+
     // 自定义颜色选择器
-    const colorPickerBtn = document.getElementById('color-picker-btn');
     const colorPickerDialog = document.getElementById('color-picker-dialog');
     const colorPickerInput = document.getElementById('color-picker-input');
     const colorPickerOk = document.getElementById('color-picker-ok');
     const colorPickerCancel = document.getElementById('color-picker-cancel');
-    const colorPickerClose = document.getElementById('color-picker-close');
-    const colorPreview = document.querySelector('.color-preview');
-    const colorValue = document.querySelector('.color-value');
+    const colorPickerLabel = document.querySelector('label[for="color-picker"]');
+    const colorPreview = document.getElementById('color-preview');
 
-    // 更新颜色预览
-    function updateColorPreview(color) {
-        colorPreview.style.backgroundColor = color;
-        colorValue.textContent = color;
-    }
+    // 初始化颜色预览
+    updateColorPreview();
 
-    // 打开颜色选择器
-    colorPickerBtn.addEventListener('click', () => {
+    // 点击Color标签时显示颜色选择器
+    colorPickerLabel.addEventListener('click', () => {
         colorPickerInput.value = currentColor;
         colorPickerDialog.classList.add('show');
     });
@@ -581,32 +997,24 @@ function bindEvents() {
         colorPickerDialog.classList.remove('show');
     }
 
-    // 确定按钮
+    // 确定按钮 - 应用选中的颜色
     colorPickerOk.addEventListener('click', () => {
         currentColor = colorPickerInput.value;
-        colorPicker.value = currentColor;
-        updateColorPreview(currentColor);
+        // 如果颜色不是透明色，才更新HTML5颜色选择器的值
+        if (currentColor !== 'transparent') {
+            colorPicker.value = currentColor;
+        }
+        // 添加到最近颜色
+        addToRecentColors(currentColor);
+        updateColorPreview();
         closeColorPicker();
     });
 
-    // 取消按钮
+    // 取消按钮 - 不应用颜色，直接关闭
     colorPickerCancel.addEventListener('click', closeColorPicker);
-    colorPickerClose.addEventListener('click', closeColorPicker);
-
-    // 点击外部关闭
-    document.addEventListener('click', (e) => {
-        if (!colorPickerBtn.contains(e.target) && !colorPickerDialog.contains(e.target)) {
-            closeColorPicker();
-        }
-    });
-
-    // 颜色选择器输入事件
-    colorPickerInput.addEventListener('input', () => {
-        updateColorPreview(colorPickerInput.value);
-    });
 
     // 初始化颜色预览
-    updateColorPreview(currentColor);
+    updateColorPreview();
 
     // 快速颜色选择
     document.querySelectorAll('.color-swatch').forEach(swatch => {
@@ -618,13 +1026,495 @@ function bindEvents() {
                 colorPicker.value = currentColor;
             }
 
+            // 添加到最近颜色
+            addToRecentColors(currentColor);
+
+            // 更新颜色预览指示器
+            updateColorPreview();
+
             // 更新活动状态
             document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
             swatch.classList.add('active');
-
-
         });
     });
+
+    // 调色盘面板功能
+    const paletteSwatches = document.querySelectorAll('.color-palette-grid .color-swatch');
+    const addCustomColorBtn = document.getElementById('add-custom-color');
+    const clearPaletteBtn = document.getElementById('clear-palette');
+    const recentColorsGrid = document.getElementById('recent-colors-grid');
+
+    // 初始化最近颜色
+    function initRecentColors() {
+        // 从本地存储加载最近颜色
+        const savedColors = localStorage.getItem('pixelLogoRecentColors');
+        if (savedColors) {
+            recentColors = JSON.parse(savedColors);
+            renderRecentColors();
+        }
+    }
+
+    // 颜色样本点击事件处理函数
+    function setColorFromSwatch(swatch) {
+        // 移除所有active状态
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        // 添加active状态到当前点击的样本
+        swatch.classList.add('active');
+
+        const color = swatch.getAttribute('data-color');
+        currentColor = color;
+        if (currentColor !== 'transparent') {
+            colorPicker.value = currentColor;
+        }
+
+        // 更新颜色预览指示器
+        updateColorPreview();
+
+        // 添加到最近颜色（透明色除外）
+        if (color !== 'transparent') {
+            addToRecentColors(color);
+        }
+    }
+
+    // 初始化调色盘颜色
+    paletteSwatches.forEach(swatch => {
+        if (swatch.dataset.color !== 'transparent') {
+            swatch.style.backgroundColor = swatch.dataset.color;
+        }
+
+        swatch.addEventListener('click', function() {
+            setColorFromSwatch(this);
+        });
+    });
+
+    // 高级颜色选择器相关变量
+    const advancedColorPickerDialog = document.getElementById('color-picker-dialog-advanced');
+    const closeColorPickerBtn = document.getElementById('close-color-picker');
+    const colorPickerOkBtn = document.getElementById('color-picker-ok-advanced');
+    const colorPickerCancelBtn = document.getElementById('color-picker-cancel-advanced');
+    const currentColorPreview = document.getElementById('current-color-preview');
+    const newColorPreview = document.getElementById('new-color-preview');
+    const hueSlider = document.getElementById('hue-slider');
+    const saturationSlider = document.getElementById('saturation-slider');
+    const lightnessSlider = document.getElementById('lightness-slider');
+    const hueInput = document.getElementById('hue-input');
+    const saturationInput = document.getElementById('saturation-input');
+    const lightnessInput = document.getElementById('lightness-input');
+    const hueSpectrum = document.getElementById('hue-spectrum');
+    const saturationLightness = document.getElementById('saturation-lightness');
+    const slCursor = document.getElementById('sl-cursor');
+    const basicColorsGrid = document.getElementById('basic-colors-grid');
+    const colorTabs = document.querySelectorAll('.color-tab');
+
+    let selectedHue = 0;
+    let selectedSaturation = 100;
+    let selectedLightness = 50;
+    let selectedColor = '#ff0000';
+
+    // 初始化高级颜色选择器
+    function initAdvancedColorPicker() {
+        // 初始化基本颜色
+        const basicColors = [
+            '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF',
+            '#FFA500', '#800080', '#A52A2A', '#008000', '#008080', '#000080', '#800000', '#808080'
+        ];
+
+        basicColors.forEach(color => {
+            const swatch = document.createElement('div');
+            swatch.className = 'color-swatch';
+            swatch.setAttribute('data-color', color);
+            swatch.style.backgroundColor = color;
+            swatch.addEventListener('click', function() {
+                const colorValue = this.getAttribute('data-color');
+                setColorFromHex(colorValue);
+            });
+            basicColorsGrid.appendChild(swatch);
+        });
+
+        // 绑定事件
+        bindAdvancedColorPickerEvents();
+
+        // 初始化颜色模式标签
+        colorTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                colorTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // 这里可以添加不同颜色模式的切换逻辑
+            });
+        });
+    }
+
+    // 绑定高级颜色选择器事件
+    function bindAdvancedColorPickerEvents() {
+        // 色调滑块和输入框同步
+        hueSlider.addEventListener('input', function() {
+            selectedHue = parseInt(this.value);
+            hueInput.value = selectedHue;
+            updateColorFromHSL();
+        });
+
+        hueInput.addEventListener('input', function() {
+            let value = parseInt(this.value) || 0;
+            value = Math.max(0, Math.min(360, value));
+            selectedHue = value;
+            hueSlider.value = value;
+            hueInput.value = value;
+            updateColorFromHSL();
+        });
+
+        // 饱和度滑块和输入框同步
+        saturationSlider.addEventListener('input', function() {
+            selectedSaturation = parseInt(this.value);
+            saturationInput.value = selectedSaturation;
+            updateColorFromHSL();
+        });
+
+        saturationInput.addEventListener('input', function() {
+            let value = parseInt(this.value) || 0;
+            value = Math.max(0, Math.min(100, value));
+            selectedSaturation = value;
+            saturationSlider.value = value;
+            saturationInput.value = value;
+            updateColorFromHSL();
+        });
+
+        // 亮度滑块和输入框同步
+        lightnessSlider.addEventListener('input', function() {
+            selectedLightness = parseInt(this.value);
+            lightnessInput.value = selectedLightness;
+            updateColorFromHSL();
+        });
+
+        lightnessInput.addEventListener('input', function() {
+            let value = parseInt(this.value) || 0;
+            value = Math.max(0, Math.min(100, value));
+            selectedLightness = value;
+            lightnessSlider.value = value;
+            lightnessInput.value = value;
+            updateColorFromHSL();
+        });
+
+        // 色调光谱点击事件
+        hueSpectrum.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const y = e.clientY - rect.top;
+            const hue = Math.round((y / rect.height) * 360);
+            selectedHue = Math.max(0, Math.min(360, hue));
+            hueSlider.value = selectedHue;
+            hueInput.value = selectedHue;
+            updateColorFromHSL();
+        });
+
+        // 饱和度/亮度区域点击事件
+        saturationLightness.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            selectedSaturation = Math.round((x / rect.width) * 100);
+            selectedLightness = Math.round(100 - (y / rect.height) * 100);
+
+            saturationSlider.value = selectedSaturation;
+            saturationInput.value = selectedSaturation;
+            lightnessSlider.value = selectedLightness;
+            lightnessInput.value = selectedLightness;
+
+            updateColorFromHSL();
+        });
+
+        // 对话框按钮事件
+        closeColorPickerBtn.addEventListener('click', closeAdvancedColorPicker);
+        colorPickerCancelBtn.addEventListener('click', closeAdvancedColorPicker);
+        colorPickerOkBtn.addEventListener('click', applyAdvancedColor);
+
+        // 点击对话框外部关闭
+        advancedColorPickerDialog.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAdvancedColorPicker();
+            }
+        });
+    }
+
+    // 从HSL值更新颜色
+    function updateColorFromHSL() {
+        selectedColor = hslToHex(selectedHue, selectedSaturation, selectedLightness);
+        newColorPreview.style.backgroundColor = selectedColor;
+        updateSLCursorPosition();
+    }
+
+    // 从十六进制颜色设置选择器
+    function setColorFromHex(hexColor) {
+        const hsl = hexToHsl(hexColor);
+        selectedHue = hsl.h;
+        selectedSaturation = hsl.s;
+        selectedLightness = hsl.l;
+
+        hueSlider.value = selectedHue;
+        hueInput.value = selectedHue;
+        saturationSlider.value = selectedSaturation;
+        saturationInput.value = selectedSaturation;
+        lightnessSlider.value = selectedLightness;
+        lightnessInput.value = selectedLightness;
+
+        selectedColor = hexColor;
+        newColorPreview.style.backgroundColor = selectedColor;
+        updateSLCursorPosition();
+    }
+
+    // 更新饱和度/亮度光标位置
+    function updateSLCursorPosition() {
+        const rect = saturationLightness.getBoundingClientRect();
+        const x = (selectedSaturation / 100) * rect.width;
+        const y = (1 - selectedLightness / 100) * rect.height;
+
+        slCursor.style.left = (x - 4) + 'px';
+        slCursor.style.top = (y - 4) + 'px';
+
+        // 更新色调光谱的背景
+        hueSpectrum.style.background = `linear-gradient(to bottom,
+            hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%), hsl(90, 100%, 50%),
+            hsl(120, 100%, 50%), hsl(150, 100%, 50%), hsl(180, 100%, 50%), hsl(210, 100%, 50%),
+            hsl(240, 100%, 50%), hsl(270, 100%, 50%), hsl(300, 100%, 50%), hsl(330, 100%, 50%), hsl(360, 100%, 50%)
+        `;
+
+        // 更新饱和度/亮度区域的背景
+        saturationLightness.style.background = `
+            linear-gradient(to right, white, hsl(${selectedHue}, 100%, 50%)),
+            linear-gradient(to bottom, black, transparent)
+        `;
+    }
+
+    // HSL转十六进制
+    function hslToHex(h, s, l) {
+        h /= 360;
+        s /= 100;
+        l /= 100;
+
+        let r, g, b;
+
+        if (s === 0) {
+            r = g = b = l;
+        } else {
+            const hue2rgb = (p, q, t) => {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+
+            const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            const p = 2 * l - q;
+
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+
+        const toHex = x => {
+            const hex = Math.round(x * 255).toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        };
+
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+    }
+
+    // 十六进制转HSL
+    function hexToHsl(hex) {
+        let r = 0, g = 0, b = 0;
+
+        if (hex.length === 4) {
+            r = parseInt(hex[1] + hex[1], 16) / 255;
+            g = parseInt(hex[2] + hex[2], 16) / 255;
+            b = parseInt(hex[3] + hex[3], 16) / 255;
+        } else if (hex.length === 7) {
+            r = parseInt(hex[1] + hex[2], 16) / 255;
+            g = parseInt(hex[3] + hex[4], 16) / 255;
+            b = parseInt(hex[5] + hex[6], 16) / 255;
+        }
+
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+
+        if (max === min) {
+            h = s = 0;
+        } else {
+            const d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+            switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+            }
+
+            h /= 6;
+        }
+
+        return {
+            h: Math.round(h * 360),
+            s: Math.round(s * 100),
+            l: Math.round(l * 100)
+        };
+    }
+
+    // 打开高级颜色选择器
+    function openAdvancedColorPicker() {
+        // 设置当前颜色预览
+        currentColorPreview.style.backgroundColor = currentColor === 'transparent' ? '#ffffff' : currentColor;
+
+        // 初始化选择器为当前颜色
+        if (currentColor !== 'transparent') {
+            setColorFromHex(currentColor);
+        } else {
+            setColorFromHex('#000000');
+        }
+
+        advancedColorPickerDialog.style.display = 'block';
+    }
+
+    // 关闭高级颜色选择器
+    function closeAdvancedColorPicker() {
+        advancedColorPickerDialog.style.display = 'none';
+    }
+
+    // 应用高级颜色选择器的颜色
+    function applyAdvancedColor() {
+        currentColor = selectedColor;
+        colorPicker.value = selectedColor;
+        updateColorPreview();
+
+        // 添加到最近颜色
+        addToRecentColors(selectedColor);
+
+        closeAdvancedColorPicker();
+    }
+
+    // 添加自定义颜色（使用高级颜色选择器）
+    addCustomColorBtn.addEventListener('click', function() {
+        openAdvancedColorPicker();
+    });
+
+    // 清空调色盘（只清除最近颜色）
+    clearPaletteBtn.addEventListener('click', () => {
+        if (confirm('确定要清除最近使用的颜色吗？')) {
+            recentColors = [];
+            localStorage.removeItem('pixelLogoRecentColors');
+            renderRecentColors();
+        }
+    });
+
+    // 初始化功能
+    initRecentColors();
+    initAdvancedColorPicker();
+
+    // 调色盘功能
+    let customPalette = [];
+    const customPaletteContainer = document.getElementById('custom-palette');
+    const savePaletteBtn = document.getElementById('save-palette');
+    const resetPaletteBtn = document.getElementById('reset-palette');
+
+    // 初始化调色盘
+    function initCustomPalette() {
+        // 初始化默认颜色
+        const defaultColors = ['#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
+        customPalette = [...defaultColors];
+        renderCustomPalette();
+    }
+
+    // 渲染调色盘
+    function renderCustomPalette() {
+        customPaletteContainer.innerHTML = '';
+
+        customPalette.forEach(color => {
+            const colorSwatch = document.createElement('div');
+            colorSwatch.className = 'color-swatch';
+            colorSwatch.dataset.color = color;
+
+            if (color === 'transparent') {
+                colorSwatch.style.backgroundImage = 'linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)';
+                colorSwatch.style.backgroundSize = '8px 8px';
+                colorSwatch.style.backgroundPosition = '0 0, 4px 4px';
+            } else {
+                colorSwatch.style.backgroundColor = color;
+            }
+
+            // 点击颜色时选择
+            colorSwatch.addEventListener('click', () => {
+                currentColor = color;
+                if (currentColor !== 'transparent') {
+                    colorPicker.value = currentColor;
+                }
+
+                // 更新活动状态
+                document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+                colorSwatch.classList.add('active');
+            });
+
+            // 右键点击删除颜色
+            colorSwatch.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                const index = customPalette.indexOf(color);
+                if (index > -1) {
+                    customPalette.splice(index, 1);
+                    renderCustomPalette();
+                }
+            });
+
+            customPaletteContainer.appendChild(colorSwatch);
+        });
+
+        // 添加一个空白的颜色样本，用于添加新颜色
+        const addColorSwatch = document.createElement('div');
+        addColorSwatch.className = 'color-swatch';
+        addColorSwatch.style.backgroundColor = 'transparent';
+        addColorSwatch.style.border = '2px dashed #666';
+        addColorSwatch.style.display = 'flex';
+        addColorSwatch.style.alignItems = 'center';
+        addColorSwatch.style.justifyContent = 'center';
+        addColorSwatch.style.color = '#666';
+        addColorSwatch.innerHTML = '+';
+
+        addColorSwatch.addEventListener('click', () => {
+            // 添加当前颜色到调色盘
+            if (customPalette.indexOf(currentColor) === -1) {
+                customPalette.push(currentColor);
+                renderCustomPalette();
+            }
+        });
+
+        customPaletteContainer.appendChild(addColorSwatch);
+    }
+
+    // 保存当前调色盘
+    savePaletteBtn.addEventListener('click', () => {
+        localStorage.setItem('pixelLogoPalette', JSON.stringify(customPalette));
+        // 可以添加一个提示
+        // fsLogger.info('调色盘已保存');
+    });
+
+    // 重置调色盘
+    resetPaletteBtn.addEventListener('click', () => {
+        initCustomPalette();
+        localStorage.removeItem('pixelLogoPalette');
+        // fsLogger.info('调色盘已重置');
+    });
+
+    // 加载保存的调色盘
+    function loadCustomPalette() {
+        const savedPalette = localStorage.getItem('pixelLogoPalette');
+        if (savedPalette) {
+            customPalette = JSON.parse(savedPalette);
+            renderCustomPalette();
+        } else {
+            initCustomPalette();
+        }
+    }
+
+    // 初始化调色盘
+    loadCustomPalette();
 
     // 画布大小选择
     sizeSelector.addEventListener('change', () => {
@@ -647,64 +1537,111 @@ function bindEvents() {
             toolButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            // 更新光标
+            // 获取画笔大小指示器
+            const brushSizeIndicator = document.getElementById('brush-size-indicator');
+
+            // 更新光标和画笔大小指示器
             if (currentTool === 'eraser') {
                 canvas.classList.add('cursor-eraser');
-                canvas.classList.remove('cursor-brush');
+                canvas.classList.remove('cursor-pencil');
                 canvas.classList.remove('cursor-fill');
-                canvas.classList.remove('cursor-dropper');
-                // 移除所有画笔尺寸类
-                for (let i = 1; i <= 5; i++) {
+                canvas.classList.remove('cursor-color-extractor');
+                // 移除所有画笔尺寸类，确保只使用橡皮擦SVG图标
+                for (let i = 1; i <= 6; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
             } else if (currentTool === 'fill') {
                 canvas.classList.remove('cursor-eraser');
-                canvas.classList.remove('cursor-brush');
+                canvas.classList.remove('cursor-pencil');
                 canvas.classList.add('cursor-fill');
-                canvas.classList.remove('cursor-dropper');
+                canvas.classList.remove('cursor-color-extractor');
                 // 移除所有画笔尺寸类
-                for (let i = 1; i <= 5; i++) {
+                for (let i = 1; i <= 6; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
-            } else if (currentTool === 'dropper') {
+            } else if (currentTool === 'color-extractor') {
                 canvas.classList.remove('cursor-eraser');
-                canvas.classList.remove('cursor-brush');
+                canvas.classList.remove('cursor-pencil');
                 canvas.classList.remove('cursor-fill');
-                canvas.classList.add('cursor-dropper');
+                canvas.classList.add('cursor-color-extractor');
                 // 移除所有画笔尺寸类
-                for (let i = 1; i <= 5; i++) {
+                for (let i = 1; i <= 6; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
             } else {
+                // 铅笔工具
                 canvas.classList.remove('cursor-eraser');
                 canvas.classList.remove('cursor-fill');
-                canvas.classList.remove('cursor-dropper');
-                canvas.classList.add('cursor-brush');
-                // 更新画笔尺寸光标
-                updateBrushSizeCursor();
+                canvas.classList.remove('cursor-color-extractor');
+                canvas.classList.add('cursor-pencil');
+                // 移除所有画笔尺寸类，确保只使用铅笔SVG图标
+                for (let i = 1; i <= 6; i++) {
+                    canvas.classList.remove(`brush-size-${i}`);
+                }
+            }
+            // 所有工具都显示画笔大小指示器
+            brushSizeIndicator.classList.add('visible');
+            // 立即更新指示器大小
+            if (canvas.matches(':hover')) {
+                // 如果鼠标已经在画布上，获取当前鼠标位置并更新指示器
+                const rect = canvas.getBoundingClientRect();
+                const mousePos = { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 };
+                updateBrushSizeIndicator(mousePos, brushSizeIndicator);
             }
         });
+    });
+
+    // 颜色吸取器功能
+    canvas.addEventListener('click', function(e) {
+        if (currentTool === 'color-extractor') {
+            const coords = getPixelCoordinates(e);
+            const x = coords.x;
+            const y = coords.y;
+
+            // 确保坐标在有效范围内
+            if (x >= 0 && x < currentSize && y >= 0 && y < currentSize) {
+                // 获取点击位置的颜色
+                let color = pixelData[y][x];
+
+                // 转换透明色表示：空字符串 -> 'transparent'
+                if (color === '') {
+                    color = 'transparent';
+                }
+
+                // 设置为当前颜色
+                currentColor = color;
+                // 如果颜色不是透明色，更新颜色选择器的值
+                if (color !== 'transparent') {
+                    colorPicker.value = color;
+                }
+                updateColorPreview();
+                // 添加到最近颜色（包括透明色）
+                addToRecentColors(color);
+            }
+        }
     });
 
     // 画笔尺寸选择
     brushSizeSlider.addEventListener('input', () => {
         currentBrushSize = parseInt(brushSizeSlider.value);
         brushSizeValue.textContent = currentBrushSize;
-        // 更新光标
-        if (currentTool === 'brush') {
+        // 更新光标（铅笔和橡皮擦工具）
+        if (currentTool === 'pencil' || currentTool === 'eraser') {
             updateBrushSizeCursor();
+        }
+        // 更新画笔大小指示器
+        const brushSizeIndicator = document.getElementById('brush-size-indicator');
+        if (brushSizeIndicator && brushSizeIndicator.classList.contains('visible')) {
+            // 检查鼠标是否在画布上
+            const mousePos = {
+                clientX: canvas.getBoundingClientRect().left + canvas.getBoundingClientRect().width / 2,
+                clientY: canvas.getBoundingClientRect().top + canvas.getBoundingClientRect().height / 2
+            };
+            updateBrushSizeIndicator(mousePos, brushSizeIndicator);
         }
     });
 
-    // 更新画笔尺寸光标
-    function updateBrushSizeCursor() {
-        // 移除所有画笔尺寸类
-        for (let i = 1; i <= 5; i++) {
-            canvas.classList.remove(`brush-size-${i}`);
-        }
-        // 添加当前尺寸的光标类
-        canvas.classList.add(`brush-size-${currentBrushSize}`);
-    }
+
 
     // 网格线显示开关
     showGridCheckbox.addEventListener('change', () => {
@@ -723,6 +1660,110 @@ function bindEvents() {
     // 清空画布
     clearButton.addEventListener('click', clearCanvas);
 
+    // 预览按钮功能
+    const previewModal = document.getElementById('preview-modal');
+    const closePreviewBtn = document.getElementById('close-preview');
+    const previewCanvas = document.getElementById('preview-canvas');
+    const previewCtx = previewCanvas.getContext('2d');
+    const zoomSlider = document.getElementById('zoom-slider');
+    const zoomValue = document.getElementById('zoom-value');
+
+    // 初始化缩放滑块事件
+    zoomSlider.addEventListener('input', function() {
+        const zoomLevel = this.value / 100;
+        previewCanvas.style.transform = `scale(${zoomLevel})`;
+        zoomValue.textContent = `${this.value}%`;
+    });
+
+    // 显示预览
+    function showPreview() {
+        // 设置预览画布大小与原画布相同
+        previewCanvas.width = canvas.width;
+        previewCanvas.height = canvas.height;
+
+        // 将当前画布内容复制到预览画布
+        previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+        previewCtx.drawImage(canvas, 0, 0);
+
+        // 显示模态窗口
+        previewModal.classList.add('active');
+
+        // 更新按钮文本
+        previewButton.textContent = 'Exit Preview';
+
+        // 设置退出预览按钮样式与预览按钮一致
+        closePreviewBtn.classList.add('preview-btn');
+        closePreviewBtn.textContent = 'Exit Preview';
+
+        // 设置预览图像为像素大小，支持最大500%放大
+        setTimeout(() => {
+            const modalContent = document.querySelector('.preview-modal-content');
+            const modalBody = document.querySelector('.preview-modal-body');
+
+            // 获取画布的像素尺寸（不是显示尺寸）
+            const pixelWidth = canvas.width;
+            const pixelHeight = canvas.height;
+
+            // 设置预览画布为像素大小（如32x32, 64x64等）
+            previewCanvas.style.width = `${pixelWidth}px`;
+            previewCanvas.style.height = `${pixelHeight}px`;
+            previewCanvas.style.maxWidth = 'none';
+            previewCanvas.style.maxHeight = 'none';
+
+            // 显示标题栏和缩放控件
+            const modalHeader = document.querySelector('.preview-modal-header');
+            const modalFooter = document.querySelector('.preview-modal-footer');
+            if (modalHeader) modalHeader.style.display = 'block';
+            if (modalFooter) modalFooter.style.display = 'block';
+
+            // 设置模态主体正常内边距
+            modalBody.style.padding = '20px';
+
+            // 重置缩放为100%（像素大小）
+            previewCanvas.style.transform = 'scale(1)';
+            previewCanvas.style.transformOrigin = 'center';
+
+            // 重置缩放滑块为100%
+            zoomSlider.value = 100;
+            zoomValue.textContent = '100%';
+
+            // 设置缩放滑块最大值为500%
+            zoomSlider.max = 500;
+        }, 100);
+    }
+
+    // 关闭预览
+    function closePreview() {
+        // 隐藏模态窗口
+        previewModal.classList.remove('active');
+
+        // 更新按钮文本
+        previewButton.textContent = 'Preview';
+
+        // 恢复退出预览按钮的原始样式
+        closePreviewBtn.classList.remove('preview-btn');
+        closePreviewBtn.textContent = '×';
+    }
+
+    // 预览按钮点击事件
+    previewButton.addEventListener('click', function() {
+        if (previewModal.classList.contains('active')) {
+            closePreview();
+        } else {
+            showPreview();
+        }
+    });
+
+    // 关闭预览按钮点击事件
+    closePreviewBtn.addEventListener('click', closePreview);
+
+    // 点击模态窗口外部关闭预览
+    previewModal.addEventListener('click', function(event) {
+        if (event.target === previewModal) {
+            closePreview();
+        }
+    });
+
     // 导出SVG
     exportSvgButton.addEventListener('click', () => {
         const svg = exportAsSvg();
@@ -739,6 +1780,29 @@ function bindEvents() {
 
     // 下载图片
     downloadImageButton.addEventListener('click', downloadCanvasAsImage);
+
+    // 新添加的导出按钮
+    exportSvgBtn.addEventListener('click', () => {
+        const svg = exportAsSvg();
+        // 切换到SVG选项卡
+        tabButtons[0].click();
+    });
+
+    exportBase64Btn.addEventListener('click', () => {
+        const base64 = exportAsBase64();
+        // 切换到Base64选项卡
+        tabButtons[1].click();
+    });
+
+    exportMarkdownBtn.addEventListener('click', () => {
+        const markdown = exportAsMarkdown();
+        // 切换到Markdown选项卡
+        // 找到Markdown选项卡按钮并点击
+        const markdownTabBtn = document.querySelector('[data-tab="markdown"]');
+        if (markdownTabBtn) {
+            markdownTabBtn.click();
+        }
+    });
 
     // 拖放区域
     dropArea.addEventListener('dragover', (e) => {
@@ -791,10 +1855,11 @@ function bindEvents() {
     });
 
     // 复制按钮
-    copyButtons.forEach((button, index) => {
+    copyButtons.forEach((button) => {
         button.addEventListener('click', () => {
-            const panelId = index === 0 ? '#svg-output' : '#base64-output';
-            const codeElement = document.querySelector(`${panelId} code`);
+            // 查找按钮所在的输出面板
+            const outputPanel = button.closest('.output-panel');
+            const codeElement = outputPanel.querySelector('code');
             const text = codeElement.textContent;
 
             if (text) {
@@ -814,10 +1879,36 @@ function displayExtractedColors(colors) {
     // 清空现有的颜色
     extractedColorsPalette.innerHTML = '';
 
+    // 从pixelData中提取颜色并统计使用频率
+    const colorFrequency = {};
+
+    // 遍历像素数据，统计每个颜色的使用频率
+    for (let y = 0; y < currentSize; y++) {
+        for (let x = 0; x < currentSize; x++) {
+            const color = pixelData[y][x];
+            if (color && color !== '') {
+                if (colorFrequency[color]) {
+                    colorFrequency[color]++;
+                } else {
+                    colorFrequency[color] = 1;
+                }
+            }
+        }
+    }
+
+    // 将颜色频率对象转换为数组并按频率排序（从高到低）
+    const sortedByFrequency = Object.entries(colorFrequency)
+        .sort((a, b) => b[1] - a[1])
+        .map(entry => entry[0]);
+
+    // 限制显示的颜色数量（使用与外部一致的maxColors值）
+    const maxColors = 64;
+    const limitedColors = sortedByFrequency.slice(0, maxColors);
+
     // 如果没有颜色，显示提示
-    if (colors.length === 0) {
+    if (limitedColors.length === 0) {
         const emptyMessage = document.createElement('div');
-        emptyMessage.textContent = 'No colors extracted from image';
+        emptyMessage.textContent = 'No colors used in pixel art';
         emptyMessage.style.textAlign = 'center';
         emptyMessage.style.color = '#666';
         emptyMessage.style.fontSize = '11px';
@@ -826,11 +1917,8 @@ function displayExtractedColors(colors) {
         return;
     }
 
-    // 按颜色值排序
-    colors.sort();
-
     // 添加颜色小方格
-    colors.forEach(color => {
+    limitedColors.forEach(color => {
         const colorSwatch = document.createElement('div');
         colorSwatch.className = 'color-swatch';
         colorSwatch.dataset.color = color;
@@ -843,6 +1931,9 @@ function displayExtractedColors(colors) {
             if (currentColor !== 'transparent') {
                 colorPicker.value = currentColor;
             }
+
+            // 更新颜色预览指示器
+            updateColorPreview();
 
             // 更新活动状态
             document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));

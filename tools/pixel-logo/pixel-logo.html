@@ -1,202 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pixel Logo Maker</title>
-    <link rel="stylesheet" href="../../libs/jquery-ui.min.css">
-    <link rel="stylesheet" href="../../libs/logger.css">
-    <link rel="stylesheet" href="pixel-logo.css">
-    <script src="../../libs/jquery-3.7.1.min.js"></script>
-    <script src="../../libs/jquery-ui.min.js"></script>
-    <script src="../../libs/logger.js"></script>
-    <script src="../../libs/tools.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Logo Maker</title>
+  <link rel="stylesheet" href="../../libs/jquery-ui.min.css">
+  <link rel="stylesheet" href="../../libs/logger.css">
+  <link rel="stylesheet" href="pixel-logo.css">
+  <script src="../../libs/jquery-3.7.1.min.js"></script>
+  <script src="../../libs/jquery-ui.min.js"></script>
+  <script src="../../libs/logger.js"></script>
+  <script src="../../libs/tools.js"></script>
 </head>
 <body>
-    <div class="container">
-    <main>
-        <div class="tool-container">
-            <div class="tool-controls">
-                <div class="tool-controls-content">
-                    <div class="control-group">
-                        <label for="canvas-size">Canvas Size:</label>
-                        <select id="canvas-size">
-                            <option value="32">32 x 32</option>
-                            <option value="64" selected>64 x 64</option>
-                        </select>
-                        <button id="clear-canvas">Clear Canvas</button>
-                    </div>
+<div class="container">
+  <main>
+    <div class="tool-container">
+      <div class="tool-controls">
+        <div class="tool-controls-content">
+          <div class="control-group">
+            <label for="canvas-size">Canvas Size:</label>
+            <select id="canvas-size">
+              <option value="32">32 x 32</option>
+              <option value="64" selected>64 x 64</option>
+            </select>
+            <button id="clear-canvas">Clear Canvas</button>
+          </div>
 
-                    <div class="control-group">
-                        <label>Tools:</label>
-                        <div class="tool-buttons">
-                            <button id="tool-brush" class="tool-btn active" data-tool="brush"></button>
-                            <button id="tool-fill" class="tool-btn" data-tool="fill"></button>
-                            <button id="tool-eraser" class="tool-btn" data-tool="eraser"></button>
-                            <button id="tool-dropper" class="tool-btn" data-tool="dropper"></button>
-                        </div>
-                    </div>
+          <!-- 统一的画笔工具面板 -->
+          <div class="brush-panel">
+            <div class="brush-panel-header">
+              <span>Brush Tools</span>
+            </div>
+            <div class="brush-panel-content">
+              <div class="tool-buttons">
+                <button id="tool-pencil" class="tool-btn active" data-tool="pencil" title="Pencil">
+                  <img src="../../materials/pencil.svg" alt="Pencil Icon" class="tool-icon">
+                </button>
+                <button id="tool-fill" class="tool-btn" data-tool="fill" title="Fill">
+                  <img src="../../materials/paint-bucket.svg" alt="Fill Icon" class="tool-icon">
+                </button>
+                <button id="tool-eraser" class="tool-btn" data-tool="eraser" title="Eraser">
+                  <img src="../../materials/eraser.svg" alt="Eraser Icon" class="tool-icon">
+                </button>
+                <button id="tool-color-extractor" class="tool-btn" data-tool="color-extractor" title="颜色吸取器">
+                    <img src="../../materials/color-extractor.svg" alt="颜色吸取器 Icon" class="tool-icon">
+                </button>
+              </div>
 
-                    <div class="control-group">
-                        <label for="brush-size">Brush Size:</label>
-                        <input type="range" id="brush-size" min="1" max="5" value="1">
-                        <span id="brush-size-value">1</span>
-                    </div>
+              <div class="brush-size-control">
+                <label for="brush-size">Size:</label>
+                <input type="range" id="brush-size" min="1" max="6" value="1">
+                <span id="brush-size-value">1</span>
+              </div>
+            </div>
+          </div>
 
-                    <div class="control-group">
-                        <label for="show-grid">Show Grid:</label>
-                        <input type="checkbox" id="show-grid">
-                    </div>
-
-                    <!-- 背景控制已移除，默认使用半透明背景 -->
-
-                    <div class="control-group">
-                        <label for="color-picker">Color:</label>
-                        <div class="color-picker-container">
-                            <input type="color" id="color-picker" value="#000000" style="display: none;">
-                            <button id="color-picker-btn" class="color-picker-btn">
-                                <span class="color-preview" style="background-color: #000000;"></span>
-                                <span class="color-value">#000000</span>
-                            </button>
-                            <div id="color-picker-dialog" class="color-picker-dialog">
-                                <div class="color-picker-header">
-                                    <span>Select Color</span>
-                                    <button id="color-picker-close" class="color-picker-close">×</button>
-                                </div>
-                                <div class="color-picker-content">
-                                    <input type="color" id="color-picker-input" value="#000000">
-                                    <div class="color-picker-controls">
-                                        <button id="color-picker-ok" class="color-picker-ok">OK</button>
-                                        <button id="color-picker-cancel" class="color-picker-cancel">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="palette">
-                        <div class="palette-header">
-                            <span>Quick Colors</span>
-                        </div>
-                        <div class="color-palette">
-                            <div class="color-swatch" data-color="#000000"></div>
-                            <div class="color-swatch" data-color="#FFFFFF"></div>
-                            <div class="color-swatch" data-color="#FF0000"></div>
-                            <div class="color-swatch" data-color="#00FF00"></div>
-                            <div class="color-swatch" data-color="#0000FF"></div>
-                            <div class="color-swatch" data-color="#FFFF00"></div>
-                            <div class="color-swatch" data-color="#FF00FF"></div>
-                            <div class="color-swatch" data-color="#00FFFF"></div>
-                            <div class="color-swatch" data-color="#FFA500"></div>
-                            <div class="color-swatch" data-color="#800080"></div>
-                            <div class="color-swatch" data-color="#A52A2A"></div>
-                            <div class="color-swatch" data-color="#008000"></div>
-                            <div class="color-swatch" data-color="#008080"></div>
-                            <div class="color-swatch" data-color="#000080"></div>
-                            <div class="color-swatch" data-color="#800000"></div>
-                            <div class="color-swatch" data-color="#808080"></div>
-                            <div class="color-swatch" data-color="#C0C0C0"></div>
-                            <div class="color-swatch" data-color="#FFC0CB"></div>
-                            <div class="color-swatch" data-color="#FFD700"></div>
-                            <div class="color-swatch" data-color="#90EE90"></div>
-                            <div class="color-swatch" data-color="#87CEEB"></div>
-                            <div class="color-swatch" data-color="#DDA0DD"></div>
-                            <div class="color-swatch" data-color="#F0E68C"></div>
-                            <div class="color-swatch" data-color="#98FB98"></div>
-                            <div class="color-swatch" data-color="#AFEEEE"></div>
-                            <div class="color-swatch" data-color="#FFB6C1"></div>
-                            <div class="color-swatch" data-color="#FFA07A"></div>
-                            <div class="color-swatch" data-color="#20B2AA"></div>
-                            <div class="color-swatch" data-color="#9370DB"></div>
-                            <div class="color-swatch" data-color="#F08080"></div>
-                            <div class="color-swatch" data-color="#48D1CC"></div>
-                            <div class="color-swatch" data-color="transparent" style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
-                        </div>
-                    </div>
-
-                    <div class="image-import">
-                        <label for="image-import">Import Image:</label>
-                        <div class="drop-area" id="drop-area">
-                            <p>Drop image here or click to select</p>
-                            <input type="file" id="image-import" accept="image/*" style="display: none;">
-                        </div>
-                        <label for="pixel-size">Pixel Size for Import (Controls detail level):</label>
-                        <div class="pixel-size-info">
-                            <input type="range" id="pixel-size" min="1" max="16" value="8">
-                            <span id="pixel-size-value">8</span>
-                            <small>Higher value = fewer pixels, lower value = more detail</small>
-                        </div>
-                    </div>
-
-                    <div class="export-options">
-                        <button id="export-svg">Export as SVG</button>
-                        <button id="export-base64">Export as Base64</button>
-                        <button id="download-image">Download Image</button>
-                    </div>
+          <!-- 调色盘面板 -->
+          <div class="palette-panel">
+            <div class="palette-panel-header">
+              <span>Color Palette</span>
+            </div>
+            <div class="palette-panel-content">
+              <!-- 最近添加的颜色 -->
+              <div class="recent-colors-section">
+                <div class="section-header">
+                  <span>Recent Colors</span>
                 </div>
+                <div class="recent-colors-grid" id="recent-colors-grid">
+                  <!-- 最近添加的颜色将动态显示在这里 -->
+                </div>
+              </div>
+
+              <!-- 标准颜色 -->
+              <div class="standard-colors-section">
+                <div class="section-header">
+                  <span>Standard Colors</span>
+                </div>
+                <div class="color-palette-grid">
+                  <div class="color-swatch" data-color="#000000" title="Black"></div>
+                  <div class="color-swatch" data-color="#FFFFFF" title="White"></div>
+                  <div class="color-swatch" data-color="#FF0000" title="Red"></div>
+                  <div class="color-swatch" data-color="#00FF00" title="Green"></div>
+                  <div class="color-swatch" data-color="#0000FF" title="Blue"></div>
+                  <div class="color-swatch" data-color="#FFFF00" title="Yellow"></div>
+                  <div class="color-swatch" data-color="#FF00FF" title="Magenta"></div>
+                  <div class="color-swatch" data-color="#00FFFF" title="Cyan"></div>
+                  <div class="color-swatch" data-color="#FFA500" title="Orange"></div>
+                  <div class="color-swatch" data-color="#800080" title="Purple"></div>
+                  <div class="color-swatch" data-color="#A52A2A" title="Brown"></div>
+                  <div class="color-swatch" data-color="#008000" title="Dark Green"></div>
+                  <div class="color-swatch" data-color="#008080" title="Teal"></div>
+                  <div class="color-swatch" data-color="#000080" title="Navy"></div>
+                  <div class="color-swatch" data-color="#800000" title="Maroon"></div>
+                  <div class="color-swatch" data-color="#808080" title="Gray"></div>
+                  <div class="color-swatch" data-color="#C0C0C0" title="Silver"></div>
+                  <div class="color-swatch" data-color="#FFC0CB" title="Pink"></div>
+                  <div class="color-swatch" data-color="#FFD700" title="Gold"></div>
+                  <div class="color-swatch" data-color="#90EE90" title="Light Green"></div>
+                  <div class="color-swatch" data-color="#87CEEB" title="Sky Blue"></div>
+                  <div class="color-swatch" data-color="#DDA0DD" title="Plum"></div>
+                  <div class="color-swatch" data-color="#F0E68C" title="Khaki"></div>
+                  <div class="color-swatch" data-color="#98FB98" title="Mint Green"></div>
+                  <div class="color-swatch" data-color="#AFEEEE" title="Pale Turquoise"></div>
+                  <div class="color-swatch" data-color="#FFB6C1" title="Light Pink"></div>
+                  <div class="color-swatch" data-color="#FFA07A" title="Light Salmon"></div>
+                  <div class="color-swatch" data-color="#20B2AA" title="Light Sea Green"></div>
+                  <div class="color-swatch" data-color="#9370DB" title="Medium Purple"></div>
+                  <div class="color-swatch" data-color="#F08080" title="Light Coral"></div>
+                  <div class="color-swatch" data-color="#48D1CC" title="Medium Turquoise"></div>
+                  <div class="color-swatch" data-color="transparent" title="Transparent"
+                       style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
+                </div>
+              </div>
+
+              <div class="palette-controls">
+                <button id="add-custom-color" class="palette-btn confirm-btn">Add Color</button>
+                <button id="clear-palette" class="palette-btn cancel-btn">Clear Recent</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 文件上传面板 -->
+          <div class="upload-panel">
+            <div class="upload-panel-header">
+              <span>Upload Image</span>
+            </div>
+            <div class="upload-panel-content">
+              <div id="upload-area" class="upload-area">
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
+                <div class="upload-area-content">
+                  <img src="../../materials/cloud-upload.svg" alt="Upload Icon" class="upload-icon">
+                  <p>Click to upload or drag and drop an image</p>
+                  <p class="upload-hint">Supports PNG, JPG, GIF</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 显示/隐藏网格 -->
+          <div class="control-group show-grid-group">
+            <label for="show-grid">Show Grid:</label>
+            <input type="checkbox" id="show-grid" checked>
+          </div>
+
+          <!-- 颜色选择器对话框 -->
+          <div id="color-picker-dialog-advanced" class="color-picker-dialog-advanced">
+            <div class="color-picker-header">
+              <span>Select Color</span>
+              <button id="close-color-picker" class="close-btn">×</button>
+            </div>
+            <div class="color-picker-content">
+              <div class="color-preview-large" id="color-preview-large">
+                <div class="current-color" id="current-color-preview"></div>
+                <div class="new-color" id="new-color-preview"></div>
+              </div>
+              <div class="color-controls">
+                <div class="color-mode-tabs">
+                  <button class="color-tab active" data-mode="hsl">HSL</button>
+                  <button class="color-tab" data-mode="rgb">RGB</button>
+                  <button class="color-tab" data-mode="hex">Hex</button>
+                </div>
+                <div class="color-inputs" id="color-inputs">
+                  <div class="input-group">
+                    <label>H:</label>
+                    <input type="range" id="hue-slider" min="0" max="360" value="0">
+                    <input type="number" id="hue-input" min="0" max="360" value="0">
+                  </div>
+                  <div class="input-group">
+                    <label>S:</label>
+                    <input type="range" id="saturation-slider" min="0" max="100" value="100">
+                    <input type="number" id="saturation-input" min="0" max="100" value="100">
+                  </div>
+                  <div class="input-group">
+                    <label>L:</label>
+                    <input type="range" id="lightness-slider" min="0" max="100" value="50">
+                    <input type="number" id="lightness-input" min="0" max="100" value="50">
+                  </div>
+                </div>
+                <div class="color-spectrum" id="color-spectrum">
+                  <div class="hue-spectrum" id="hue-spectrum"></div>
+                  <div class="saturation-lightness" id="saturation-lightness">
+                    <div class="sl-cursor" id="sl-cursor"></div>
+                  </div>
+                </div>
+                <div class="basic-colors">
+                  <div class="basic-colors-grid" id="basic-colors-grid">
+                    <!-- 基本颜色将动态生成 -->
+                  </div>
+                </div>
+              </div>
+              <div class="color-picker-actions">
+                <button id="color-picker-ok-advanced" class="confirm-btn">OK</button>
+                <button id="color-picker-cancel-advanced" class="cancel-btn">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="color-panel">
+            <div class="control-group">
+              <label for="color-picker" class="color-label-btn">
+                <span>Color:</span>
+                <div class="color-preview-indicator" id="color-preview"></div>
+              </label>
+              <div class="color-picker-container">
+                <input type="color" id="color-picker" value="#000000" style="display: none;">
+                <div id="color-picker-dialog" class="color-picker-dialog">
+                  <div class="color-picker-content">
+                    <input type="color" id="color-picker-input" value="#000000">
+                    <div class="color-picker-controls">
+                      <button id="color-picker-ok" class="color-picker-ok"></button>
+                      <button id="color-picker-cancel" class="color-picker-cancel"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="canvas-container">
-                <canvas id="pixel-canvas"></canvas>
+            <div class="quick-colors">
+              <div class="palette-header">
+                <span>Quick Colors</span>
+              </div>
+              <div class="color-palette">
+                <div class="color-swatch" data-color="#000000"></div>
+                <div class="color-swatch" data-color="#FFFFFF"></div>
+                <div class="color-swatch" data-color="#FF0000"></div>
+                <div class="color-swatch" data-color="#00FF00"></div>
+                <div class="color-swatch" data-color="#0000FF"></div>
+                <div class="color-swatch" data-color="#FFFF00"></div>
+                <div class="color-swatch" data-color="#FF00FF"></div>
+                <div class="color-swatch" data-color="#00FFFF"></div>
+                <div class="color-swatch" data-color="#FFA500"></div>
+                <div class="color-swatch" data-color="#800080"></div>
+                <div class="color-swatch" data-color="#A52A2A"></div>
+                <div class="color-swatch" data-color="#008000"></div>
+                <div class="color-swatch" data-color="#008080"></div>
+                <div class="color-swatch" data-color="#000080"></div>
+                <div class="color-swatch" data-color="#800000"></div>
+                <div class="color-swatch" data-color="#808080"></div>
+                <div class="color-swatch" data-color="#C0C0C0"></div>
+                <div class="color-swatch" data-color="#FFC0CB"></div>
+                <div class="color-swatch" data-color="#FFD700"></div>
+                <div class="color-swatch" data-color="#90EE90"></div>
+                <div class="color-swatch" data-color="#87CEEB"></div>
+                <div class="color-swatch" data-color="#DDA0DD"></div>
+                <div class="color-swatch" data-color="#F0E68C"></div>
+                <div class="color-swatch" data-color="#98FB98"></div>
+                <div class="color-swatch" data-color="#AFEEEE"></div>
+                <div class="color-swatch" data-color="#FFB6C1"></div>
+                <div class="color-swatch" data-color="#FFA07A"></div>
+                <div class="color-swatch" data-color="#20B2AA"></div>
+                <div class="color-swatch" data-color="#9370DB"></div>
+                <div class="color-swatch" data-color="#F08080"></div>
+                <div class="color-swatch" data-color="#48D1CC"></div>
+                <div class="color-swatch" data-color="transparent"
+                     style="background-image: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc); background-size: 8px 8px; background-position: 0 0, 4px 4px;"></div>
+              </div>
             </div>
 
-            <div class="output-container">
-                <div class="output-tabs">
-                    <button class="tab-btn active" data-tab="svg">SVG Output</button>
-                    <button class="tab-btn" data-tab="base64">Base64 Output</button>
-                </div>
-                <div class="output-content">
-                    <div id="svg-output" class="output-panel active">
-                        <pre><code></code></pre>
-                        <button class="copy-btn">Copy to Clipboard</button>
-                    </div>
-                    <div id="base64-output" class="output-panel">
-                        <pre><code></code></pre>
-                        <button class="copy-btn">Copy to Clipboard</button>
-                    </div>
-                </div>
-                <div class="extracted-colors">
-                    <div class="extracted-colors-header">
-                        <span>Extracted Colors from Image</span>
-                    </div>
-                    <div class="extracted-colors-content">
-                        <div class="color-palette" id="extracted-colors-palette">
-                            <!-- 提取的颜色将动态添加到这里 -->
-                        </div>
-                    </div>
-                </div>
-                <div class="info-area">
-                    <h1>Pixel Logo Maker</h1>
-                    <p class="subtitle">Create your own pixel art logo with ease!</p>
-                    <p id="author-info" class="author-info"></p>
-                </div>
+            <div class="control-group">
+              <div class="palette-header">
+                <span>Color Palette</span>
+              </div>
+              <div id="custom-palette" class="color-palette">
+                <!-- 调色盘颜色将通过JavaScript生成 -->
+              </div>
+              <div class="palette-controls">
+                <button id="save-palette" class="palette-btn confirm-btn">Save</button>
+                <button id="reset-palette" class="palette-btn cancel-btn">Reset</button>
+              </div>
             </div>
+
+            <div class="image-import">
+              <label for="image-import">Import Image:</label>
+              <div class="drop-area" id="drop-area">
+                <p>Drop image here or click to select</p>
+                <input type="file" id="image-import" accept="image/*" style="display: none;">
+              </div>
+              <label for="pixel-size">Pixel Size for Import (Controls detail level):</label>
+              <div class="pixel-size-info">
+                <input type="range" id="pixel-size" min="1" max="16" value="8">
+                <span id="pixel-size-value">8</span>
+                <small>Higher value = fewer pixels, lower value = more detail</small>
+              </div>
+            </div>
+
+            <div class="export-options">
+              <button id="export-svg">Export as SVG</button>
+              <button id="export-base64">Export as Base64</button>
+              <button id="download-image">Download Image</button>
+            </div>
+          </div>
         </div>
-    </main>
 
-        <footer class="footer">
-            <p>Powered by fs-tools and <span id="footer-author"></span></p>
-        </footer>
-
-        <!-- Info area will be in the right panel now -->
+      </div>
+      <div class="canvas-container">
+        <div class="canvas-controls">
+          <button id="preview-button" class="control-btn">Preview</button>
+          <button id="export-svg-btn" class="control-btn">Export SVG</button>
+          <button id="export-base64-btn" class="control-btn">Export Base64</button>
+          <button id="export-markdown-btn" class="control-btn">Export Markdown</button>
+        </div>
+        <canvas id="pixel-canvas"></canvas>
+        <div id="brush-size-indicator" class="brush-size-indicator"></div>
+      </div>
+      <div class="output-container">
+        <div class="output-tabs">
+          <button class="tab-btn active" data-tab="svg">SVG Output</button>
+          <button class="tab-btn" data-tab="base64">Base64 Output</button>
+          <button class="tab-btn" data-tab="markdown">Markdown Output</button>
+        </div>
+        <div class="output-content">
+          <div id="svg-output" class="output-panel active">
+            <pre><code></code></pre>
+            <button class="copy-btn">Copy to Clipboard</button>
+          </div>
+          <div id="base64-output" class="output-panel">
+            <pre><code></code></pre>
+            <button class="copy-btn">Copy to Clipboard</button>
+          </div>
+          <div id="markdown-output" class="output-panel">
+            <pre><code></code></pre>
+            <button class="copy-btn">Copy to Clipboard</button>
+          </div>
+        </div>
+        <div class="extracted-colors">
+          <div class="extracted-colors-header">
+            <span>Extracted Colors from Image</span>
+          </div>
+          <div class="extracted-colors-content">
+            <div class="color-palette" id="extracted-colors-palette">
+              <!-- 提取的颜色将动态添加到这里 -->
+            </div>
+          </div>
+        </div>
+        <div class="info-area">
+          <h1>Pixel Logo Maker</h1>
+          <p class="subtitle">Create your own pixel art logo with ease!</p>
+          <p id="author-info" class="author-info"></p>
+        </div>
+      </div>
     </div>
+  </main>
 
-    <script src="pixel-logo.js"></script>
+  <footer class="footer">
+    <p>Powered by fs-tools and <span id="footer-author"></span></p>
+  </footer>
 
-    <script>
-        // 显示作者信息
-        $(document).ready(() => {
-            // 获取当前工具(pixel-logo)的作者信息
-            fsTools.getToolAuthorAsync('pixel-logo', function(author) {
-                if (author) {
-                    $('#author-info').text('Author: ' + author);
-                    const footerAuthor = document.getElementById('footer-author');
-                    if (footerAuthor) {
-                        footerAuthor.textContent = author;
-                    }
-                }
-            });
-        });
-    </script>
+  <!-- Preview Modal -->
+  <div id="preview-modal" class="preview-modal">
+    <div class="preview-modal-content">
+      <div class="preview-modal-header">
+        <button id="close-preview" class="close-preview-btn">&times;</button>
+      </div>
+      <div class="preview-modal-body">
+        <canvas id="preview-canvas"></canvas>
+      </div>
+      <div class="preview-modal-footer">
+        <div class="zoom-controls">
+          <label for="zoom-slider">Zoom:</label>
+          <input type="range" id="zoom-slider" min="10" max="300" value="100">
+          <span id="zoom-value">100%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info area will be in the right panel now -->
+</div>
+
+<script src="pixel-logo.js"></script>
+
+<script>
+  // 显示作者信息
+  $(document).ready(() => {
+      // 获取当前工具(pixel-logo)的作者信息
+      fsTools.getToolAuthorAsync('pixel-logo', function(author) {
+          if (author) {
+              $('#author-info').text('Author: ' + author);
+              const footerAuthor = document.getElementById('footer-author');
+              if (footerAuthor) {
+                  footerAuthor.textContent = author;
+              }
+          }
+      });
+  });
+</script>
 </body>
 </html>
