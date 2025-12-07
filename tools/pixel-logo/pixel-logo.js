@@ -9,12 +9,63 @@ let currentSize = 64;
 let currentTool = 'pencil';
 let currentColor = '#000000';
 let currentBrushSize = 1;
+let recentColorsSize = 24;
 let isDrawing = false;
 let pixelData = [];
 let currentBackgroundColor = '#FFFFFF';
 let showGrid = true;
 let gridCanvas;
 let gridCtx;
+
+// 历史记录功能 - 撤销和重做
+let undoStack = [];
+let redoStack = [];
+
+// 移除了选择工具相关变量
+
+// 保存当前画布状态到撤销栈
+function saveState() {
+    // 深拷贝当前像素数据
+    const state = pixelData.map(row => [...row]);
+    undoStack.push(state);
+    // 限制撤销栈大小
+    if (undoStack.length > 50) {
+        undoStack.shift();
+    }
+    // 清空重做栈
+    redoStack = [];
+}
+
+// 撤销操作
+function undo() {
+    if (undoStack.length > 0) {
+        // 保存当前状态到重做栈
+        redoStack.push(pixelData.map(row => [...row]));
+        // 恢复上一个状态
+        pixelData = undoStack.pop();
+        // 重绘画布
+        redrawCanvas();
+    }
+}
+
+// 重做操作
+function redo() {
+    if (redoStack.length > 0) {
+        // 保存当前状态到撤销栈
+        undoStack.push(pixelData.map(row => [...row]));
+        // 恢复下一个状态
+        pixelData = redoStack.pop();
+        // 重绘画布
+        redrawCanvas();
+    }
+}
+
+// 选择工具辅助函数
+// 移除了选择工具相关函数
+
+// 移除了自动复制选择区域功能
+
+
 
 // 文件上传相关变量
 let uploadArea;
@@ -134,7 +185,7 @@ function init() {
 
     // 初始化画布
     resizeCanvas(currentSize);
-    clearCanvas();
+    clearCanvas(false);
 
     // 设置默认显示网格线
     showGridCheckbox.checked = true;
@@ -187,15 +238,6 @@ function bindUploadEvents() {
         uploadArea.addEventListener(eventName, preventDefaults, false);
     });
 
-    // 添加拖拽效果
-    ['dragenter', 'dragover'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, highlight, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        uploadArea.addEventListener(eventName, unhighlight, false);
-    });
-
     // 处理文件放置
     uploadArea.addEventListener('drop', handleDrop, false);
 }
@@ -206,15 +248,7 @@ function preventDefaults(e) {
     e.stopPropagation();
 }
 
-// 添加拖拽高亮效果
-function highlight() {
-    uploadArea.classList.add('drag-over');
-}
 
-// 移除拖拽高亮效果
-function unhighlight() {
-    uploadArea.classList.remove('drag-over');
-}
 
 // 处理文件放置
 function handleDrop(e) {
@@ -382,6 +416,9 @@ function resizeCanvas(size) {
     // 重新初始化像素数据 - 使用'transparent'表示透明/无像素
     pixelData = Array(size).fill().map(() => Array(size).fill('transparent'));
 
+    // 清空选择区域
+
+
     // 清空画布
     ctx.clearRect(0, 0, size, size);
 
@@ -392,7 +429,12 @@ function resizeCanvas(size) {
 }
 
 // 清空画布
-function clearCanvas() {
+function clearCanvas(saveStateToHistory = true) {
+    // 保存当前状态到撤销栈（除非明确要求不保存）
+    if (saveStateToHistory) {
+        saveState();
+    }
+
     ctx.clearRect(0, 0, currentSize, currentSize);
 
     // 重置像素数据 - 使用空字符串表示透明/无像素
@@ -472,6 +514,8 @@ function redrawCanvas() {
 
     // 更新网格
     updateGrid();
+
+    // 移除了绘制选择区域的代码
 }
 
 // 获取鼠标在画布上的像素坐标
@@ -501,6 +545,9 @@ function getPixelColor(x, y) {
 function floodFill(startX, startY, targetColor, replacementColor) {
     // 如果目标颜色和替换颜色相同，直接返回
     if (targetColor === replacementColor) return;
+
+    // 保存当前状态到撤销栈
+    saveState();
 
     // 使用队列进行广度优先搜索
     const queue = [];
@@ -604,8 +651,8 @@ function addToRecentColors(color) {
     recentColors.unshift(color);
 
     // 限制最多8个颜色
-    if (recentColors.length > 8) {
-        recentColors = recentColors.slice(0, 8);
+    if (recentColors.length > recentColorsSize) {
+        recentColors = recentColors.slice(0, recentColorsSize);
     }
 
     // 保存到本地存储
@@ -880,6 +927,8 @@ function bindEvents() {
         } else {
             // 铅笔和橡皮擦工具：开始绘制
             isDrawing = true;
+            // 保存当前状态（连续绘制只保存一次）
+            saveState();
             // 如果是橡皮擦工具，使用'transparent'表示透明
             // 如果是铅笔工具，直接使用currentColor（包括透明色）
             const color = currentTool === 'eraser' ? 'transparent' : currentColor;
@@ -896,6 +945,8 @@ function bindEvents() {
 
         // 更新画笔大小指示器位置
         updateBrushSizeIndicator(e, brushSizeIndicator);
+
+        // 移除了粘贴预览位置更新代码
     });
 
     window.addEventListener('mouseup', () => {
@@ -1543,26 +1594,20 @@ function bindEvents() {
             // 更新光标和画笔大小指示器
             if (currentTool === 'eraser') {
                 canvas.classList.add('cursor-eraser');
-                canvas.classList.remove('cursor-pencil');
-                canvas.classList.remove('cursor-fill');
-                canvas.classList.remove('cursor-color-extractor');
+                canvas.classList.remove('cursor-pencil', 'cursor-fill', 'cursor-color-extractor');
                 // 移除所有画笔尺寸类，确保只使用橡皮擦SVG图标
                 for (let i = 1; i <= 6; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
             } else if (currentTool === 'fill') {
-                canvas.classList.remove('cursor-eraser');
-                canvas.classList.remove('cursor-pencil');
+                canvas.classList.remove('cursor-eraser', 'cursor-pencil', 'cursor-color-extractor');
                 canvas.classList.add('cursor-fill');
-                canvas.classList.remove('cursor-color-extractor');
                 // 移除所有画笔尺寸类
                 for (let i = 1; i <= 6; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
             } else if (currentTool === 'color-extractor') {
-                canvas.classList.remove('cursor-eraser');
-                canvas.classList.remove('cursor-pencil');
-                canvas.classList.remove('cursor-fill');
+                canvas.classList.remove('cursor-eraser', 'cursor-pencil', 'cursor-fill');
                 canvas.classList.add('cursor-color-extractor');
                 // 移除所有画笔尺寸类
                 for (let i = 1; i <= 6; i++) {
@@ -1570,9 +1615,7 @@ function bindEvents() {
                 }
             } else {
                 // 铅笔工具
-                canvas.classList.remove('cursor-eraser');
-                canvas.classList.remove('cursor-fill');
-                canvas.classList.remove('cursor-color-extractor');
+                canvas.classList.remove('cursor-eraser', 'cursor-fill', 'cursor-color-extractor');
                 canvas.classList.add('cursor-pencil');
                 // 移除所有画笔尺寸类，确保只使用铅笔SVG图标
                 for (let i = 1; i <= 6; i++) {
@@ -1591,8 +1634,29 @@ function bindEvents() {
         });
     });
 
+    // 键盘事件监听 - 撤销和重做
+    document.addEventListener('keydown', function(e) {
+        // 调试键盘事件
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'v')) {
+            console.log('Ctrl key pressed with:', e.key);
+        }
+        // 移除了ESC键取消选择的代码
+        // Ctrl+Z 撤销
+        if (e.ctrlKey && e.key === 'z') {
+            e.preventDefault();
+            undo();
+        }
+        // Ctrl+Shift+Z 重做
+        if (e.ctrlKey && e.shiftKey && e.key === 'Z') {
+            e.preventDefault();
+            redo();
+        }
+        // 移除了Ctrl+C和Ctrl+V处理代码
+    });
+
     // 颜色吸取器功能
     canvas.addEventListener('click', function(e) {
+
         if (currentTool === 'color-extractor') {
             const coords = getPixelCoordinates(e);
             const x = coords.x;
@@ -1617,6 +1681,20 @@ function bindEvents() {
                 updateColorPreview();
                 // 添加到最近颜色（包括透明色）
                 addToRecentColors(color);
+
+                // 切换为铅笔工具
+                currentTool = 'pencil';
+                // 更新工具按钮状态
+                toolButtons.forEach(btn => btn.classList.remove('active'));
+                const pencilBtn = document.querySelector('.tool-btn[data-tool="pencil"]');
+                if (pencilBtn) {
+                    pencilBtn.classList.add('active');
+                }
+                // 更新光标
+                canvas.classList.remove('cursor-eraser');
+                canvas.classList.remove('cursor-fill');
+                canvas.classList.remove('cursor-color-extractor');
+                canvas.classList.add('cursor-pencil');
             }
         }
     });

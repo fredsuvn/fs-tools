@@ -148,7 +148,7 @@ main {
     margin-bottom: 4px;
     font-weight: 500;
     color: #555;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .color-label-btn {
@@ -333,8 +333,7 @@ main {
     font-size: 12px;
 }
 
-.drop-area:hover,
-.drop-area.drag-over {
+.drop-area:hover {
     border-color: #667eea;
 }
 
@@ -462,11 +461,7 @@ main {
     border-color: #5a6fd8;
 }
 
-.upload-area.drag-over {
-    background-color: #e6eeff;
-    border-color: #4c63d2;
-    transform: scale(1.02);
-}
+
 
 .upload-area-content {
     display: flex;
@@ -1420,6 +1415,8 @@ main {
     cursor: url('../../assets/color-extractor.svg') 8 8, crosshair;
 }
 
+
+
 .preview-btn {
     background-color: #667eea;
     color: white;
@@ -1459,12 +1456,38 @@ main {
     background-color: #5a6fd8;
 }
 
+/* Grid Panel 样式 */
+.grid-panel {
+    background-color: #f8f9fa;
+    border: 1px solid #e1e5e9;
+    border-radius: 0;
+    margin-top: 6px;
+}
+
+.grid-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    border-bottom: 1px solid #e1e5e9;
+}
+
+.grid-panel-header span {
+    font-weight: 500;
+    font-size: 12px;
+    color: #333;
+}
+
+.grid-panel-content {
+    padding: 8px;
+}
+
 /* Show Grid 一行显示 */
 .show-grid-group {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
 
 /* 预览模态窗口样式 */
