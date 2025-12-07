@@ -1087,7 +1087,7 @@ function bindEvents() {
                     // 开始粘贴模式
                     isPasting = true;
                     pasteData = region;
-                    console.log('开始粘贴模式:', region);
+                    fsLogger.debug('开始粘贴模式:', region);
                 }
             }
         }
@@ -1683,15 +1683,13 @@ function bindEvents() {
     savePaletteBtn.addEventListener('click', () => {
         localStorage.setItem('pixelLogoPalette', JSON.stringify(customPalette));
         // 可以添加一个提示
-        // fsLogger.info('调色盘已保存');
     });
 
     // 重置调色盘
     resetPaletteBtn.addEventListener('click', () => {
         initCustomPalette();
-        localStorage.removeItem('pixelLogoPalette');
-        // fsLogger.info('调色盘已重置');
-    });
+          localStorage.removeItem('pixelLogoPalette');
+      });
 
     // 加载保存的调色盘
     function loadCustomPalette() {
@@ -1723,7 +1721,7 @@ function bindEvents() {
         button.addEventListener('click', () => {
             // 更新工具
             currentTool = button.dataset.tool;
-            console.log('工具切换:', currentTool);
+            fsLogger.debug('工具切换:', currentTool);
 
             // 更新按钮状态
             toolButtons.forEach(btn => btn.classList.remove('active'));
@@ -1786,7 +1784,7 @@ function bindEvents() {
     document.addEventListener('keydown', function(e) {
         // 调试键盘事件
         if (e.ctrlKey && (e.key === 'c' || e.key === 'v')) {
-            console.log('Ctrl key pressed with:', e.key);
+            fsLogger.debug('Ctrl key pressed with:', e.key);
         }
         // 移除了ESC键取消选择的代码
         // Ctrl+Z 撤销
@@ -2308,7 +2306,7 @@ function updateSelectionTabs() {
                 // 为当前tab添加active类
                 tab.classList.add('active');
                 // 可以添加切换显示该区域的功能
-                console.log('选择区域:', region);
+                fsLogger.debug('选择区域:', region);
             }
         });
 
