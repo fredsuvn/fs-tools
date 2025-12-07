@@ -348,7 +348,7 @@
           </div>
         </div>
         <div class="info-area">
-          <h1>Pixel Logo Maker</h1>
+          <h1>Pixel Logo Maker <span class="version" id="version-info" style="font-size: 0.5em; margin-left: 10px; opacity: 0.8;"></span></h1>
           <p class="subtitle">Create your own pixel art logo with ease!</p>
           <p id="author-info" class="author-info"></p>
         </div>
@@ -385,15 +385,24 @@
 <script src="pixel-logo.js"></script>
 
 <script>
-  // 显示作者信息
+  // 显示作者和版本信息
   $(document).ready(() => {
-      // 获取当前工具(pixel-logo)的作者信息
-      fsTools.getToolAuthorAsync('pixel-logo', function(author) {
-          if (author) {
-              $('#author-info').text('Author: ' + author);
-              const footerAuthor = document.getElementById('footer-author');
-              if (footerAuthor) {
-                  footerAuthor.textContent = author;
+      // 获取当前工具(pixel-logo)的完整信息
+      fsTools.getToolInfo('pixel-logo', function(toolInfo) {
+          if (toolInfo) {
+              // 显示版本信息
+              if (toolInfo.version) {
+                  $('#version-info').text('v' + toolInfo.version);
+              }
+
+              // 显示作者信息
+              const author = toolInfo.authors ? toolInfo.authors.join(', ') : '';
+              if (author) {
+                  $('#author-info').text('Author: ' + author);
+                  const footerAuthor = document.getElementById('footer-author');
+                  if (footerAuthor) {
+                      footerAuthor.textContent = author;
+                  }
               }
           }
       });

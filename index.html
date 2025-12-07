@@ -274,7 +274,7 @@
         <img src="docs/pics/logo.svg" alt="fs-tools Logo">
       </div>
       <div style="text-align: center;">
-        <h1>fs-tools</h1>
+        <h1>fs-tools <span class="version" id="version-info" style="font-size: 0.5em; margin-left: 10px; opacity: 0.8;"></span></h1>
         <p class="subtitle">JavaScript Tools Collection</p>
         <p class="author-info" id="author-info" style="text-align: left; margin-left: 61.8%; margin-top: 10px; font-size: 0.9rem; opacity: 0.9;"></p>
       </div>
@@ -336,22 +336,29 @@
       // 默认作者信息（降级方案）
       const defaultAuthor = 'sunqian, DeepSeek-V3.1';
 
-      // 异步获取index.html的作者信息
-      fsTools.getToolAuthorAsync('index.html', function(authorInfo) {
+      // 异步获取index.html的完整信息
+      fsTools.getToolInfo('index.html', function(toolInfo) {
         if (typeof fsLogger !== 'undefined') {
-          fsLogger.debug('Author info received for index.html:', authorInfo);
+          fsLogger.debug('Tool info received for index.html:', toolInfo);
         } else {
-          console.log('Author info received for index.html:', authorInfo);
+          console.log('Tool info received for index.html:', toolInfo);
         }
-        // 处理可能的空作者信息，为空时使用默认作者
-        const finalAuthor = authorInfo || defaultAuthor;
-        if (typeof fsLogger !== 'undefined') {
-          fsLogger.debug('Setting author info:', finalAuthor);
+
+        // 处理可能的空工具信息
+        if (toolInfo) {
+          // 显示版本信息
+          $('#version-info').text('v' + toolInfo.version);
+
+          // 处理作者信息
+          const authorInfo = toolInfo.authors ? toolInfo.authors.join(', ') : '';
+          const finalAuthor = authorInfo || defaultAuthor;
+          $('#author-info').text('Author: ' + finalAuthor);
+          $('#footer-author').text(finalAuthor);
         } else {
-          console.log('Setting author info:', finalAuthor);
+          // 如果获取不到工具信息，使用默认作者
+          $('#author-info').text('Author: ' + defaultAuthor);
+          $('#footer-author').text(defaultAuthor);
         }
-        $('#author-info').text('Author: ' + finalAuthor);
-        $('#footer-author').text(finalAuthor);
       });
 
       // 仅在首页加载所有工具信息
@@ -368,6 +375,9 @@
           // 保存所有工具信息
           allTools = tools.filter(tool => tool.id !== 'index.html');
 
+          // 按工具名称字母顺序排序
+          allTools.sort((a, b) => a.name.localeCompare(b.name));
+
           // 初始渲染所有工具
           renderTools(allTools);
 
@@ -375,6 +385,8 @@
           $('#search-input').on('input', function() {
             const searchTerm = $(this).val().toLowerCase().trim();
             const filteredTools = filterTools(allTools, searchTerm);
+            // 搜索结果也按名称字母顺序排序
+            filteredTools.sort((a, b) => a.name.localeCompare(b.name));
             renderTools(filteredTools);
           });
         } else {

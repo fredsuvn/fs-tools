@@ -18,7 +18,7 @@
   <!-- Header with global controls -->
   <header class="header">
     <div style="position: relative; text-align: center; min-height: 100px;">
-      <h1>JMH Benchmark Visualizer</h1>
+      <h1>JMH Benchmark Visualizer <span class="version" id="version-info" style="font-size: 0.5em; margin-left: 10px; opacity: 0.8;"></span></h1>
       <p class="subtitle">Visualize JMH benchmark results in an elegant way</p>
       <p id="author-info" class="author-info"
          style="text-align: left; margin-left: 61.8%; font-size: 0.9rem; opacity: 0.9;"></p>
@@ -104,13 +104,23 @@
 </footer>
 
 <script>
-  // 获取并显示作者信息（使用回调函数形式）
-  fsTools.getToolAuthorAsync('jmh-visualizer', function(author) {
-    if (author) {
-      document.getElementById('author-info').textContent = 'Author: ' + author;
-      const footerAuthor = document.getElementById('footer-author');
-      if (footerAuthor) {
-        footerAuthor.textContent = author;
+  // 获取并显示作者和版本信息
+  fsTools.getToolInfo('jmh-visualizer', function(toolInfo) {
+    if (toolInfo) {
+      // 显示版本信息
+      const versionInfo = document.getElementById('version-info');
+      if (versionInfo) {
+        versionInfo.textContent = 'v' + toolInfo.version;
+      }
+
+      // 显示作者信息
+      const author = toolInfo.authors ? toolInfo.authors.join(', ') : '';
+      if (author) {
+        document.getElementById('author-info').textContent = 'Author: ' + author;
+        const footerAuthor = document.getElementById('footer-author');
+        if (footerAuthor) {
+          footerAuthor.textContent = author;
+        }
       }
     }
   });
