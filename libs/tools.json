@@ -1,55 +1,16 @@
 {
-  "logger": {
-    "level": "warn"
-  },
   "tools": [
     {
       "id": "index.html",
-      "name": "fs-tools",
-      "directory": ".",
-      "description": "The index.html file of fs-tools.",
-      "tags": [
-        "fs",
-        "tools",
-        "index"
-      ],
-      "authors": [
-        "sunqian",
-        "DeepSeek-V3.1",
-        "Doubal-Seed-Code"
-      ]
+      "enabled": true
     },
     {
       "id": "jmh-visualizer",
-      "name": "JMH Benchmark Visualizer",
-      "directory": "jmh-visualizer",
-      "description": "JMH Benchmark Visualizer is a tool to visualize the results of JMH benchmarks.",
-      "tags": [
-        "jmh",
-        "visualizer",
-        "benchmark"
-      ],
-      "authors": [
-        "sunqian",
-        "DeepSeek-V3.1",
-        "Doubal-Seed-Code"
-      ]
+      "enabled": true
     },
     {
       "id": "pixel-logo",
-      "name": "Pixel Logo Maker",
-      "directory": "pixel-logo",
-      "description": "Pixel Logo Maker is a tool to help developers to create pixel art logos.",
-      "tags": [
-        "pixel",
-        "logo",
-        "maker"
-      ],
-      "authors": [
-        "Doubal-Seed-Code",
-        "DeepSeek-V3.1",
-        "Qwen-3-Coder"
-      ]
+      "enabled": true
     }
   ]
 }

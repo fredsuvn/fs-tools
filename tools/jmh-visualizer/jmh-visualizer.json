@@ -1,0 +1,18 @@
+{
+  "id": "jmh-visualizer",
+  "name": "JMH Benchmark Visualizer",
+  "version": "0.0.0",
+  "directory": "jmh-visualizer",
+  "description": "JMH Benchmark Visualizer is a tool to visualize the results of JMH benchmarks.",
+  "tags": [
+    "jmh",
+    "visualizer",
+    "benchmark"
+  ],
+  "authors": [
+    "sunqian",
+    "DeepSeek-V3.1",
+    "Doubal-Seed-Code"
+  ],
+  "all-in-one": true
+}

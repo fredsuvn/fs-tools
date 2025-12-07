@@ -1,0 +1,17 @@
+{
+  "id": "index.html",
+  "name": "fs-tools",
+  "version": "0.0.0",
+  "directory": ".",
+  "description": "The index.html file of fs-tools.",
+  "tags": [
+    "fs",
+    "tools",
+    "index"
+  ],
+  "authors": [
+    "sunqian",
+    "DeepSeek-V3.1",
+    "Doubal-Seed-Code"
+  ]
+}

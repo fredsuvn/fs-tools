@@ -1,0 +1,17 @@
+{
+  "id": "pixel-logo",
+  "name": "Pixel Logo Maker",
+  "version": "0.0.0",
+  "directory": "pixel-logo",
+  "description": "Pixel Logo Maker is a tool to help developers to create pixel art logos.",
+  "tags": [
+    "pixel",
+    "logo",
+    "maker"
+  ],
+  "authors": [
+    "Doubal-Seed-Code",
+    "DeepSeek-V3.1",
+    "Qwen-3-Coder"
+  ]
+}

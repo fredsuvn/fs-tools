@@ -47,13 +47,13 @@
     consoleOutput: true
   };
 
-  // 私有方法：统一获取tools.json的路径
+  // 私有方法：统一获取logger.json的路径
   function _getJsonPath() {
     const currentPath = window.location.pathname;
     // 简化的路径检测逻辑：
     // 1. 如果路径包含 '/tools/'，说明在tools的子目录下
     // 2. 否则视为在根目录下（如index.html）
-    return currentPath.includes('/tools/') ? '../../libs/tools.json' : 'libs/tools.json';
+    return currentPath.includes('/tools/') ? '../../libs/logger.json' : 'libs/logger.json';
   }
 
   // 当前配置
@@ -221,7 +221,7 @@
     }
   };
 
-  // 从tools.json加载日志配置
+  // 从logger.json加载日志配置
   function loadLoggerConfigFromJson() {
     try {
       $.ajax({
@@ -229,20 +229,14 @@
         dataType: 'json',
         async: true,
         success: function(data) {
-          // 检查是否存在logger配置
-          if (data && data.logger) {
-            // 使用原生console进行初始化配置日志，确保在配置加载过程中不会丢失信息
-            console.log('Loading logger configuration from tools.json:', data.logger);
-            fsLogger.configure(data.logger);
-            // 配置加载成功后，使用logger输出日志
-            fsLogger.debug('Logger configuration loaded successfully from tools.json');
-          } else {
-            console.log('No logger configuration found in tools.json, using default');
-            fsLogger.debug('Using default logger configuration');
-          }
+          // 使用原生console进行初始化配置日志，确保在配置加载过程中不会丢失信息
+          console.log('Loading logger configuration from logger.json:', data);
+          fsLogger.configure(data);
+          // 配置加载成功后，使用logger输出日志
+          fsLogger.debug('Logger configuration loaded successfully from logger.json');
         },
         error: function(xhr, status, error) {
-          console.error('Failed to load tools.json for logger configuration:', error);
+          console.error('Failed to load logger.json for logger configuration:', error);
           // 使用默认配置，不中断功能
           fsLogger.debug('Using default logger configuration due to load failure');
         }
@@ -253,20 +247,10 @@
     }
   }
 
-  // 自动初始化：从tools.json加载配置
+  // 自动初始化：从logger.json加载配置
   $(document).ready(function() {
-    // 优先尝试直接从tools.json加载配置
+    // 从logger.json加载配置
     loadLoggerConfigFromJson();
-
-    // 同时保留与fsTools的兼容性
-    if (window.fsTools && typeof fsTools.loadAllToolsInfo === 'function') {
-      fsTools.loadAllToolsInfo(function() {
-        // 配置已经在tools.js中加载完成并应用
-        fsLogger.debug('Logger configuration may have been updated by fsTools');
-      });
-    } else {
-      fsLogger.debug('fsTools not available');
-    }
   });
 
   return fsLogger;
