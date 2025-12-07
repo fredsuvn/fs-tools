@@ -17,6 +17,19 @@ let showGrid = true;
 let gridCanvas;
 let gridCtx;
 
+// 全局变量 - 选择工具
+let isSelecting = false;
+let selectionStartX = 0;
+let selectionStartY = 0;
+let selectionEndX = 0;
+let selectionEndY = 0;
+let selectionCanvas;
+let selectionCtx;
+
+// 存储选择区域的数组
+let selectionRegions = [];
+const MAX_SELECTION_REGIONS = 8;
+
 // 历史记录功能 - 撤销和重做
 let undoStack = [];
 let redoStack = [];
@@ -179,9 +192,21 @@ function init() {
     gridCanvas.style.position = 'absolute';
     gridCanvas.style.pointerEvents = 'none';
 
+    // 创建选择框画布
+    selectionCanvas = document.createElement('canvas');
+    selectionCtx = selectionCanvas.getContext('2d');
+    selectionCanvas.style.position = 'absolute';
+    selectionCanvas.style.pointerEvents = 'none';
+    selectionCanvas.style.zIndex = '10';
+
+    // 初始设置选择框画布尺寸 - 将在resizeCanvas中进一步设置
+    selectionCanvas.width = 1;
+    selectionCanvas.height = 1;
+
     // 确保画布容器有相对定位
     canvas.parentElement.style.position = 'relative';
     canvas.parentElement.appendChild(gridCanvas);
+    canvas.parentElement.appendChild(selectionCanvas);
 
     // 初始化画布
     resizeCanvas(currentSize);
@@ -410,6 +435,12 @@ function resizeCanvas(size) {
     gridCanvas.style.width = `${size * pixelSize}px`;
     gridCanvas.style.height = `${size * pixelSize}px`;
 
+    // 设置选择框画布尺寸 - 与主画布保持一致
+    selectionCanvas.width = size;
+    selectionCanvas.height = size;
+    selectionCanvas.style.width = `${size * pixelSize}px`;
+    selectionCanvas.style.height = `${size * pixelSize}px`;
+
     // 确保网格画布与主画布对齐
     alignGridCanvas();
 
@@ -457,6 +488,10 @@ function alignGridCanvas() {
     // 设置网格画布位置与主画布对齐
     gridCanvas.style.left = `${offsetX}px`;
     gridCanvas.style.top = `${offsetY}px`;
+
+    // 设置选择框画布位置与主画布对齐
+    selectionCanvas.style.left = `${offsetX}px`;
+    selectionCanvas.style.top = `${offsetY}px`;
 }
 
 // 更新网格显示
@@ -924,6 +959,16 @@ function bindEvents() {
         } else if (currentTool === 'color-extractor') {
             // 颜色吸取器工具：不执行绘制逻辑，由click事件处理
             return;
+        } else if (currentTool === 'select') {
+            // 框选工具：开始框选
+            isSelecting = true;
+            selectionStartX = coords.x;
+            selectionStartY = coords.y;
+            selectionEndX = coords.x;
+            selectionEndY = coords.y;
+            // 清除之前的选框并立即绘制新的选框
+            clearSelectionCanvas();
+            drawSelectionRect();
         } else {
             // 铅笔和橡皮擦工具：开始绘制
             isDrawing = true;
@@ -937,10 +982,17 @@ function bindEvents() {
     });
 
     canvas.addEventListener('mousemove', (e) => {
-        if (isDrawing && currentTool !== 'fill' && currentTool !== 'color-extractor') {
+        if (isDrawing && currentTool !== 'fill' && currentTool !== 'color-extractor' && currentTool !== 'select') {
             const coords = getPixelCoordinates(e);
             const color = currentTool === 'eraser' ? 'transparent' : currentColor;
             drawPixel(coords.x, coords.y, color);
+        }
+
+        if (isSelecting && currentTool === 'select') {
+            const coords = getPixelCoordinates(e);
+            selectionEndX = coords.x;
+            selectionEndY = coords.y;
+            drawSelectionRect();
         }
 
         // 更新画笔大小指示器位置
@@ -951,6 +1003,18 @@ function bindEvents() {
 
     window.addEventListener('mouseup', () => {
         isDrawing = false;
+        if (isSelecting) {
+            isSelecting = false;
+            // 不再自动清除选框，保持选中区域显示直到下次选择
+            // clearSelectionCanvas();
+        }
+    });
+
+    // 处理Ctrl+C快捷键保存选择区域
+    window.addEventListener('keydown', (e) => {
+        if (currentTool === 'select' && e.ctrlKey && e.key === 'c') {
+            saveSelectionRegion();
+        }
     });
 
     // 鼠标进入画布时显示画笔大小指示器
@@ -1583,6 +1647,7 @@ function bindEvents() {
         button.addEventListener('click', () => {
             // 更新工具
             currentTool = button.dataset.tool;
+            console.log('工具切换:', currentTool);
 
             // 更新按钮状态
             toolButtons.forEach(btn => btn.classList.remove('active'));
@@ -1607,15 +1672,22 @@ function bindEvents() {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
             } else if (currentTool === 'color-extractor') {
-                canvas.classList.remove('cursor-eraser', 'cursor-pencil', 'cursor-fill');
+                canvas.classList.remove('cursor-eraser', 'cursor-pencil', 'cursor-fill', 'cursor-select');
                 canvas.classList.add('cursor-color-extractor');
+                // 移除所有画笔尺寸类
+                for (let i = 1; i <= 6; i++) {
+                    canvas.classList.remove(`brush-size-${i}`);
+                }
+            } else if (currentTool === 'select') {
+                canvas.classList.remove('cursor-eraser', 'cursor-pencil', 'cursor-fill', 'cursor-color-extractor');
+                canvas.classList.add('cursor-select');
                 // 移除所有画笔尺寸类
                 for (let i = 1; i <= 6; i++) {
                     canvas.classList.remove(`brush-size-${i}`);
                 }
             } else {
                 // 铅笔工具
-                canvas.classList.remove('cursor-eraser', 'cursor-fill', 'cursor-color-extractor');
+                canvas.classList.remove('cursor-eraser', 'cursor-fill', 'cursor-color-extractor', 'cursor-select');
                 canvas.classList.add('cursor-pencil');
                 // 移除所有画笔尺寸类，确保只使用铅笔SVG图标
                 for (let i = 1; i <= 6; i++) {
@@ -2020,6 +2092,148 @@ function displayExtractedColors(colors) {
 
         extractedColorsPalette.appendChild(colorSwatch);
     });
+}
+
+// 清除选择框画布
+function clearSelectionCanvas() {
+    if (selectionCtx) {
+        selectionCtx.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
+    }
+}
+
+// 保存选择区域
+function saveSelectionRegion() {
+    // 确保当前有选中区域
+    if (selectionStartX === selectionEndX && selectionStartY === selectionEndY) {
+        return;
+    }
+
+    // 计算选择区域的范围
+    const startX = Math.min(selectionStartX, selectionEndX);
+    const startY = Math.min(selectionStartY, selectionEndY);
+    const endX = Math.max(selectionStartX, selectionEndX);
+    const endY = Math.max(selectionStartY, selectionEndY);
+    const width = endX - startX + 1;
+    const height = endY - startY + 1;
+
+    // 读取选择区域内的像素数据
+    const regionData = [];
+    for (let y = startY; y <= endY; y++) {
+        const row = [];
+        for (let x = startX; x <= endX; x++) {
+            row.push(getPixelColor(x, y));
+        }
+        regionData.push(row);
+    }
+
+    // 创建新的选择区域记录
+    const region = {
+        id: Date.now(),
+        data: regionData,
+        width: width,
+        height: height,
+        startX: startX,
+        startY: startY,
+        endX: endX,
+        endY: endY,
+        timestamp: Date.now()
+    };
+
+    // 限制选择区域数量
+    if (selectionRegions.length >= MAX_SELECTION_REGIONS) {
+        selectionRegions.shift(); // 删除最旧的记录
+    }
+
+    // 添加新记录
+    selectionRegions.push(region);
+
+    // 更新选择区域标签
+    updateSelectionTabs();
+}
+
+// 更新选择区域标签
+function updateSelectionTabs() {
+    const tabsContainer = document.getElementById('selection-tabs');
+    if (!tabsContainer) return;
+
+    // 清空现有标签
+    tabsContainer.innerHTML = '';
+
+    // 创建新标签
+    selectionRegions.forEach((region, index) => {
+        const tab = document.createElement('div');
+        tab.className = 'selection-tab';
+        tab.textContent = `区域 ${index + 1}`;
+        tab.dataset.regionId = region.id;
+
+        // 添加关闭按钮
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-btn';
+        closeBtn.textContent = '×';
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            removeSelectionRegion(region.id);
+        });
+
+        // 添加点击事件（可以扩展显示预览等功能）
+        tab.addEventListener('click', () => {
+            // 可以添加切换显示该区域的功能
+            console.log('选择区域:', region);
+        });
+
+        tab.appendChild(closeBtn);
+        tabsContainer.appendChild(tab);
+    });
+}
+
+// 删除选择区域
+function removeSelectionRegion(regionId) {
+    selectionRegions = selectionRegions.filter(region => region.id !== regionId);
+    updateSelectionTabs();
+}
+
+// 绘制选择框
+function drawSelectionRect() {
+    if (!selectionCtx) return;
+
+    // 获取主画布的实际显示尺寸
+    const rect = canvas.getBoundingClientRect();
+
+    // 确保选择框画布大小与主画布显示尺寸一致
+    selectionCanvas.width = rect.width;
+    selectionCanvas.height = rect.height;
+
+    // 清除之前的选框
+    clearSelectionCanvas();
+
+    // 计算选框的像素坐标范围
+    const startX = Math.min(selectionStartX, selectionEndX);
+    const startY = Math.min(selectionStartY, selectionEndY);
+    const endX = Math.max(selectionStartX, selectionEndX);
+    const endY = Math.max(selectionStartY, selectionEndY);
+
+    // 计算选框的宽度和高度（像素数）
+    const width = endX - startX + 1;
+    const height = endY - startY + 1;
+
+    // 计算每个像素在屏幕上的实际大小
+    const pixelSize = rect.width / currentSize;
+
+    // 计算选框的屏幕坐标
+    const rectX = startX * pixelSize;
+    const rectY = startY * pixelSize;
+    const rectWidth = width * pixelSize;
+    const rectHeight = height * pixelSize;
+
+    // 绘制选框边框 - 使用当前选中的颜色
+    selectionCtx.strokeStyle = currentColor === 'transparent' ? '#000000' : currentColor;
+    selectionCtx.lineWidth = 2;
+    selectionCtx.setLineDash([]);
+
+    // 绘制选框边框
+    selectionCtx.beginPath();
+    selectionCtx.rect(rectX, rectY, rectWidth, rectHeight);
+    selectionCtx.stroke();
 }
 
 // 当页面加载完成后初始化

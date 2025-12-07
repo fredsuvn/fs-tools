@@ -401,6 +401,59 @@ main {
     image-rendering: crisp-edges;
 }
 
+/* 选择区域标签样式 */
+.selection-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+}
+
+.selection-tab {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.selection-tab:hover {
+    background-color: #e0e0e0;
+}
+
+.selection-tab.active {
+    background-color: #ffffff;
+    border-bottom-color: #ffffff;
+    font-weight: bold;
+}
+
+.selection-tab .close-btn {
+    margin-left: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    font-size: 12px;
+    padding: 0;
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.selection-tab .close-btn:hover {
+    background-color: #ffdddd;
+    color: #ff0000;
+}
+
 /* 画笔大小指示器样式 */
 .brush-size-indicator {
     position: absolute;
@@ -1413,6 +1466,10 @@ main {
 
 .cursor-color-extractor {
     cursor: url('../../assets/color-extractor.svg') 8 8, crosshair;
+}
+
+.cursor-select {
+    cursor: url('../../assets/arrow.svg') 8 8, crosshair;
 }
 
 
