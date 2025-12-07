@@ -244,6 +244,9 @@ function init() {
 
     // 绑定文件上传事件
     bindUploadEvents();
+
+    // 初始化显示8个选择区域标签
+    updateSelectionTabs();
 }
 
 // 绑定文件上传事件
@@ -416,7 +419,12 @@ function resizeCanvas(size) {
     // 获取canvas-controls的高度，从可用高度中减去
     const canvasControls = document.querySelector('.canvas-controls');
     const controlsHeight = canvasControls ? canvasControls.offsetHeight : 0;
-    const availableHeight = containerRect.height - 30 - controlsHeight; // 考虑内边距和预览按钮高度
+
+    // 获取selection-tabs的高度，从可用高度中减去
+    const selectionTabs = document.getElementById('selection-tabs');
+    const tabsHeight = selectionTabs ? selectionTabs.offsetHeight : 0;
+
+    const availableHeight = containerRect.height - 30 - controlsHeight - tabsHeight; // 考虑内边距、预览按钮和标签栏高度
 
     // 计算像素大小以尽可能填充空间
     let pixelSize = Math.floor(Math.min(availableWidth, availableHeight) / currentSize);
@@ -429,11 +437,17 @@ function resizeCanvas(size) {
     canvas.style.width = `${size * pixelSize}px`;
     canvas.style.height = `${size * pixelSize}px`;
 
-    // 设置网格画布尺寸 - 与实际显示尺寸一致
+    // 设置网格画布尺寸 - 与主画布的实际显示尺寸完全一致
     gridCanvas.width = size * pixelSize;
     gridCanvas.height = size * pixelSize;
     gridCanvas.style.width = `${size * pixelSize}px`;
     gridCanvas.style.height = `${size * pixelSize}px`;
+
+    // 确保网格画布的位置和尺寸在调整后仍然正确
+    setTimeout(() => {
+        alignGridCanvas();
+        updateGrid();
+    }, 0);
 
     // 设置选择框画布尺寸 - 与主画布保持一致
     selectionCanvas.width = size;
@@ -481,13 +495,20 @@ function alignGridCanvas() {
     const canvasRect = canvas.getBoundingClientRect();
     const containerRect = canvas.parentElement.getBoundingClientRect();
 
-    // 计算主画布在容器中的偏移量
+    // 计算主画布在容器中的精确偏移量
     const offsetX = canvasRect.left - containerRect.left;
     const offsetY = canvasRect.top - containerRect.top;
 
-    // 设置网格画布位置与主画布对齐
+    // 确保网格画布只覆盖主画布区域，不包括tabs区域
+    gridCanvas.style.position = 'absolute';
     gridCanvas.style.left = `${offsetX}px`;
     gridCanvas.style.top = `${offsetY}px`;
+    gridCanvas.style.width = `${canvasRect.width}px`;
+    gridCanvas.style.height = `${canvasRect.height}px`;
+
+    // 确保网格画布的内部尺寸与显示尺寸一致
+    gridCanvas.width = canvasRect.width;
+    gridCanvas.height = canvasRect.height;
 
     // 设置选择框画布位置与主画布对齐
     selectionCanvas.style.left = `${offsetX}px`;
@@ -1014,6 +1035,11 @@ function bindEvents() {
     window.addEventListener('keydown', (e) => {
         if (currentTool === 'select' && e.ctrlKey && e.key === 'c') {
             saveSelectionRegion();
+            // 清除当前选中区域
+            clearSelectionCanvas();
+            // 重置选择区域坐标
+            selectionStartX = selectionEndX = -1;
+            selectionStartY = selectionEndY = -1;
         }
     });
 
@@ -2139,16 +2165,41 @@ function saveSelectionRegion() {
         timestamp: Date.now()
     };
 
-    // 限制选择区域数量
-    if (selectionRegions.length >= MAX_SELECTION_REGIONS) {
-        selectionRegions.shift(); // 删除最旧的记录
+    // 按照从1到8的顺序找空的按钮
+    let added = false;
+    for (let i = 0; i < MAX_SELECTION_REGIONS; i++) {
+        if (!selectionRegions[i]) {
+            selectionRegions[i] = region;
+            added = true;
+            break;
+        }
     }
 
-    // 添加新记录
-    selectionRegions.push(region);
+    // 如果全满，依次前进覆盖复制
+    if (!added) {
+        // 移除第一个元素，其他元素前移
+        selectionRegions.shift();
+        // 在末尾添加新元素
+        selectionRegions.push(region);
+    }
 
     // 更新选择区域标签
     updateSelectionTabs();
+
+    // 找到新添加的区域在数组中的索引
+    const newIndex = selectionRegions.findIndex(r => r && r.id === region.id);
+    if (newIndex !== -1) {
+        // 将新添加的区域对应的tab设置为选中状态
+        setTimeout(() => {
+            const tabs = document.querySelectorAll('.selection-tab');
+            if (tabs[newIndex]) {
+                // 移除所有tab的active类
+                tabs.forEach(t => t.classList.remove('active'));
+                // 为新添加的tab添加active类
+                tabs[newIndex].classList.add('active');
+            }
+        }, 0);
+    }
 }
 
 // 更新选择区域标签
@@ -2156,39 +2207,73 @@ function updateSelectionTabs() {
     const tabsContainer = document.getElementById('selection-tabs');
     if (!tabsContainer) return;
 
+    // 在更新前保存当前选中的regionId
+    let activeRegionId = null;
+    const activeTab = document.querySelector('.selection-tab.active');
+    if (activeTab && activeTab.dataset.regionId) {
+        activeRegionId = parseInt(activeTab.dataset.regionId);
+    }
+
     // 清空现有标签
     tabsContainer.innerHTML = '';
 
-    // 创建新标签
-    selectionRegions.forEach((region, index) => {
+    // 始终创建8个标签，无论是否有复制数据
+    for (let i = 0; i < MAX_SELECTION_REGIONS; i++) {
         const tab = document.createElement('div');
-        tab.className = 'selection-tab';
-        tab.textContent = `区域 ${index + 1}`;
-        tab.dataset.regionId = region.id;
+        const region = selectionRegions[i];
 
-        // 添加关闭按钮
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'close-btn';
-        closeBtn.textContent = '×';
-        closeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            removeSelectionRegion(region.id);
-        });
+        // 根据是否有数据设置不同的样式类
+        if (region) {
+            tab.className = 'selection-tab selection-tab-filled';
+            tab.dataset.regionId = region.id;
 
-        // 添加点击事件（可以扩展显示预览等功能）
+            // 如果该区域是之前选中的，并且数据没有被清除/覆盖，则保持选中状态
+            if (region.id === activeRegionId) {
+                tab.classList.add('active');
+            }
+        } else {
+            tab.className = 'selection-tab selection-tab-empty';
+            tab.dataset.regionId = null;
+        }
+
+        tab.textContent = `Copy ${i + 1}`;
+
+        // 添加关闭按钮，但只有有数据的标签才显示
+        if (region) {
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'close-btn';
+            closeBtn.textContent = '×';
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                removeSelectionRegion(region.id);
+            });
+            tab.appendChild(closeBtn);
+        }
+
+        // 添加点击事件
         tab.addEventListener('click', () => {
-            // 可以添加切换显示该区域的功能
-            console.log('选择区域:', region);
+            if (region) {
+                // 移除所有tab的active类
+                document.querySelectorAll('.selection-tab').forEach(t => t.classList.remove('active'));
+                // 为当前tab添加active类
+                tab.classList.add('active');
+                // 可以添加切换显示该区域的功能
+                console.log('选择区域:', region);
+            }
         });
 
-        tab.appendChild(closeBtn);
         tabsContainer.appendChild(tab);
-    });
+    }
 }
 
-// 删除选择区域
+// 删除选择区域（仅清空指定位置的数据，不移动后面的按钮）
 function removeSelectionRegion(regionId) {
-    selectionRegions = selectionRegions.filter(region => region.id !== regionId);
+    // 找到要删除的区域在数组中的索引
+    const index = selectionRegions.findIndex(region => region && region.id === regionId);
+    if (index !== -1) {
+        // 仅清空该位置的数据，不删除元素，保持数组结构
+        selectionRegions[index] = null;
+    }
     updateSelectionTabs();
 }
 

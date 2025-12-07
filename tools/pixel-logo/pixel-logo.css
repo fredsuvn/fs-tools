@@ -392,6 +392,7 @@ main {
     align-items: center;
     height: 100%;
     overflow: hidden;
+    position: relative;
 }
 
 #pixel-canvas {
@@ -404,54 +405,129 @@ main {
 /* 选择区域标签样式 */
 .selection-tabs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap;
+    justify-content: space-between;
     max-width: 100%;
+    margin-bottom: 5px;
+    gap: 0;
+    position: relative;
+    z-index: 10;
+    width: 100%;
 }
 
 .selection-tab {
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 4px 4px 0 0;
-    padding: 6px 12px;
-    font-size: 12px;
+    border-radius: 0;
+    padding: 0 4px;
+    font-size: 11px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     position: relative;
+    flex: 1;
+    text-align: center;
+    height: 26px;
+    line-height: 26px;
+    box-sizing: border-box;
+    min-width: 0;
+    border: 1px solid #e1e5e9;
+    /* 固定尺寸，确保所有状态下大小一致 */
+    transform: none !important;
+    box-shadow: none !important;
+    width: calc(100% / 8);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.selection-tab:hover {
-    background-color: #e0e0e0;
-}
-
-.selection-tab.active {
+/* 空标签样式 - 没有数据 */
+.selection-tab-empty {
     background-color: #ffffff;
-    border-bottom-color: #ffffff;
-    font-weight: bold;
+    color: #495057;
+    border-color: #e1e5e9;
+    /* 确保尺寸相关属性一致 */
+    padding: 0 4px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+/* 有数据标签样式 - 使用浅绿色 */
+.selection-tab-filled {
+    background-color: #85dcb8;
+    color: white;
+    border-color: #85dcb8;
+    /* 确保尺寸相关属性一致 */
+    padding: 0 4px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+/* 悬停效果 - 只改变颜色 */
+.selection-tab-empty:hover {
+    background-color: #f8f9fa;
+    border-color: #667eea;
+    color: #667eea;
+    /* 确保尺寸相关属性一致 */
+    padding: 0 4px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.selection-tab-filled:hover {
+    background-color: #74d1ac;
+    border-color: #74d1ac;
+    /* 确保尺寸相关属性一致 */
+    padding: 0 4px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+/* 有数据且选中时 - 使用画笔选中样式，只改变颜色 */
+.selection-tab.active {
+    background-color: #667eea;
+    color: white;
+    border-color: #667eea;
+    font-weight: normal;
+    /* 确保尺寸相关属性一致 */
+    padding: 0 4px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+/* 有数据且选中时的悬停效果 */
+.selection-tab.active:hover {
+    background-color: #5a6fd8;
+    border-color: #5a6fd8;
+    /* 确保尺寸相关属性一致 */
+    padding: 0 4px;
+    border-width: 1px;
+    border-style: solid;
 }
 
 .selection-tab .close-btn {
-    margin-left: 6px;
-    background: none;
+    margin-left: 2px;
+    background: rgba(255, 255, 255, 0.3);
     border: none;
     cursor: pointer;
-    color: #666;
-    font-size: 12px;
+    color: white;
+    font-size: 10px;
     padding: 0;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
+    vertical-align: middle;
+    flex-shrink: 0;
 }
 
 .selection-tab .close-btn:hover {
-    background-color: #ffdddd;
-    color: #ff0000;
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #333;
 }
 
 /* 画笔大小指示器样式 */
@@ -1796,7 +1872,9 @@ main {
         linear-gradient(-45deg, transparent 75%, #C0C0C0 75%);
     background-size: 12px 12px;
     background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
-    background-attachment: fixed;
+    background-attachment: local;
+    position: relative;
+    z-index: 1;
 }
 
 
