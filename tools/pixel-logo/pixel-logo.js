@@ -30,6 +30,12 @@ let selectionCtx;
 let selectionRegions = [];
 const MAX_SELECTION_REGIONS = 8;
 
+// 粘贴功能相关
+let isPasting = false;
+let pasteData = null;
+let pasteOffsetX = 0;
+let pasteOffsetY = 0;
+
 // 历史记录功能 - 撤销和重做
 let undoStack = [];
 let redoStack = [];
@@ -1019,7 +1025,19 @@ function bindEvents() {
         // 更新画笔大小指示器位置
         updateBrushSizeIndicator(e, brushSizeIndicator);
 
-        // 移除了粘贴预览位置更新代码
+        // 粘贴预览逻辑
+        if (isPasting && pasteData) {
+            // 获取鼠标在画布上的像素坐标
+            const coords = getPixelCoordinates(e);
+            const { width, height } = pasteData;
+
+            // 计算粘贴的左上角坐标，使鼠标位于预览图中心（对齐网格）
+            pasteOffsetX = coords.x - Math.floor(width / 2);
+            pasteOffsetY = coords.y - Math.floor(height / 2);
+
+            // 绘制粘贴预览
+            drawPastePreview();
+        }
     });
 
     window.addEventListener('mouseup', () => {
@@ -1031,8 +1049,24 @@ function bindEvents() {
         }
     });
 
-    // 处理Ctrl+C快捷键保存选择区域
+    // 鼠标点击画布时处理粘贴操作
+    canvas.addEventListener('click', (e) => {
+        if (isPasting && pasteData) {
+            // 执行粘贴操作
+            pasteToCanvas();
+        }
+    });
+
+    // 窗口失去焦点时取消粘贴模式
+    window.addEventListener('blur', () => {
+        if (isPasting) {
+            cancelPaste();
+        }
+    });
+
+    // 处理Ctrl+C和Ctrl+V快捷键
     window.addEventListener('keydown', (e) => {
+        // Ctrl+C保存选择区域
         if (currentTool === 'select' && e.ctrlKey && e.key === 'c') {
             saveSelectionRegion();
             // 清除当前选中区域
@@ -1040,6 +1074,22 @@ function bindEvents() {
             // 重置选择区域坐标
             selectionStartX = selectionEndX = -1;
             selectionStartY = selectionEndY = -1;
+        }
+        // Ctrl+V粘贴选择区域
+        else if (e.ctrlKey && e.key === 'v') {
+            // 找到当前选中的tab
+            const activeTab = document.querySelector('.selection-tab.active');
+            if (activeTab && activeTab.dataset.regionId) {
+                const regionId = parseInt(activeTab.dataset.regionId);
+                const region = selectionRegions.find(r => r && r.id === regionId);
+
+                if (region) {
+                    // 开始粘贴模式
+                    isPasting = true;
+                    pasteData = region;
+                    console.log('开始粘贴模式:', region);
+                }
+            }
         }
     });
 
@@ -2275,6 +2325,105 @@ function removeSelectionRegion(regionId) {
         selectionRegions[index] = null;
     }
     updateSelectionTabs();
+}
+
+// 绘制粘贴预览
+function drawPastePreview() {
+    if (!pasteData || !selectionCtx) return;
+
+    // 获取主画布的实际显示尺寸
+    const rect = canvas.getBoundingClientRect();
+
+    // 确保选择框画布大小与主画布显示尺寸一致（与drawSelectionRect保持一致）
+    selectionCanvas.width = rect.width;
+    selectionCanvas.height = rect.height;
+
+    // 清除之前的选择框和预览
+    clearSelectionCanvas();
+
+    const { data, width, height } = pasteData;
+
+    // 计算网格大小（每个像素的显示大小）
+    const pixelSize = rect.width / currentSize;
+
+    // 计算预览区域的实际像素坐标（考虑缩放）
+    const startX = pasteOffsetX;
+    const startY = pasteOffsetY;
+
+    // 绘制半透明的预览
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const color = data[y][x];
+            if (color && color !== 'transparent') {
+                const canvasX = startX + x;
+                const canvasY = startY + y;
+
+                // 确保在画布范围内
+                if (canvasX >= 0 && canvasX < currentSize && canvasY >= 0 && canvasY < currentSize) {
+                    // 根据pixelSize缩放坐标和尺寸
+                    const drawX = canvasX * pixelSize;
+                    const drawY = canvasY * pixelSize;
+
+                    selectionCtx.fillStyle = color;
+                    selectionCtx.globalAlpha = 0.7;
+                    selectionCtx.fillRect(drawX, drawY, pixelSize, pixelSize);
+
+                    // 绘制边框
+                    selectionCtx.strokeStyle = '#333';
+                    selectionCtx.globalAlpha = 1.0;
+                    selectionCtx.strokeRect(drawX, drawY, pixelSize, pixelSize);
+                }
+            }
+        }
+    }
+
+    // 绘制整个预览区域的边框
+    selectionCtx.strokeStyle = '#000';
+    selectionCtx.lineWidth = 1;
+    const borderX = startX * pixelSize;
+    const borderY = startY * pixelSize;
+    const borderWidth = width * pixelSize;
+    const borderHeight = height * pixelSize;
+    selectionCtx.strokeRect(borderX, borderY, borderWidth, borderHeight);
+}
+
+// 执行粘贴操作
+function pasteToCanvas() {
+    if (!pasteData) return;
+
+    // 保存当前状态到撤销栈
+    saveState();
+
+    const { data, width, height } = pasteData;
+
+    // 将数据复制到画布上
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const color = data[y][x];
+            const canvasX = pasteOffsetX + x;
+            const canvasY = pasteOffsetY + y;
+
+            // 确保在画布范围内
+            if (canvasX >= 0 && canvasX < currentSize && canvasY >= 0 && canvasY < currentSize) {
+                // 直接传递颜色给drawPixel函数，它会处理透明色
+                drawPixel(canvasX, canvasY, color);
+            }
+        }
+    }
+
+    // 结束粘贴模式
+    cancelPaste();
+}
+
+// 取消粘贴模式
+function cancelPaste() {
+    isPasting = false;
+    pasteData = null;
+    pasteOffsetX = 0;
+    pasteOffsetY = 0;
+
+    // 清除预览
+    clearSelectionCanvas();
 }
 
 // 绘制选择框
