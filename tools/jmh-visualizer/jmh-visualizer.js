@@ -15,7 +15,14 @@ class JMHVisualizer {
 
   init() {
     this.setupEventListeners();
-    this.loadDefaultData();
+    // 检查URL参数是否指定了结果文件路径
+    const urlParams = new URLSearchParams(window.location.search);
+    const resultsPath = urlParams.get('resultsPath');
+    if (resultsPath) {
+      this.loadDataFromPath(resultsPath);
+    } else {
+      this.loadDefaultData();
+    }
   }
 
   setupEventListeners() {
@@ -85,6 +92,28 @@ class JMHVisualizer {
       fsLogger.error('Error loading default results.json:', error.message);
       fsLogger.showToast('Error loading default results.json: ' + error.message, 'error');
       $('#loading').addClass('hidden');
+    }
+  }
+
+  async loadDataFromPath(path) {
+    try {
+      $('#loading').removeClass('hidden');
+      const response = await fetch(path);
+      if (!response.ok) throw new Error(`Failed to load ${path}`);
+
+      this.benchmarkData = await response.json();
+      this.processData();
+      this.renderTOC();
+      this.renderGroups();
+      $('#loading').addClass('hidden');
+      fsLogger.info(`Successfully loaded data from ${path}`);
+      fsLogger.showToast(`Successfully loaded data from ${path}`, 'info');
+    } catch (error) {
+      fsLogger.error(`Error loading ${path}:`, error.message);
+      fsLogger.showToast(`Error loading ${path}: ${error.message}`, 'error');
+      $('#loading').addClass('hidden');
+      // 如果加载失败，尝试加载默认数据
+      this.loadDefaultData();
     }
   }
 
