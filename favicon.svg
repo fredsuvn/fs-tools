@@ -1,12 +1,18 @@
 <svg width="104" height="104" viewBox="0 0 104 104" xmlns="http://www.w3.org/2000/svg">
   <title>fs-tools</title>
+  <!--
   <g id="group-back">
     <rect id="back-global" x="0" y="0" width="100%" height="100%" fill="#3f3f3f" stroke="none"/>
   </g>
+  -->
   <g id="group-hive"
      stroke-linecap="square" stroke-miterlimit="100"
-     stroke="#3f3f3f" stroke-width="2" fill="#fefefe"
+     stroke="#98C379" stroke-width="1" fill="#3f3f3f"
   >
+    <path id="hive-center"
+          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
+          transform="translate(0,0)"
+    />
     <path id="hive-t"
           d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
           transform="translate(0,-34)"
@@ -34,7 +40,7 @@
   </g>
   <g id="group-cmd"
      stroke-linecap="square" stroke-miterlimit="100"
-     stroke="#fefefe" stroke-width="1"
+     stroke="#fefefe" stroke-width="2"
   >
     <path id="cmd-prompt"
           d="M52,52 m-11,-10 l10,8 l-10,8"
@@ -45,4 +51,9 @@
           fill="none"
     />
   </g>
+  <!--
+    write: #fefefe
+    black: #3f3f3f
+    green:
+  -->
 </svg>
