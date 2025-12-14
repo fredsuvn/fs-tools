@@ -13,17 +13,28 @@
 *.svg text
 *.xml text
 *.kts text
-*.properties text
-*.md text
-*.adoc text
 *.bat text
 *.gradle text
 *.kts text
 *.kt text
 
+# config files:
+*.json text
+*.yaml text
+*.yml text
+*.properties text
+*.md text
+*.adoc text
+*.toml text
+
 # binary files:
+*.class binary
+*.jar binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.rar  binary
 *.gif  binary
-*.jar  binary
 *.jpeg  binary
 *.jpg  binary
 *.png  binary

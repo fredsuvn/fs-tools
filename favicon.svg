@@ -1,59 +1,107 @@
-<svg width="104" height="104" viewBox="0 0 104 104" xmlns="http://www.w3.org/2000/svg">
-  <title>fs-tools</title>
-  <!--
-  <g id="group-back">
-    <rect id="back-global" x="0" y="0" width="100%" height="100%" fill="#3f3f3f" stroke="none"/>
-  </g>
-  -->
-  <g id="group-hive"
-     stroke-linecap="square" stroke-miterlimit="100"
-     stroke="#98C379" stroke-width="1" fill="#3f3f3f"
-  >
-    <path id="hive-center"
-          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
-          transform="translate(0,0)"
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <title>fst-logo</title>
+  <g>
+    <path fill="#50a4ff"
+          d="
+          M3,0
+          l29,0 l0,32 l-32,0
+          l0,-29 a3,3,0,0,1,3,-3
+          Z
+          "
     />
-    <path id="hive-t"
-          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
-          transform="translate(0,-34)"
-    />
-    <path id="hive-rt"
-          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
-          transform="translate(30,-17)"
-    />
-    <path id="hive-rb"
-          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
-          transform="translate(30,17)"
-    />
-    <path id="hive-b"
-          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
-          transform="translate(0,34)"
-    />
-    <path id="hive-lt"
-          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
-          transform="translate(-30,-17)"
-    />
-    <path id="hive-lb"
-          d="M52,52 m-10,-17 l20,0 l10,17 l-10,17 l-20,0 l-10,-17 l10,-17"
-          transform="translate(-30,17)"
+    <path stroke="#eeeeee" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+          d="
+          M16,16 m-6,-6
+          l12,6 l-12, 6
+          "
     />
   </g>
-  <g id="group-cmd"
-     stroke-linecap="square" stroke-miterlimit="100"
-     stroke="#fefefe" stroke-width="2"
-  >
-    <path id="cmd-prompt"
-          d="M52,52 m-11,-10 l10,8 l-10,8"
-          fill="none"
+  <g>
+    <path fill="#98C379"
+          d="
+        M32,0
+        l29,0 a3,3,0,0,1,3,3
+        l0,29 l-32,0 l0,-29
+        Z
+        "
     />
-    <path id="cmd-input >_"
-          d="M52,52 m1,10 l10,0 l-10,0"
-          fill="none"
-    />
+    <g id="letter-f-lower"
+       stroke="#eeeeee" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+       transform="translate(16, 0) scale(1, 0.5)"
+    >
+      <circle cx="32" cy="12" r="6"/>
+      <path d="
+            M32,32 m0,-14
+            a20,36,0,0,1,-5,44
+            M32,32 m8,-6
+            a18,64,-10,0,1,-14,0
+            "
+      />
+      <path d="
+            M32,32 m8,-6
+            a18,64,-10,0,1,-14,0
+            "
+      />
+    </g>
   </g>
-  <!--
-    write: #fefefe
-    black: #3f3f3f
-    green:
-  -->
+  <g>
+    <path fill="#ff5350"
+          d="
+        M32,32
+        l32,0
+        l0,29 a3,3,0,0,1,-3,3
+        l-29,0 l0,-32
+        Z
+        "
+    />
+    <g id="letter-s-lower"
+       stroke="#eeeeee" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+       transform="translate(16, 28) scale(1, 0.5)"
+    >
+      <path d="
+          M32,32 m0,-8
+          a32,24,0,0,0,-1,16
+          a32,24,0,0,1,-2,22
+          "
+      />
+      <path d="
+          M32,32 m-8,-4
+          a28,24,0,0,0,0,10
+          m14,-10
+          a32,16,0,0,0,0,10
+          m-12,10
+          a32,14,0,0,1,-2,10
+          m16,-10
+          a24,18,0,0,1,-2,12
+          "
+      />
+    </g>
+  </g>
+  <g>
+    <path fill="#ffaa50"
+          d="
+        M0,32
+        l32,0 l0,32
+        l-29,0 a3,3,0,0,1,-3,-3
+        l0,-29
+        Z
+        "
+    />
+    <g id="letter-t-lower"
+       stroke="#3f3f3f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+       transform="translate(-16, 28) scale(1, 0.5)"
+    >
+      <path d="
+            M32,32 m0,-8
+            l0,24
+            "
+      />
+      <path d="
+            M32,32 m8,0
+            a12,12,0,0,1,-16,0
+            "
+      />
+      <circle cx="32" cy="54" r="6"/>
+    </g>
+  </g>
 </svg>
