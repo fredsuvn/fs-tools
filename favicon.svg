@@ -37,14 +37,14 @@
   />
 
   <!-- chars: >fst -->
-  <path stroke="#ebebeb" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+  <path stroke="#FF8683" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
         d="
           M48,16 m-6,-6
           l12,6 l-12, 6
           "
   />
   <g id="letter-f-lower"
-     stroke="#ebebeb" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+     stroke="#98C379" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(16, 32) scale(1, 0.5)"
   >
     <circle cx="32" cy="12" r="6"/>
@@ -62,7 +62,7 @@
     />
   </g>
   <g id="letter-s-lower"
-     stroke="#ebebeb" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+     stroke="#50a4ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(-16, 0) scale(1, 0.5)"
   >
     <path d="
@@ -84,7 +84,7 @@
     />
   </g>
   <g id="letter-t-lower"
-     stroke="#50a4ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
+     stroke="#ffaa50" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"
      transform="translate(-16, 32) scale(1, 0.5)"
   >
     <path d="
